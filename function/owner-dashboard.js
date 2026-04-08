@@ -1,0 +1,1 @@
+document.getElementById("stats").innerHTML = "Total Orders: 5";

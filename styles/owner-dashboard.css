@@ -1,0 +1,49 @@
+/* Fonts & Colors */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #F5F7FA;
+  margin: 0;
+  padding: 0;
+  color: #1E2A38;
+}
+
+/* Navbar / Sidebar */
+nav {
+  background-color: #2D3E50;
+  padding: 20px;
+  text-align: left;
+}
+nav a {
+  display: block;
+  color: #ffffff;
+  margin: 10px 0;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+nav a:hover {
+  background-color: #4A90E2;
+}
+
+/* Stats Boxes */
+#stats {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px;
+}
+#stats div {
+  background-color: #4A90E2;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 30%;
+  text-align: center;
+}
+#stats div:nth-child(2) { background-color: #7AC47F; }
+#stats div:nth-child(3) { background-color: #F5A623; }
+
+/* Headings */
+h1 {
+  text-align: center;
+  margin-top: 20px;
+}
