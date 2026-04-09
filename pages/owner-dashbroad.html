@@ -4,30 +4,27 @@
   <meta charset="UTF-8">
   <title>Owner Dashboard</title>
   <link rel="stylesheet" href="../styles/owner-dashboard.css">
-  <script src="../function/owner-dashboard.js"></script>
 </head>
 <body>
+
   <nav>
-    <a href="owner-dashboard.html">Owner Dashboard</a>
-    <a href="manage-menu.html">Manage Menu</a>
-    <a href="orders.html">View Orders</a>
+    <a href="../pages/owner-dashbroad.html">Owner Dashboard</a>
+    <a href="../pages/mange-menu.html">Manage Menu</a>
+    <a href="../pages/orders.html">View Orders</a>
   </nav>
 
   <h1>Welcome back, [uni-eat]</h1>
 
-  <div id="stats">
-    <div>
-      <h3>Total Orders</h3>
-      <p>245</p>
-    </div>
-    <div>
-      <h3>Orders Pending</h3>
-      <p>8</p>
-    </div>
-    <div>
-      <h3>Orders Completed</h3>
-      <p>180</p>
-    </div>
-  </div>
+<h1>Owner Dashboard</h1>
+<div id="stats">
+  <div>Total Orders: <span id="totalOrders">0</span></div>
+  <div>Pending: <span id="pendingOrders">0</span></div>
+  <div>Completed: <span id="completedOrders">0</span></div>
+</div>
+
+  
+
+
+<script src="../function/owner-dashboard.js"></script>
 </body>
 </html>

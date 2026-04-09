@@ -4,18 +4,23 @@
   <meta charset="UTF-8">
   <title>Manage Menu</title>
   <link rel="stylesheet" href="../styles/mange-menu.css">
-  <script src="../function/manage-menu.js"></script>
 </head>
 <body>
+
   <h1>Manage Menu</h1>
 
-  <input type="text" placeholder="Item Name">
-  <input type="number" placeholder="Price">
-  <button>Add Item</button>
 
-  <ul>
-    <li>Sample Item 1 - $10</li>
-    <li>Sample Item 2 - $15</li>
-  </ul>
+  <input type="text" id="itemName" placeholder="Item Name">
+  <input type="number" id="itemPrice" placeholder="Price">
+
+ 
+  <button onclick="addItem()">Add Item</button>
+
+
+  <ul id="menuList"></ul>
+
+
+  <script src="../function/manage-menu.js"></script>
+
 </body>
 </html>
