@@ -1,21 +1,18 @@
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+let list=document.getElementById("orderList");
+let total=0;
 
-let summary = document.getElementById("order-summary");
-let total = 0;
-
-cart.forEach(item => {
-    let p = document.createElement("p");
-    p.textContent = item.name + " - " + item.price + " EGP";
-    summary.appendChild(p);
-
-    total += item.price;
+cart.forEach(i=>{
+    let li=document.createElement("li");
+    li.innerText=i.name+" "+i.price;
+    list.appendChild(li);
+    total+=i.price;
 });
 
+document.getElementById("total").innerText=total;
 
-document.getElementById("total").textContent = total;
-
-
-function placeOrder() {
-    localStorage.removeItem("cart");
-    window.location.href = "order-tracking.html";
+function placeOrder(){
+    localStorage.setItem("status","Preparing");
+    alert("Order Placed 🎉");
+    window.location.href="order-tracking.html";
 }
