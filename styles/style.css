@@ -1,0 +1,57 @@
+body {
+    font-family: Arial;
+    background: var(--light-yellow);
+    margin: 0;
+    text-align: center;
+}
+
+/* Navbar */
+.navbar {
+    background: var(--orange);
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    color: white;
+}
+
+.links a {
+    margin: 10px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.links a:hover {
+    color: var(--light-yellow);
+}
+
+/* Container */
+.container {
+    background: white;
+    width: 320px;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 15px;
+    border: 3px solid var(--peach);
+    animation: fadeIn 0.5s;
+}
+
+/* Buttons */
+button {
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: var(--dark-pink);
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1;}
+}
