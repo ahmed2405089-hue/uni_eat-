@@ -6,26 +6,34 @@
     <title>UNIEats - Login</title>
 </head>
 <body>
-
     <main>
         <form action="#" method="POST" id="loginForm">
             <h2>Login Form</h2>
             
             <div>
-                <label for="email">Email Address</label>
-                <input type="email" name="email" id="email" required>
+                <label for="login_identifier">Email or Username</label>
+                <input type="text" name="login_identifier" id="login_identifier" 
+                       placeholder="Enter your email or username" 
+                       required autocomplete="username">
             </div>
 
             <div>
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" required>
+                <input type="password" name="password" id="password" required autocomplete="current-password">
             </div>
 
+            <!-- Forgot password link -->
+            <div style="margin: 8px 0 12px 0;">
+                <a href="forgot-password.html" style="font-size:0.85rem;">Forgot password?</a>
+            </div>
+
+            <input type="hidden" name="csrf_token" id="csrf_token" value="">
+            
             <button type="submit">Login</button>
 
             <p>Don't have an account? <a href="register.html">Register here</a></p>
         </form>
     </main>
-
+    <script src="app.js"></script>
 </body>
 </html>
