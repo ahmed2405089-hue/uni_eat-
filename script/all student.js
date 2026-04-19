@@ -149,9 +149,18 @@ if (menuDiv) {
                 // Files have spaces, so keep as is, but toLowerCase.
                 imageName = restaurant.name === "Conitta" ? item.name + '.' + ext : item.name.toLowerCase() + '.' + ext;
 
+                let subfolder = '';
+                if (restaurant.name === "TBS") {
+                    if (category.name === "Beverages") {
+                        subfolder = 'beverages/hot/';
+                    } else if (category.name === "Sandwiches") {
+                        subfolder = 'sandwiches/';
+                    }
+                }
+
                 itemDiv.innerHTML = `
                     <div class="item-info">
-                        <img src="../assets/${restaurant.name.toLowerCase().replace(' ', '')}/${imageName}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover; margin-bottom: 10px;" onerror="this.src='../assets/${restaurant.name.toLowerCase().replace(' ', '')}/${imageName.replace('.jpg','.webp')}'">
+                        <img src="../assets/${restaurant.name.toLowerCase().replace(' ', '')}/${subfolder}${imageName}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover; margin-bottom: 10px;" onerror="this.src='../assets/Gemini_Generated_Image_40czvt40czvt40cz.png'">
                         <h4>${item.name}</h4>
                         <p class="price">$${item.price.toFixed(2)}</p>
                     </div>
@@ -175,7 +184,12 @@ if (menuDiv) {
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 function addToCart(name, price) {
-    cart.push({ name, price: parseFloat(price) });
+    let existing = cart.find(item => item.name === name);
+    if (existing) {
+        existing.qty += 1;
+    } else {
+        cart.push({ name, price: parseFloat(price), qty: 1 });
+    }
     saveCart();
     alert("Added to cart ✅");
 }
@@ -196,18 +210,25 @@ function loadCart() {
     let subtotal = 0;
 
     cart.forEach((item, index) => {
-        subtotal += item.price;
+        subtotal += item.price * item.qty;
 
         let div = document.createElement("div");
         div.className = "cart-item";
 
         div.innerHTML = `
-            <div>
+            <div class="item-info">
                 <h4>${item.name}</h4>
                 <p>$${item.price.toFixed(2)}</p>
             </div>
-
-            <button onclick="removeItem(${index})">X</button>
+            <div class="item-quantity">
+                <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+                <span>${item.qty}</span>
+                <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+            </div>
+            <div class="item-total">
+                $${(item.price * item.qty).toFixed(2)}
+            </div>
+            <button class="remove-btn" onclick="removeItem(${index})">X</button>
         `;
 
         cartDiv.appendChild(div);
@@ -218,6 +239,15 @@ function loadCart() {
 
 function removeItem(index) {
     cart.splice(index, 1);
+    saveCart();
+    loadCart();
+}
+
+function changeQty(index, delta) {
+    cart[index].qty += delta;
+    if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+    }
     saveCart();
     loadCart();
 }
