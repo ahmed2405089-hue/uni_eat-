@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Character counter for username
         function updateUsernameCounter() {
             const len = usernameInput.value.length;
-            usernameCounter.textContent = ${len}/20;
+            usernameCounter.textContent = `${len}/20`;
             if (len >= 18) usernameCounter.style.color = "#f4b400";
             else if (len === 20) usernameCounter.style.color = "#d93025";
             else usernameCounter.style.color = "#666";
@@ -315,14 +315,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (identifierInput) identifierInput.focus();
 
-        loginForm.addEventListener("submit", async (e) => {
+        loginForm.addEventListener("submit", (e) => {
             e.preventDefault();
             if (isLoggingIn) return;
-
-            if (!identifierInput.value.trim() || !passwordInput.value.trim()) {
-                displayLoginError("Please fill in both fields.");
-                return;
-            }
 
             loginAttempts++;
             if (loginAttempts > 5) {
@@ -340,8 +335,7 @@ document.addEventListener("DOMContentLoaded", () => {
             loginBtn.style.cursor = "wait";
             clearLoginError();
 
-            try {
-                await new Promise(resolve => setTimeout(resolve, 1200));
+            setTimeout(() => {
                 loginBtn.textContent = "Welcome back!";
                 loginBtn.style.backgroundColor = "#34a853";
                 loginBtn.style.color = "white";
@@ -357,16 +351,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 
                 setTimeout(() => window.location.href = targetPage, 1000);
-            } catch (error) {
-                console.error("Login attempt failed."); 
-                displayLoginError("Invalid email/username or password.");
-                isLoggingIn = false;
-                loginBtn.textContent = originalBtnText;
-                loginBtn.disabled = false;
-                loginBtn.style.cursor = "pointer";
-                passwordInput.value = "";
-                passwordInput.focus();
-            }
+            }, 1200);
         });
 
         function displayLoginError(message) {

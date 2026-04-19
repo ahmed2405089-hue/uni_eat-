@@ -29,12 +29,23 @@ if(!list) return;
 
 let menu=get("menu");
 
+// If menu is empty, initialize with some sample items
+if(menu.length === 0){
+menu = [
+{id:1, name:"Burger", price:"5.99"},
+{id:2, name:"Pizza", price:"8.99"},
+{id:3, name:"Fries", price:"2.99"}
+];
+set("menu", menu);
+}
+
 list.innerHTML="";
 
 menu.forEach(i=>{
 list.innerHTML+=`
 <li>
 ${i.name} - $${i.price}
+<button onclick="removeItem(${i.id})">Remove</button>
 </li>
 `;
 });
@@ -73,17 +84,14 @@ ${o.item} - ${o.status}
 });
 }
 
-function complete(id){
-let orders=get("orders");
+function removeItem(id){
+let menu=get("menu");
 
-orders=orders.map(o=>{
-if(o.id===id)o.status="Completed";
-return o;
-});
+menu=menu.filter(i=>i.id!==id);
 
-set("orders",orders);
-displayOrders();
-updateDashboard();
+set("menu",menu);
+
+displayMenu();
 }
 
 /* ===== DASHBOARD ===== */

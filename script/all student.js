@@ -2,53 +2,88 @@ let restaurants = [
     {
         id: 1,
         name: "Gyro",
-        menu: [
-            { name: "Crispy Chicken Sandwich", price: 6.5 },
-            { name: "Greek Salad", price: 5 },
-            { name: "Greek Shawerma", price: 7 },
-            { name: "Gyro Fries", price: 4 },
-            { name: "Shawerma Meal", price: 8 }
+        categories: [
+            {
+                name: "Main Dishes",
+                items: [
+                    { name: "Crispy Chicken Sandwich", price: 6.5 },
+                    { name: "Greek Shawerma", price: 7 },
+                    { name: "Shawerma Meal", price: 8 }
+                ]
+            },
+            {
+                name: "Sides",
+                items: [
+                    { name: "Greek Salad", price: 5 },
+                    { name: "Gyro Fries", price: 4 }
+                ]
+            }
         ]
     },
 
     {
         id: 2,
         name: "TBS",
-        menu: [
-            { name: "Latte", price: 3 },
-            { name: "Mocha", price: 3.5 },
-            { name: "Hot Chocolate", price: 3 },
-            { name: "Grilled Chicken Sandwich", price: 6 }
+        categories: [
+            {
+                name: "Beverages",
+                items: [
+                    { name: "Latte", price: 3 },
+                    { name: "Mocha", price: 3.5 },
+                    { name: "Hot Chocolate", price: 3 }
+                ]
+            },
+            {
+                name: "Sandwiches",
+                items: [
+                    { name: "Grilled Chicken Sandwich", price: 6 }
+                ]
+            }
         ]
     },
 
     {
         id: 3,
         name: "Cinnabon",
-        menu: [
-            { name: "Cinnabon Classic", price: 4 },
-            { name: "Chocobon", price: 4.5 },
-            { name: "Caramel Roll", price: 4.5 }
+        categories: [
+            {
+                name: "Baked Goods",
+                items: [
+                    { name: "Cinnabon Classic", price: 4 },
+                    { name: "Chocobon", price: 4.5 },
+                    { name: "Caramel Roll", price: 4.5 }
+                ]
+            }
         ]
     },
 
     {
         id: 4,
         name: "My Corner",
-        menu: [
-            { name: "Cottage Cheese Sandwich", price: 4 },
-            { name: "Crispy Chicken Crepe", price: 5 },
-            { name: "Foul Sandwich", price: 3 }
+        categories: [
+            {
+                name: "Sandwiches",
+                items: [
+                    { name: "Cottage Cheese Sandwich", price: 4 },
+                    { name: "Crispy Chicken Crepe", price: 5 },
+                    { name: "Foul Sandwich", price: 3 }
+                ]
+            }
         ]
     },
 
     {
         id: 5,
         name: "Conitta",
-        menu: [
-            { name: "Brownie", price: 3 },
-            { name: "Cookie", price: 2 },
-            { name: "Soft Ice Cream", price: 2.5 }
+        categories: [
+            {
+                name: "Desserts",
+                items: [
+                    { name: "Brownie", price: 3 },
+                    { name: "Cookie", price: 2 },
+                    { name: "Soft Ice Cream", price: 2.5 }
+                ]
+            }
         ]
     }
 ];
@@ -60,19 +95,33 @@ let restDiv = document.getElementById("restaurants");
 
 if (restDiv) {
     restaurants.forEach(r => {
+        let logoExt = r.name === "Cinnabon" ? "jpeg" : (r.name === "Conitta" ? "png" : "jpg");
         let div = document.createElement("div");
+        div.className = "restaurant-card";
 
-        div.innerHTML = `<h3>${r.name}</h3>`;
+        div.innerHTML = `
+            <div class="restaurant-image" style="background-image: url('../assets/${r.name.toLowerCase().replace(' ', '')}/logo.${logoExt}'); background-size: cover; background-position: center;"></div>
+            <div class="restaurant-info">
+                <h3>${r.name}</h3>
+                <p class="tags">Delicious food</p>
+                <div class="card-meta">
+                    <span class="rating">⭐ 4.5</span>
+                    <span class="time">🕒 15 mins</span>
+                </div>
+            </div>
+        `;
         div.onclick = () => {
-            window.location.href = `menu.html?id=${r.id}`;
+            window.location.href = `resturant-detalis.html?id=${r.id}`;
         };
 
         restDiv.appendChild(div);
     });
+} else {
+    console.log("All menu div not found");
 }
 
 /* =========================
-   MENU PAGE
+   RESTAURANT DETAILS PAGE
 ========================= */
 let menuDiv = document.getElementById("menu");
 
@@ -82,17 +131,41 @@ if (menuDiv) {
     let restaurant = restaurants.find(r => r.id == id);
 
     if (restaurant) {
-        restaurant.menu.forEach(item => {
-            let div = document.createElement("div");
+        document.getElementById("rest-name").textContent = restaurant.name;
 
-            div.innerHTML = `
-                <h4>${item.name}</h4>
-                <p>$${item.price.toFixed(2)}</p>
-                <button onclick="addToCart('${item.name}', ${item.price})">Add</button>
-            `;
+        restaurant.categories.forEach(category => {
+            let catDiv = document.createElement("div");
+            catDiv.className = "menu-category";
 
-            menuDiv.appendChild(div);
+            catDiv.innerHTML = `<h4>${category.name}</h4>`;
+
+            category.items.forEach(item => {
+                let itemDiv = document.createElement("div");
+                itemDiv.className = "menu-item";
+
+                let ext = restaurant.name === "Conitta" ? "webp" : "jpg";
+                let imageName = item.name.toLowerCase().replace(/ /g, ' ') + '.' + ext; // keep spaces? No, files have spaces.
+
+                // Files have spaces, so keep as is, but toLowerCase.
+                imageName = restaurant.name === "Conitta" ? item.name + '.' + ext : item.name.toLowerCase() + '.' + ext;
+
+                itemDiv.innerHTML = `
+                    <div class="item-info">
+                        <img src="../assets/${restaurant.name.toLowerCase().replace(' ', '')}/${imageName}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover; margin-bottom: 10px;" onerror="this.src='../assets/${restaurant.name.toLowerCase().replace(' ', '')}/${imageName.replace('.jpg','.webp')}'">
+                        <h4>${item.name}</h4>
+                        <p class="price">$${item.price.toFixed(2)}</p>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('${item.name}', ${item.price})">Add</button>
+                `;
+
+                catDiv.appendChild(itemDiv);
+            });
+
+            menuDiv.appendChild(catDiv);
         });
+    } else {
+        document.getElementById("rest-name").textContent = "Restaurant Not Found";
+        menuDiv.innerHTML = "<p>Please select a valid restaurant.</p>";
     }
 }
 
