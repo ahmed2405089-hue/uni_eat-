@@ -143,7 +143,7 @@ if (menuDiv) {
                 let itemDiv = document.createElement("div");
                 itemDiv.className = "menu-item";
 
-                let ext = restaurant.name === "Conitta" ? "webp" : "jpg";
+                let ext = restaurant.name === "Conitta" ? "webp" : (restaurant.name === "Gyro" ? "webp" : "jpg");
                 let imageName = item.name.toLowerCase().replace(/ /g, ' ') + '.' + ext; // keep spaces? No, files have spaces.
 
                 // Files have spaces, so keep as is, but toLowerCase.
