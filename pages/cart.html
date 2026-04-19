@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNIEats - Cart</title>
+
     <link rel="stylesheet" href="../styles/colors.css">
     <link rel="stylesheet" href="../styles/global.css">
     <link rel="stylesheet" href="../styles/student.css">
 </head>
 
 <body>
+
     <nav class="navbar">
         <div class="logo">UNIEats</div>
         <div class="links">
@@ -24,59 +26,115 @@
     <main class="container cart-container">
         <h2>Your Cart</h2>
 
-        <div class="cart-items">
-            <!-- Sample Item 1 -->
-            <div class="cart-item">
-                <div class="item-info">
-                    <h4>Chicken Shawarma</h4>
-                    <p>Price: $5.00</p>
-                </div>
-                <div class="item-quantity">
-                    <button class="qty-btn">-</button>
-                    <span>1</span>
-                    <button class="qty-btn">+</button>
-                </div>
-                <div class="item-total">
-                    $5.00
-                </div>
-                <button class="remove-btn">X</button>
-            </div>
-
-            <!-- Sample Item 2 -->
-            <div class="cart-item">
-                <div class="item-info">
-                    <h4>Beef Burger</h4>
-                    <p>Price: $7.50</p>
-                </div>
-                <div class="item-quantity">
-                    <button class="qty-btn">-</button>
-                    <span>2</span>
-                    <button class="qty-btn">+</button>
-                </div>
-                <div class="item-total">
-                    $15.00
-                </div>
-                <button class="remove-btn">X</button>
-            </div>
+        <div class="cart-items" id="cart-items">
+            <!-- Items will be loaded here -->
         </div>
 
         <div class="cart-summary">
             <h3>Order Summary</h3>
+
             <div class="summary-line">
                 <span>Subtotal:</span>
-                <span>$20.00</span>
+                <span id="subtotal">$0.00</span>
             </div>
+
             <div class="summary-line">
                 <span>Tax (5%):</span>
-                <span>$1.00</span>
+                <span id="tax">$0.00</span>
             </div>
+
             <div class="summary-line total">
                 <span>Total:</span>
-                <span>$21.00</span>
+                <span id="total">$0.00</span>
             </div>
-            <button class="checkout-btn" onclick="window.location.href='checkout.html'">Proceed to Checkout</button>
+
+            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
         </div>
     </main>
-</body>
 
+    <script>
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        function renderCart() {
+            const container = document.getElementById("cart-items");
+            container.innerHTML = "";
+
+            let subtotal = 0;
+
+            cart.forEach((item, index) => {
+                let itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                container.innerHTML += `
+                <div class="cart-item">
+                    <div class="item-info">
+                        <h4>${item.name}</h4>
+                        <p>Price: $${item.price.toFixed(2)}</p>
+                    </div>
+
+                    <div class="item-quantity">
+                        <button onclick="changeQty(${index}, -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button onclick="changeQty(${index}, 1)">+</button>
+                    </div>
+
+                    <div class="item-total">
+                        $${itemTotal.toFixed(2)}
+                    </div>
+
+                    <button class="remove-btn" onclick="removeItem(${index})">X</button>
+                </div>
+                `;
+            });
+
+            let tax = subtotal * 0.05;
+            let total = subtotal + tax;
+
+            document.getElementById("subtotal").textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById("tax").textContent = `$${tax.toFixed(2)}`;
+            document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+        }
+
+        function changeQty(index, change) {
+            cart[index].quantity += change;
+
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+
+            renderCart();
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            renderCart();
+        }
+
+        function addItem(name, price) {
+            let existing = cart.find(item => item.name === name);
+
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ name, price, quantity: 1 });
+            }
+
+            renderCart();
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Cart is empty!");
+                return;
+            }
+
+            window.location.href = "checkout.html";
+        }
+
+        renderCart();
+    </script>
+
+</body>
 </html>
