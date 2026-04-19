@@ -1,0 +1,99 @@
+/* Shared Container */
+main.container {
+    max-width: 450px;
+    margin: 60px auto;
+    padding: 30px;
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+/* Forms Common Style */
+#loginForm,
+#registerForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+
+/* Headings */
+#loginForm h2,
+#registerForm h2 {
+    text-align: center;
+    color: var(--primary);
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--surface-border);
+}
+
+/* Labels */
+#loginForm label,
+#registerForm label {
+    font-weight: bold;
+    color: var(--text-muted);
+}
+
+/* Inputs */
+#loginForm input,
+#registerForm input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--surface-border);
+    background: transparent;
+    color: var(--text);
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+#loginForm input:focus,
+#registerForm input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 10px var(--primary-glow);
+    outline: none;
+}
+
+/* Buttons */
+#loginForm button,
+#registerForm button {
+    margin-top: 10px;
+    padding: 12px;
+    font-size: 1.1em;
+    font-weight: bold;
+    background: var(--primary);
+    color: var(--text);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#loginForm button:hover,
+#registerForm button:hover {
+    background: var(--secondary);
+    box-shadow: 0 0 12px var(--primary-glow);
+}
+
+/* Links */
+#loginForm p,
+#registerForm p {
+    text-align: center;
+    margin-top: 10px;
+    color: var(--text-muted);
+}
+
+#loginForm a,
+#registerForm a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+#loginForm a:hover,
+#registerForm a:hover {
+    color: var(--secondary);
+    text-decoration: underline;
+}
