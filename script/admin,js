@@ -1,0 +1,14 @@
+function loadDashboard() {
+    document.getElementById('resCount').innerText = 12;
+    document.getElementById('userCount').innerText = 50;
+    document.getElementById('orderCount').innerText = 120;
+}
+function removeUser(btn) {
+    btn.parentElement.remove();
+}
+function deleteRow(btn) {
+    btn.parentElement.parentElement.remove();
+}
+function updateStatus() {
+    document.getElementById('status').innerText = 'Completed';
+}
