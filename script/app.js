@@ -315,9 +315,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (identifierInput) identifierInput.focus();
 
-        loginForm.addEventListener("submit", (e) => {
+        loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             if (isLoggingIn) return;
+
+            if (!identifierInput.value.trim() || !passwordInput.value.trim()) {
+                displayLoginError("Please fill in both fields.");
+                return;
+            }
 
             loginAttempts++;
             if (loginAttempts > 5) {
@@ -335,7 +340,8 @@ document.addEventListener("DOMContentLoaded", () => {
             loginBtn.style.cursor = "wait";
             clearLoginError();
 
-            setTimeout(() => {
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1200));
                 loginBtn.textContent = "Welcome back!";
                 loginBtn.style.backgroundColor = "#34a853";
                 loginBtn.style.color = "white";
@@ -351,7 +357,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 
                 setTimeout(() => window.location.href = targetPage, 1000);
-            }, 1200);
+            } catch (error) {
+                console.error("Login attempt failed."); 
+                displayLoginError("Invalid email/username or password.");
+                isLoggingIn = false;
+                loginBtn.textContent = originalBtnText;
+                loginBtn.disabled = false;
+                loginBtn.style.cursor = "pointer";
+                passwordInput.value = "";
+                passwordInput.focus();
+            }
         });
 
         function displayLoginError(message) {
