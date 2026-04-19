@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNIEats - Login</title>
+    <link rel="stylesheet" href="../styles/colors.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/login.css">
 </head>
+
 <body>
-    <main>
+
+    <main class="container">
         <form action="#" method="POST" id="loginForm">
             <h2>Login Form</h2>
-            
+
             <div>
                 <label for="login_identifier">Email or Username</label>
-                <input type="text" name="login_identifier" id="login_identifier" 
-                       placeholder="Enter your email or username" 
-                       required autocomplete="username">
+                <input type="text" name="login_identifier" id="login_identifier" required>
             </div>
 
             <div>
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" required autocomplete="current-password">
+                <input type="password" name="password" id="password" required>
             </div>
 
-            <!-- Forgot password link -->
-            <div style="margin: 8px 0 12px 0;">
-                <a href="forgot-password.html" style="font-size:0.85rem;">Forgot password?</a>
-            </div>
-
-            <input type="hidden" name="csrf_token" id="csrf_token" value="">
-            
             <button type="submit">Login</button>
 
             <p>Don't have an account? <a href="register.html">Register here</a></p>
+            <p><a href="forgot-password.html">Forgot Password?</a></p>
         </form>
     </main>
-    <script src="app.js"></script>
+
+    <script src="../script/app.js"></script>
 </body>
+
 </html>
