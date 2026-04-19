@@ -156,12 +156,26 @@ if (menuDiv) {
                 if (restaurant.name === "My Corner" && item.name === "Foul Sandwich") {
                     imageName = "foul with olive oil.jpg";
                 }
+                // Special cases for Cinnabon
+                if (restaurant.name === "Cinnabon") {
+                    if (item.name === "Cinnabon Classic") {
+                        imageName = "cinnabon-classic-roll.jpg";
+                    } else if (item.name === "Caramel Roll") {
+                        imageName = "caramel-roll.jpg";
+                    } else if (item.name === "Chocobon") {
+                        imageName = "chocobon.jpg";
+                    }
+                }
                 let subfolder = '';
                 if (restaurant.name === "TBS") {
                     if (category.name === "Beverages") {
                         subfolder = 'beverages/hot/';
                     } else if (category.name === "Sandwiches") {
                         subfolder = 'sandwiches/';
+                    }
+                } else if (restaurant.name === "Cinnabon") {
+                    if (category.name === "Baked Goods") {
+                        subfolder = 'baked goods/';
                     }
                 }
 
