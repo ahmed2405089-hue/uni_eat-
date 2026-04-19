@@ -1,51 +1,59 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNIEats - Register</title>
+    <link rel="stylesheet" href="../styles/colors.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/register.css">
 </head>
+
 <body>
-    <main>
+
+    <main class="container">
         <form action="#" method="POST" id="registerForm">
             <h2>Registration Form</h2>
 
             <div>
                 <label for="username">Username</label>
-                <input type="text" name="username" id="username" pattern="[a-zA-Z0-9_]{3,20}"
-                    title="Username must be 3-20 characters, alphanumeric and underscore only" required
-                    autocomplete="username" maxlength="20" />
-                <span id="usernameCounter" style="font-size:0.8rem; color:#666; margin-left:8px;">0/20</span>
+                <input type="text" name="username" id="username" required>
+                <span id="usernameCounter" style="display:block; text-align:right; font-size:0.8rem; color:#666;">0/20</span>
             </div>
 
             <div>
                 <label for="email">Email Address</label>
-                <!-- Removed pattern attribute – custom JS validation will handle it -->
-                <input type="email" name="email" id="email" 
-                       title="Please enter a valid email address" 
-                       required autocomplete="email" />
+                <input type="email" name="email" id="email" required>
             </div>
 
             <div>
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" minlength="8" maxlength="128"
-                    pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}"
-                    title="Password must be at least 8 characters with uppercase, lowercase, number, and special character"
-                    required autocomplete="new-password" />
+                <input type="password" name="password" id="password" required>
             </div>
 
             <div>
                 <label for="confirm">Confirm Password</label>
-                <input type="password" name="confirm" id="confirm" required autocomplete="new-password" />
+                <input type="password" name="confirm" id="confirm" required>
             </div>
 
-            <input type="hidden" name="csrf_token" id="csrf_token" value="" />
+            <div>
+                <label for="mnumber">Mobile Number</label>
+                <input type="tel" name="mnumber" id="mnumber" required>
+            </div>
 
-            <button type="submit" id="submitBtn" disabled>Register</button>
+            <div>
+                <label for="bdate">Birth Date</label>
+                <input type="date" name="bdate" id="bdate" required>
+            </div>
+
+            <button type="submit" id="submitBtn">Submit</button>
 
             <p>Already have an account? <a href="login.html">Login here</a></p>
         </form>
     </main>
-    <script src="app.js"></script>
+
+    <script src="../script/app.js"></script>
 </body>
+
 </html>
