@@ -1,21 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Checkout - UniEats</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../styles/colors.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/checkout.css">
 </head>
+
 <body>
 
-<h2>Checkout</h2>
+    <div class="navbar">
+        <h2>UniEats</h2>
+        <div class="links">
+            <a href="order-tracking.html">Tracking</a>
+        </div>
+    </div>
 
-<h3>Order Summary</h3>
-<div id="order-summary"></div>
+    <h1>Checkout</h1>
 
-<h3>Total: <span id="total"></span> EGP</h3>
+    <div class="container">
+        <ul id="orderList"></ul>
+        <h3>Total: <span id="total"></span></h3>
 
-<button onclick="placeOrder()">Place Order</button>
+        <button onclick="placeOrder()">Place Order</button>
+    </div>
 
-<script src="script.js"></script>
+    <script src="../script/checkout.js"></script>
 </body>
+
 </html>

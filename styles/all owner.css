@@ -1,0 +1,100 @@
+/* ===== ROOT ===== */
+:root{
+--primary:#6366f1;
+--bg:#0f172a;
+--card:#1e293b;
+--text:#f8fafc;
+}
+
+/* ===== BODY ===== */
+body{
+margin:0;
+font-family:Arial;
+background:var(--bg);
+color:var(--text);
+}
+
+/* ===== LAYOUT ===== */
+.container{
+display:flex;
+min-height:100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+width:220px;
+background:var(--card);
+padding:20px;
+}
+
+.sidebar h2{
+color:var(--primary);
+}
+
+.sidebar a{
+display:block;
+color:white;
+text-decoration:none;
+margin:10px 0;
+padding:8px;
+border-radius:5px;
+}
+
+.sidebar a.active,
+.sidebar a:hover{
+background:var(--primary);
+}
+
+/* ===== MAIN ===== */
+.main{
+flex:1;
+padding:20px;
+}
+
+/* ===== STATS ===== */
+.stats{
+display:flex;
+gap:15px;
+}
+
+.card{
+flex:1;
+background:var(--card);
+padding:20px;
+border-radius:10px;
+text-align:center;
+}
+
+/* ===== INPUTS ===== */
+input{
+padding:10px;
+margin:5px;
+background:var(--card);
+border:1px solid #333;
+color:white;
+}
+
+/* ===== BUTTON ===== */
+button{
+padding:10px 15px;
+background:var(--primary);
+border:none;
+color:white;
+cursor:pointer;
+border-radius:5px;
+}
+
+/* ===== LIST ===== */
+ul{
+list-style:none;
+padding:0;
+}
+
+li{
+background:var(--card);
+padding:10px;
+margin:10px 0;
+border-radius:5px;
+display:flex;
+justify-content:space-between;
+}

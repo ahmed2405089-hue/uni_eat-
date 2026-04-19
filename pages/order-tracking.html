@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Order Tracking - UniEats</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../styles/colors.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/order-tracking.css">
 </head>
+
 <body>
 
-<h2>Track Your Order</h2>
+    <div class="navbar">
+        <h2>UniEats</h2>
+    </div>
 
-<div id="status-container">
-    <p id="status">Order Placed</p>
-</div>
+    <h1>Tracking 📦</h1>
 
-<button onclick="nextStatus()">Update Status</button>
+    <div class="container">
+        <h2 id="status"></h2>
+    </div>
 
-<script src="tracking.js"></script>
+    <script src="../script/tracking.js"></script>
 </body>
+
 </html>

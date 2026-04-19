@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNIEats - Register</title>
+    <link rel="stylesheet" href="../styles/colors.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/register.css">
+</head>
+
+<body>
+
+    <main class="container">
+        <form action="#" method="POST" id="registerForm">
+            <h2>Registration Form</h2>
+
+            <div>
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username" required>
+                <span id="usernameCounter" style="display:block; text-align:right; font-size:0.8rem; color:#666;">0/20</span>
+            </div>
+
+            <div>
+                <label for="email">Email Address</label>
+                <input type="email" name="email" id="email" required>
+            </div>
+
+            <div>
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" required>
+            </div>
+
+            <div>
+                <label for="confirm">Confirm Password</label>
+                <input type="password" name="confirm" id="confirm" required>
+            </div>
+
+            <div>
+                <label for="mnumber">Mobile Number</label>
+                <input type="tel" name="mnumber" id="mnumber" required>
+            </div>
+
+            <div>
+                <label for="bdate">Birth Date</label>
+                <input type="date" name="bdate" id="bdate" required>
+            </div>
+
+            <button type="submit" id="submitBtn">Submit</button>
+
+            <p>Already have an account? <a href="login.html">Login here</a></p>
+        </form>
+    </main>
+
+    <script src="../script/app.js"></script>
+</body>
+
+</html>

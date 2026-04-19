@@ -1,22 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Profile - UniEats</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../styles/colors.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/profile.css">
 </head>
+
 <body>
 
-<h2>My Profile</h2>
+    <div class="navbar">
+        <h2>UniEats</h2>
+    </div>
 
-<form onsubmit="saveProfile(event)">
-    <input type="text" id="name" placeholder="Name">
-    <input type="email" id="email" placeholder="Email">
-    <input type="text" id="phone" placeholder="Phone">
+    <h1>Profile</h1>
 
-    <button type="submit">Save</button>
-</form>
+    <div class="container">
+        <input id="name" placeholder="Name">
+        <input id="email" placeholder="Email">
 
-<script src="profile.js"></script>
+        <button onclick="save()">Save</button>
+    </div>
+
+    <script src="../script/profile.js"></script>
 </body>
+
 </html>
