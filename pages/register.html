@@ -1,59 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNIEats - Register</title>
     <link rel="stylesheet" href="../styles/colors.css">
-    <link rel="stylesheet" href="../styles/global.css">
-    <link rel="stylesheet" href="../styles/register.css">
+    <link rel="stylesheet" href="../styles/app.css">
 </head>
-
 <body>
 
-    <main class="container">
-        <form action="#" method="POST" id="registerForm">
-            <h2>Registration Form</h2>
+    <div class="split-layout">
+        
+        <div class="form-panel">
+            <main class="container">
+                <form action="#" method="POST" id="registerForm">
+                    <h2>Create Account</h2>
 
-            <div>
-                <label for="username">Username</label>
-                <input type="text" name="username" id="username" required>
-                <span id="usernameCounter" style="display:block; text-align:right; font-size:0.8rem; color:#666;">0/20</span>
+                    <div class="input-group">
+                        <div class="input-header">
+                            <label for="username">Username</label>
+                            <span id="usernameCounter">0/20</span>
+                        </div>
+                        <input type="text" name="username" id="username" placeholder="Choose a username" required>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-header"><label for="email">Email Address</label></div>
+                        <input type="email" name="email" id="email" placeholder="name@example.com" required>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-header"><label for="password">Password</label></div>
+                        <input type="password" name="password" id="password" placeholder="Create a secure password" required>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-header"><label for="confirm">Confirm Password</label></div>
+                        <input type="password" name="confirm" id="confirm" placeholder="Repeat your password" required>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-header"><label for="mnumber">Mobile Number</label></div>
+                        <input type="tel" name="mnumber" id="mnumber" placeholder="+20 10 0000 0000" required>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-header"><label for="bdate">Birth Date</label></div>
+                        <input type="date" name="bdate" id="bdate" required>
+                    </div>
+
+                    <button type="submit" id="submitBtn">Create Account</button>
+
+                    <div class="auth-links">
+                        <p>Already have an account? <a href="login.html">Login here</a></p>
+                    </div>
+                </form>
+            </main>
+        </div>
+
+        <div class="brand-panel">
+            <div class="brand-content">
+                <h1>UNIEats</h1>
+                <p>Your ultimate campus dining experience.</p>
             </div>
-
-            <div>
-                <label for="email">Email Address</label>
-                <input type="email" name="email" id="email" required>
-            </div>
-
-            <div>
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" required>
-            </div>
-
-            <div>
-                <label for="confirm">Confirm Password</label>
-                <input type="password" name="confirm" id="confirm" required>
-            </div>
-
-            <div>
-                <label for="mnumber">Mobile Number</label>
-                <input type="tel" name="mnumber" id="mnumber" required>
-            </div>
-
-            <div>
-                <label for="bdate">Birth Date</label>
-                <input type="date" name="bdate" id="bdate" required>
-            </div>
-
-            <button type="submit" id="submitBtn">Submit</button>
-
-            <p>Already have an account? <a href="login.html">Login here</a></p>
-        </form>
-    </main>
+        </div>
+        
+    </div>
 
     <script src="../script/app.js"></script>
 </body>
-
 </html>
