@@ -1,99 +1,327 @@
-/* Shared Container */
-main.container {
-    max-width: 450px;
-    margin: 60px auto;
-    padding: 30px;
-    background: var(--surface);
-    border: 1px solid var(--surface-border);
-    border-radius: 15px;
-    backdrop-filter: blur(10px);
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-/* Forms Common Style */
-#loginForm,
-#registerForm {
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background); /* Dark premium background */
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* =========================================
+   CENTERED STACKED LAYOUT (Branding on Top, Form in Middle)
+   ========================================= */
+.split-layout {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-    text-align: left;
+    flex-direction: column-reverse; 
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 40px 20px;
+    gap: 30px; 
 }
 
-/* Headings */
-#loginForm h2,
-#registerForm h2 {
+/* =========================================
+   TOP SECTION: BRANDING
+   ========================================= */
+.brand-panel {
+    flex: none;
+    width: 100%;
+    max-width: 600px;
+    background: transparent; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.brand-content {
     text-align: center;
-    color: var(--primary);
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--surface-border);
+    width: 100%;
+    animation: fadeSlideDown 0.6s ease-out forwards;
 }
 
-/* Labels */
-#loginForm label,
-#registerForm label {
-    font-weight: bold;
+@keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.brand-content h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #ffffff; 
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+}
+
+.brand-content p {
+    font-size: 1.1rem;
     color: var(--text-muted);
 }
 
-/* Inputs */
-#loginForm input,
-#registerForm input {
+/* =========================================
+   MIDDLE SECTION: THE FORM / CONTAINER
+   ========================================= */
+.form-panel {
+    flex: none; 
     width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid var(--surface-border);
-    background: transparent;
+    max-width: 500px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent; 
+    padding: 0;
+    z-index: 5;
+}
+
+/* Base Container Styling */
+.container {
+    width: 100%;
+    background: rgba(30, 41, 59, 0.4); 
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    animation: fadeSlideUp 0.6s ease-out forwards; 
+}
+
+/* Standalone container centering (For Forgot/Reset pages) */
+main.container {
+    max-width: 500px;
+    margin: 10vh auto; /* Centers the card without needing the split-layout wrapper */
+}
+
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
     color: var(--text);
-    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Standalone paragraphs (Forgot Password instructions & Back Links) */
+.container > p {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.container > p:last-of-type {
+    margin-top: 25px;
+    margin-bottom: 0;
+}
+
+.container > p a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
     transition: 0.3s;
 }
 
-#loginForm input:focus,
-#registerForm input:focus {
+.container > p a:hover {
+    color: var(--secondary);
+}
+
+/* =========================================
+   FORM ELEMENTS (WHITE / LIGHT GREY INPUTS)
+   ========================================= */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#usernameCounter {
+    font-size: 0.85rem; 
+    color: var(--text-muted);
+}
+
+/* Target both nested inputs (login) AND direct inputs (forgot/reset) */
+.input-group input,
+.container form input {
+    width: 100%;
+    padding: 16px;
+    background: #f1f5f9; 
+    border: 1px solid #cbd5e1; 
+    border-radius: 12px;
+    color: #0f172a; 
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus,
+.container form input:focus {
+    background: #ffffff; 
     border-color: var(--primary);
-    box-shadow: 0 0 10px var(--primary-glow);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
     outline: none;
 }
 
-/* Buttons */
-#loginForm button,
-#registerForm button {
-    margin-top: 10px;
-    padding: 12px;
-    font-size: 1.1em;
-    font-weight: bold;
-    background: var(--primary);
-    color: var(--text);
+.input-group input::placeholder,
+.container form input::placeholder {
+    color: #94a3b8; 
+}
+
+/* Reset Password matching error message */
+#match-error {
+    margin-top: -10px;
+    margin-bottom: 5px;
+    padding-left: 5px;
+    color: var(--danger, #ef4444) !important;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 18px;
+    margin-top: 15px;
+    border-radius: 12px;
     border: none;
-    border-radius: 10px;
+    background: var(--primary); /* Solid minimalist purple */
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s ease;
 }
 
-#loginForm button:hover,
-#registerForm button:hover {
-    background: var(--secondary);
-    box-shadow: 0 0 12px var(--primary-glow);
+button[type="submit"]:hover:not(:disabled) {
+    transform: translateY(-2px);
+    background: #4f46e5;
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
 }
 
-/* Links */
-#loginForm p,
-#registerForm p {
-    text-align: center;
-    margin-top: 10px;
+button[type="submit"]:disabled {
+    background: var(--surface-border);
     color: var(--text-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
-#loginForm a,
-#registerForm a {
+.auth-links {
+    margin-top: 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.auth-links a {
     color: var(--primary);
     text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s;
+    font-weight: 600;
+    transition: 0.3s; 
 }
 
-#loginForm a:hover,
-#registerForm a:hover {
+.auth-links a:hover {
     color: var(--secondary);
-    text-decoration: underline;
+}
+
+.error-msg {
+    color: var(--danger) !important;
+    font-size: 0.85rem;
+    margin-top: 6px;
+}
+
+/* Show Password Button - Adjusted for light background */
+.input-group > button[type="button"] {
+    position: absolute;
+    right: 15px;
+    top: 42px;
+    background: transparent;
+    border: none;
+    color: #64748b; 
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s; 
+}
+
+.input-group > button[type="button"]:hover {
+    color: var(--primary);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    .brand-content h1 {
+        font-size: 2.8rem;
+    }
+    .container {
+        padding: 30px 20px;
+    }
+    main.container {
+        margin: 5vh 20px;
+        width: auto;
+    }
+    main.container {
+    width: 100%;
+    max-width: 500px;
+    margin: 10vh auto; 
+    background: rgba(30, 41, 59, 0.4); 
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+}
+
+/* Styles the text paragraphs inside the forgot/reset cards */
+.container > p {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* Styles the 'Back to Login' link */
+.container > p a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Ensures inputs inside the form are styled even without the .input-group wrapper */
+.container form input {
+    width: 100%;
+    padding: 16px;
+    background: #f1f5f9; 
+    border: 1px solid #cbd5e1; 
+    border-radius: 12px;
+    color: #0f172a; 
+    margin-bottom: 10px;
+}
 }
