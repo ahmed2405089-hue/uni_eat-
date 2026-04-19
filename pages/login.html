@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNIEats - Login</title>
     <link rel="stylesheet" href="../styles/app.css">
+    <script>
+function handleLogin(event) {
+    event.preventDefault(); // stop page refresh
+
+    let role = document.getElementById("userRole").value;
+
+    // Simple role-based navigation
+    if (role === "student") {
+        window.location.href = "student-home.html";
+    } 
+    else if (role === "owner") {
+        window.location.href = "owner-dashboard.html";
+    } 
+    else if (role === "admin") {
+        window.location.href = "admin-dashboard.html";
+    }
+}
+</script>
 </head>
 <body>
 
