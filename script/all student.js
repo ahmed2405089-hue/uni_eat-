@@ -188,31 +188,71 @@ if (menuDiv) {
                 let itemDiv = document.createElement("div");
                 itemDiv.className = "menu-item";
 
-                let ext = restaurant.name === "Conitta" ? "webp" : "jpg";
-                let imageName = item.name.toLowerCase().replace(/ /g, ' ') + '.' + ext; // keep spaces? No, files have spaces.
+                function getItemImagePath(restaurant, category, item) {
+                    const basePath = `../assets/${restaurant.name.toLowerCase().replace(/ /g, '')}/`;
 
-                // Files have spaces, so keep as is, but toLowerCase.
-                imageName = restaurant.name === "Conitta" ? item.name.replace(/ /g, '_') + '.' + ext : item.name.toLowerCase() + '.' + ext;
-                // Special case for TBS Hot Chocolate
-                if (restaurant.name === "TBS" && item.name === "Hot Chocolate") {
-                    imageName = "hot chcolate.jpg";
-                }
-                // Special case for My Corner Foul Sandwich
-                if (restaurant.name === "My Corner" && item.name === "Foul Sandwich") {
-                    imageName = "foul with olive oil.jpg";
-                }
-                let subfolder = '';
-                if (restaurant.name === "TBS") {
-                    if (category.name === "Beverages") {
-                        subfolder = 'beverages/hot/';
-                    } else if (category.name === "Sandwiches") {
-                        subfolder = 'sandwiches/';
+                    if (restaurant.name === "Cinnabon") {
+                        const cinnabonMap = {
+                            "Cinnabon Classic": "cinnabon-classic-roll.jpg",
+                            "Chocobon": "chocobon.jpg",
+                            "Caramel Roll": "caramel-roll.jpg"
+                        };
+                        return `${basePath}baked goods/${cinnabonMap[item.name] || item.name.toLowerCase().replace(/ /g, '-') + '.jpg'}`;
                     }
+
+                    if (restaurant.name === "TBS") {
+                        if (category.name === "Beverages") {
+                            const tbsBeverageMap = {
+                                "Latte": "cold/hot/latte.webp",
+                                "Mocha": "cold/hot/mocha.webp",
+                                "Hot Chocolate": "cold/hot/hot chcolate.webp"
+                            };
+                            return `${basePath}beverages/${tbsBeverageMap[item.name] || item.name.toLowerCase().replace(/ /g, ' ') + '.webp'}`;
+                        }
+                        if (category.name === "Sandwiches") {
+                            return `${basePath}sandwiches/${item.name.toLowerCase()}.jpg`;
+                        }
+                    }
+
+                    if (restaurant.name === "Gyro") {
+                        const gyroMap = {
+                            "Crispy Chicken Sandwich": "crispy chicken sandwich.jpg",
+                            "Greek Shawerma": "greek shawerma.webp",
+                            "Shawerma Meal": "shawerma meal.webp",
+                            "Greek Salad": "greek salad.webp",
+                            "Gyro Fries": "gyro fires.jpg"
+                        };
+                        return `${basePath}${gyroMap[item.name] || item.name.toLowerCase().replace(/ /g, ' ') + '.jpg'}`;
+                    }
+
+                    if (restaurant.name === "My Corner") {
+                        const myCornerMap = {
+                            "Cottage Cheese Sandwich": "cottage cheese sandwich.jpg",
+                            "Crispy Chicken Crepe": "crispy chicken crepe.jpg",
+                            "Foul Sandwich": "foul with olive oil.jpg"
+                        };
+                        return `${basePath}${myCornerMap[item.name] || item.name.toLowerCase().replace(/ /g, ' ') + '.jpg'}`;
+                    }
+
+                    if (restaurant.name === "Conitta") {
+                        const conittaMap = {
+                            "Brownie": "Brownie.webp",
+                            "Cookie": "Cookie.webp",
+                            "Soft Ice Cream": "Soft_Ice_Cream.webp"
+                        };
+                        return `${basePath}${conittaMap[item.name] || item.name.toLowerCase().replace(/ /g, '_') + '.webp'}`;
+                    }
+
+                    let ext = restaurant.name === "Conitta" ? "webp" : "jpg";
+                    let fileName = item.name.toLowerCase().replace(/ /g, ' ') + '.' + ext;
+                    return `${basePath}${fileName}`;
                 }
+
+                let imagePath = getItemImagePath(restaurant, category, item);
 
                 itemDiv.innerHTML = `
                     <div class="item-info">
-                        <img src="../assets/${restaurant.name.toLowerCase().replace(' ', '')}/${subfolder}${imageName}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover; margin-bottom: 10px;" onerror="this.src='../assets/Gemini_Generated_Image_40czvt40czvt40cz.png'">
+                        <img src="${imagePath}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover; margin-bottom: 10px;" onerror="this.src='../assets/Gemini_Generated_Image_40czvt40czvt40cz.png'">
                         <h4>${item.name}</h4>
                         <p class="price">$${item.price.toFixed(2)}</p>
                     </div>
