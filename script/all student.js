@@ -92,9 +92,19 @@ let restaurants = [
    RESTAURANTS PAGE
 ========================= */
 let restDiv = document.getElementById("restaurants");
+let searchInput = document.getElementById("restaurant-search");
+let searchButton = document.getElementById("search-button");
 
-if (restDiv) {
-    restaurants.forEach(r => {
+function renderRestaurants(list) {
+    if (!restDiv) return;
+    restDiv.innerHTML = "";
+
+    if (list.length === 0) {
+        restDiv.innerHTML = "<p class='no-results'>No restaurants or items found.</p>";
+        return;
+    }
+
+    list.forEach(r => {
         let logoExt = r.name === "Cinnabon" ? "jpeg" : (r.name === "Conitta" ? "png" : "jpg");
         let div = document.createElement("div");
         div.className = "restaurant-card";
@@ -116,8 +126,43 @@ if (restDiv) {
 
         restDiv.appendChild(div);
     });
+}
+
+function searchRestaurants() {
+    if (!searchInput || !restDiv) return;
+    const term = searchInput.value.trim().toLowerCase();
+    if (!term) {
+        renderRestaurants(restaurants);
+        return;
+    }
+
+    const filtered = restaurants.filter(r => {
+        const inName = r.name.toLowerCase().includes(term);
+        const inItems = r.categories.some(category =>
+            category.items.some(item => item.name.toLowerCase().includes(term))
+        );
+        return inName || inItems;
+    });
+
+    renderRestaurants(filtered);
+}
+
+if (restDiv) {
+    renderRestaurants(restaurants);
 } else {
     console.log("All menu div not found");
+}
+
+if (searchButton) {
+    searchButton.addEventListener("click", searchRestaurants);
+}
+
+if (searchInput) {
+    searchInput.addEventListener("keyup", (e) => {
+        if (e.key === "Enter") {
+            searchRestaurants();
+        }
+    });
 }
 
 /* =========================
@@ -185,13 +230,17 @@ if (menuDiv) {
    CART SYSTEM
 ========================= */
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
+cart = cart.map(item => ({
+    ...item,
+    quantity: item.quantity ?? item.qty ?? 1
+}));
 
 function addToCart(name, price) {
     let existing = cart.find(item => item.name === name);
     if (existing) {
-        existing.qty += 1;
+        existing.quantity += 1;
     } else {
-        cart.push({ name, price: parseFloat(price), qty: 1 });
+        cart.push({ name, price: parseFloat(price), quantity: 1 });
     }
     saveCart();
     alert("Added to cart ✅");
@@ -213,7 +262,7 @@ function loadCart() {
     let subtotal = 0;
 
     cart.forEach((item, index) => {
-        subtotal += item.price * item.qty;
+        subtotal += item.price * item.quantity;
 
         let div = document.createElement("div");
         div.className = "cart-item";
@@ -225,11 +274,11 @@ function loadCart() {
             </div>
             <div class="item-quantity">
                 <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
-                <span>${item.qty}</span>
+                <span>${item.quantity}</span>
                 <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
             </div>
             <div class="item-total">
-                $${(item.price * item.qty).toFixed(2)}
+                $${(item.price * item.quantity).toFixed(2)}
             </div>
             <button class="remove-btn" onclick="removeItem(${index})">X</button>
         `;
@@ -247,8 +296,8 @@ function removeItem(index) {
 }
 
 function changeQty(index, delta) {
-    cart[index].qty += delta;
-    if (cart[index].qty <= 0) {
+    cart[index].quantity += delta;
+    if (cart[index].quantity <= 0) {
         cart.splice(index, 1);
     }
     saveCart();

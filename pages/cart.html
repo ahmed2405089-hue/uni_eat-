@@ -54,6 +54,10 @@
 
     <script>
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        cart = cart.map(item => ({
+            ...item,
+            quantity: item.quantity ?? item.qty ?? 1
+        }));
 
         function renderCart() {
             const container = document.getElementById("cart-items");
