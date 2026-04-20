@@ -1,4 +1,4 @@
-let restaurants = [
+window.restaurants = [
     {
         id: 1,
         name: "Gyro",
@@ -165,6 +165,15 @@ if (searchInput) {
     });
 }
 
+function getRestaurantMenus() {
+    return JSON.parse(localStorage.getItem("restaurantMenus")) || {};
+}
+
+function getRestaurantMenu(restaurantId) {
+    const menus = getRestaurantMenus();
+    return menus[restaurantId] || [];
+}
+
 /* =========================
    RESTAURANT DETAILS PAGE
 ========================= */
@@ -178,92 +187,118 @@ if (menuDiv) {
     if (restaurant) {
         document.getElementById("rest-name").textContent = restaurant.name;
 
-        restaurant.categories.forEach(category => {
+        function getItemImagePath(restaurant, category, item) {
+            const basePath = `../assets/${restaurant.name.toLowerCase().replace(/ /g, '')}/`;
+            const categoryName = category ? category.name : "";
+
+            if (restaurant.name === "Cinnabon") {
+                const cinnabonMap = {
+                    "Cinnabon Classic": "cinnabon-classic-roll.jpg",
+                    "Chocobon": "chocobon.jpg",
+                    "Caramel Roll": "caramel-roll.jpg"
+                };
+                return `${basePath}baked goods/${cinnabonMap[item.name] || item.name.toLowerCase().replace(/ /g, '-') + '.jpg'}`;
+            }
+
+            if (restaurant.name === "TBS") {
+                if (item.name === "Hot Chocolate") {
+                    return `${basePath}beverages/cold/hot/hot chcolate.webp`;
+                }
+                if (item.name === "Latte") {
+                    return `${basePath}beverages/cold/hot/latte.webp`;
+                }
+                if (item.name === "Mocha") {
+                    return `${basePath}beverages/cold/hot/mocha.webp`;
+                }
+                if (item.name.toLowerCase().includes("sandwich")) {
+                    return `${basePath}sandwiches/${item.name.toLowerCase()}.jpg`;
+                }
+                return `${basePath}beverages/cold/${item.name.toLowerCase().replace(/ /g, ' ')}.webp`;
+            }
+
+            if (restaurant.name === "Gyro") {
+                const gyroMap = {
+                    "Crispy Chicken Sandwich": "crispy chicken sandwich.jpg",
+                    "Greek Shawerma": "greek shawerma.webp",
+                    "Shawerma Meal": "shawerma meal.webp",
+                    "Greek Salad": "greek salad.webp",
+                    "Gyro Fries": "gyro fires.jpg"
+                };
+                return `${basePath}${gyroMap[item.name] || item.name.toLowerCase().replace(/ /g, ' ') + '.jpg'}`;
+            }
+
+            if (restaurant.name === "My Corner") {
+                const myCornerMap = {
+                    "Cottage Cheese Sandwich": "cottage cheese sandwich.jpg",
+                    "Crispy Chicken Crepe": "crispy chicken crepe.jpg",
+                    "Foul Sandwich": "foul with olive oil.jpg"
+                };
+                return `${basePath}${myCornerMap[item.name] || item.name.toLowerCase().replace(/ /g, ' ') + '.jpg'}`;
+            }
+
+            if (restaurant.name === "Conitta") {
+                const conittaMap = {
+                    "Brownie": "Brownie.webp",
+                    "Cookie": "Cookie.webp",
+                    "Soft Ice Cream": "Soft_Ice_Cream.webp"
+                };
+                return `${basePath}${conittaMap[item.name] || item.name.toLowerCase().replace(/ /g, '_') + '.webp'}`;
+            }
+
+            let ext = restaurant.name === "Conitta" ? "webp" : "jpg";
+            let fileName = item.name.toLowerCase().replace(/ /g, ' ') + '.' + ext;
+            return `${basePath}${fileName}`;
+        }
+
+        const dynamicMenu = getRestaurantMenu(restaurant.id);
+        if (dynamicMenu.length) {
             let catDiv = document.createElement("div");
             catDiv.className = "menu-category";
+            catDiv.innerHTML = `<h4>Available Menu</h4>`;
 
-            catDiv.innerHTML = `<h4>${category.name}</h4>`;
-
-            category.items.forEach(item => {
+            dynamicMenu.forEach(item => {
                 let itemDiv = document.createElement("div");
                 itemDiv.className = "menu-item";
 
-                function getItemImagePath(restaurant, category, item) {
-                    const basePath = `../assets/${restaurant.name.toLowerCase().replace(/ /g, '')}/`;
-
-                    if (restaurant.name === "Cinnabon") {
-                        const cinnabonMap = {
-                            "Cinnabon Classic": "cinnabon-classic-roll.jpg",
-                            "Chocobon": "chocobon.jpg",
-                            "Caramel Roll": "caramel-roll.jpg"
-                        };
-                        return `${basePath}baked goods/${cinnabonMap[item.name] || item.name.toLowerCase().replace(/ /g, '-') + '.jpg'}`;
-                    }
-
-                    if (restaurant.name === "TBS") {
-                        if (category.name === "Beverages") {
-                            const tbsBeverageMap = {
-                                "Latte": "cold/hot/latte.webp",
-                                "Mocha": "cold/hot/mocha.webp",
-                                "Hot Chocolate": "cold/hot/hot chcolate.webp"
-                            };
-                            return `${basePath}beverages/${tbsBeverageMap[item.name] || item.name.toLowerCase().replace(/ /g, ' ') + '.webp'}`;
-                        }
-                        if (category.name === "Sandwiches") {
-                            return `${basePath}sandwiches/${item.name.toLowerCase()}.jpg`;
-                        }
-                    }
-
-                    if (restaurant.name === "Gyro") {
-                        const gyroMap = {
-                            "Crispy Chicken Sandwich": "crispy chicken sandwich.jpg",
-                            "Greek Shawerma": "greek shawerma.webp",
-                            "Shawerma Meal": "shawerma meal.webp",
-                            "Greek Salad": "greek salad.webp",
-                            "Gyro Fries": "gyro fires.jpg"
-                        };
-                        return `${basePath}${gyroMap[item.name] || item.name.toLowerCase().replace(/ /g, ' ') + '.jpg'}`;
-                    }
-
-                    if (restaurant.name === "My Corner") {
-                        const myCornerMap = {
-                            "Cottage Cheese Sandwich": "cottage cheese sandwich.jpg",
-                            "Crispy Chicken Crepe": "crispy chicken crepe.jpg",
-                            "Foul Sandwich": "foul with olive oil.jpg"
-                        };
-                        return `${basePath}${myCornerMap[item.name] || item.name.toLowerCase().replace(/ /g, ' ') + '.jpg'}`;
-                    }
-
-                    if (restaurant.name === "Conitta") {
-                        const conittaMap = {
-                            "Brownie": "Brownie.webp",
-                            "Cookie": "Cookie.webp",
-                            "Soft Ice Cream": "Soft_Ice_Cream.webp"
-                        };
-                        return `${basePath}${conittaMap[item.name] || item.name.toLowerCase().replace(/ /g, '_') + '.webp'}`;
-                    }
-
-                    let ext = restaurant.name === "Conitta" ? "webp" : "jpg";
-                    let fileName = item.name.toLowerCase().replace(/ /g, ' ') + '.' + ext;
-                    return `${basePath}${fileName}`;
-                }
-
-                let imagePath = getItemImagePath(restaurant, category, item);
-
+                let imagePath = getItemImagePath(restaurant, null, item);
                 itemDiv.innerHTML = `
                     <div class="item-info">
                         <img src="${imagePath}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover; margin-bottom: 10px;" onerror="this.src='../assets/Gemini_Generated_Image_40czvt40czvt40cz.png'">
                         <h4>${item.name}</h4>
-                        <p class="price">$${item.price.toFixed(2)}</p>
+                        <p class="price">$${parseFloat(item.price).toFixed(2)}</p>
                     </div>
                     <button class="add-to-cart-btn" onclick="addToCart('${item.name}', ${item.price})">Add</button>
                 `;
 
                 catDiv.appendChild(itemDiv);
             });
-
             menuDiv.appendChild(catDiv);
-        });
+        } else {
+            restaurant.categories.forEach(category => {
+                let catDiv = document.createElement("div");
+                catDiv.className = "menu-category";
+
+                catDiv.innerHTML = `<h4>${category.name}</h4>`;
+
+                category.items.forEach(item => {
+                    let itemDiv = document.createElement("div");
+                    itemDiv.className = "menu-item";
+
+                    let imagePath = getItemImagePath(restaurant, category, item);
+                    itemDiv.innerHTML = `
+                        <div class="item-info">
+                            <img src="${imagePath}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover; margin-bottom: 10px;" onerror="this.src='../assets/Gemini_Generated_Image_40czvt40czvt40cz.png'">
+                            <h4>${item.name}</h4>
+                            <p class="price">$${item.price.toFixed(2)}</p>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('${item.name}', ${item.price})">Add</button>
+                    `;
+
+                    catDiv.appendChild(itemDiv);
+                });
+                menuDiv.appendChild(catDiv);
+            });
+        }
     } else {
         document.getElementById("rest-name").textContent = "Restaurant Not Found";
         menuDiv.innerHTML = "<p>Please select a valid restaurant.</p>";
