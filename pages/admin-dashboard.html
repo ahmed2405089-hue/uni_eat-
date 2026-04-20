@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html>
 
 <head>
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="styles/admin.css">
+    <link rel="stylesheet" href="../styles/admin.css">
     <link rel="stylesheet" href="../styles/style.css">
 </head>
 
@@ -12,11 +13,23 @@
         <h2>Admin Dashboard</h2>
     </header>
     <div class="container">
-        <div class="card">Total Restaurants<br><b id="resCount"></b></div>
-        <div class="card">Total Users<br><b id="userCount"></b></div>
-        <div class="card">Total Orders<br><b id="orderCount"></b></div>
+        <div class="card">
+            Total Restaurants
+            <br><b id="resCount"></b>
+            <button onclick="window.location.href='manage-restaurants.html'">Manage</button>
+        </div>
+        <div class="card">
+            Total Users
+            <br><b id="userCount"></b>
+            <button onclick="window.location.href='manage-users.html'">Manage</button>
+        </div>
+        <div class="card">
+            Total Orders
+            <br><b id="orderCount"></b>
+            <button onclick="window.location.href='all-orders.html'">View All</button>
+        </div>
     </div>
-    <script src="script/admin,js"></script>
+    <script src="../script/admin.js"></script>
 </body>
 
 </html>
