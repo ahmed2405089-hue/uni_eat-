@@ -123,14 +123,41 @@ function displayMenu(){
         list.innerHTML += `
             <li>
                 ${i.name} - $${parseFloat(i.price).toFixed(2)}
-                <button onclick="editItem(${i.id})">Edit</button>
-                <button onclick="removeItem(${i.id})">Remove</button>
+                <button onclick="promptPrice('${i.id}')">Change Price</button>
+                <button onclick="removeItem('${i.id}')">Remove</button>
             </li>
         `;
     });
 }
 
+function promptPrice(id){
+    const newPrice = prompt("Enter new price:");
+    if (newPrice === null) return;
+    updatePrice(id, newPrice);
+}
+
+function updatePrice(id, newPrice){
+    const price = parseFloat(newPrice);
+    if (isNaN(price) || price < 0) {
+        alert("Please enter a valid positive price.");
+        return;
+    }
+
+    const restaurantId = getCurrentRestaurantId();
+    if (!restaurantId) return;
+
+    let menu = getRestaurantMenu(restaurantId);
+    const item = menu.find(i => i.id == id);
+    if (item) {
+        item.price = price.toFixed(2);
+        saveRestaurantMenu(restaurantId, menu);
+        displayMenu();
+    }
+}
+
 function removeItem(id){
+    if (!confirm("Are you sure you want to delete this item?")) return;
+
     const restaurantId = getCurrentRestaurantId();
     if (!restaurantId) return;
 
