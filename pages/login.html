@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNIEats - Login</title>
-    <link rel="stylesheet" href="../styles/colors.css">
     <link rel="stylesheet" href="../styles/app.css">
+     <link rel="stylesheet" href="styles/colors.css">
 </head>
 <body>
 
@@ -24,6 +24,15 @@
                     <div class="input-group">
                         <div class="input-header"><label for="password">Password</label></div>
                         <input type="password" name="password" id="password" placeholder="Enter your password" required>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-header"><label for="userRole">Login As</label></div>
+                        <select name="userRole" id="userRole" required class="role-select">
+                            <option value="student">Student</option>
+                            <option value="owner">Restaurant Owner</option>
+                            <option value="admin">Admin</option>
+                        </select>
                     </div>
 
                     <button type="submit">Login</button>

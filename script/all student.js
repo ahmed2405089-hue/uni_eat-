@@ -260,7 +260,28 @@ if (menuDiv) {
                 let itemDiv = document.createElement("div");
                 itemDiv.className = "menu-item";
 
-                let imagePath = getItemImagePath(restaurant, null, item);
+                let ext = restaurant.name === "Conitta" ? "webp" : "jpg";
+                let imageName = item.name.toLowerCase().replace(/ /g, ' ') + '.' + ext; // keep spaces? No, files have spaces.
+
+                // Files have spaces, so keep as is, but toLowerCase.
+                imageName = restaurant.name === "Conitta" ? item.name.replace(/ /g, '_') + '.' + ext : item.name.toLowerCase() + '.' + ext;
+                // Special case for TBS Hot Chocolate
+                if (restaurant.name === "TBS" && item.name === "Hot Chocolate") {
+                    imageName = "hot chcolate.jpg";
+                }
+                // Special case for My Corner Foul Sandwich
+                if (restaurant.name === "My Corner" && item.name === "Foul Sandwich") {
+                    imageName = "foul with olive oil.jpg";
+                }
+                let subfolder = '';
+                if (restaurant.name === "TBS") {
+                    if (category.name === "Beverages") {
+                        subfolder = 'beverages/hot/';
+                    } else if (category.name === "Sandwiches") {
+                        subfolder = 'sandwiches/';
+                    }
+                }
+
                 itemDiv.innerHTML = `
                     <div class="item-info">
                         <img src="${imagePath}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover; margin-bottom: 10px;" onerror="this.src='../assets/Gemini_Generated_Image_40czvt40czvt40cz.png'">
