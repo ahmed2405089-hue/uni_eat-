@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -7,19 +8,18 @@
     <link rel="stylesheet" href="../styles/colors.css">
 </head>
 
-<body onload="displayRestaurants()">
+<body>
     <h2>Manage Restaurants</h2>
     <button onclick="window.location.href='admin-dashboard.html'">Back to Dashboard</button>
-    <table id="restaurants-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Restaurants will be loaded here -->
-        </tbody>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td>Pizza Place</td>
+            <td><button onclick="removeItem(this)">Delete</button></td>
+        </tr>
     </table>
     <script src="../script/admin.js"></script>
 </body>
