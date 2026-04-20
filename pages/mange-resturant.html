@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -8,18 +9,44 @@
 </head>
 
 <body>
-    <h2>Manage Restaurants</h2>
-    <button onclick="window.location.href='admin-dashboard.html'">Back to Dashboard</button>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Action</th>
-        </tr>
-        <tr>
-            <td>Pizza Place</td>
-            <td><button onclick="removeItem(this)">Delete</button></td>
-        </tr>
-    </table>
+    <header>
+        <h2>Manage Restaurants</h2>
+    </header>
+    <div class="container">
+        <button onclick="window.location.href='admin-dashboard.html'">← Back to Dashboard</button>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+            <tr>
+                <td>Gyro</td>
+                <td>Delicious food</td>
+                <td><button class="delete" onclick="removeItem(this)">Delete</button></td>
+            </tr>
+            <tr>
+                <td>TBS - The Bakery Shop</td>
+                <td>Delicious food</td>
+                <td><button class="delete" onclick="removeItem(this)">Delete</button></td>
+            </tr>
+            <tr>
+                <td>Cinnabon</td>
+                <td>Delicious food</td>
+                <td><button class="delete" onclick="removeItem(this)">Delete</button></td>
+            </tr>
+            <tr>
+                <td>My Corner</td>
+                <td>Delicious food</td>
+                <td><button class="delete" onclick="removeItem(this)">Delete</button></td>
+            </tr>
+            <tr>
+                <td>Conitta</td>
+                <td>Delicious food</td>
+                <td><button class="delete" onclick="removeItem(this)">Delete</button></td>
+            </tr>
+        </table>
+    </div>
     <script src="../script/admin.js"></script>
 </body>
 
