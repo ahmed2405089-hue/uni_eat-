@@ -181,7 +181,6 @@ let menuDiv = document.getElementById("menu");
 
 if (menuDiv) {
     let id = new URLSearchParams(window.location.search).get("id");
-
     let restaurant = restaurants.find(r => r.id == id);
 
     if (restaurant) {
@@ -189,7 +188,7 @@ if (menuDiv) {
 
         function getItemImagePath(restaurant, category, item) {
             const basePath = `../assets/${restaurant.name.toLowerCase().replace(/ /g, '')}/`;
-            const categoryName = category ? category.name : "";
+            const itemName = item.name;
 
             if (restaurant.name === "Cinnabon") {
                 const cinnabonMap = {
@@ -197,23 +196,23 @@ if (menuDiv) {
                     "Chocobon": "chocobon.jpg",
                     "Caramel Roll": "caramel-roll.jpg"
                 };
-                return `${basePath}baked goods/${cinnabonMap[item.name] || item.name.toLowerCase().replace(/ /g, '-') + '.jpg'}`;
+                return `${basePath}baked goods/${cinnabonMap[itemName] || itemName.toLowerCase().replace(/ /g, '-') + '.jpg'}`;
             }
 
             if (restaurant.name === "TBS") {
-                if (item.name === "Hot Chocolate") {
-                    return `${basePath}beverages/cold/hot/hot chcolate.webp`;
+                const tbsMap = {
+                    "Latte": "beverages/cold/matcha spanish latte.jpg",
+                    "Mocha": "beverages/cold/chocolate peanutbutter frappe.jpg",
+                    "Hot Chocolate": "beverages/cold/caramel latte frappe.jpg",
+                    "Grilled Chicken Sandwich": "sandwiches/grilled chicken sandwich.jpg"
+                };
+                if (tbsMap[itemName]) {
+                    return `${basePath}${tbsMap[itemName]}`;
                 }
-                if (item.name === "Latte") {
-                    return `${basePath}beverages/cold/hot/latte.webp`;
+                if (category && category.name === "Beverages") {
+                    return `${basePath}beverages/cold/${itemName.toLowerCase().replace(/ /g, ' ')}.jpg`;
                 }
-                if (item.name === "Mocha") {
-                    return `${basePath}beverages/cold/hot/mocha.webp`;
-                }
-                if (item.name.toLowerCase().includes("sandwich")) {
-                    return `${basePath}sandwiches/${item.name.toLowerCase()}.jpg`;
-                }
-                return `${basePath}beverages/cold/${item.name.toLowerCase().replace(/ /g, ' ')}.webp`;
+                return `${basePath}sandwiches/${itemName.toLowerCase().replace(/ /g, ' ')}.jpg`;
             }
 
             if (restaurant.name === "Gyro") {
@@ -224,7 +223,7 @@ if (menuDiv) {
                     "Greek Salad": "greek salad.webp",
                     "Gyro Fries": "gyro fires.jpg"
                 };
-                return `${basePath}${gyroMap[item.name] || item.name.toLowerCase().replace(/ /g, ' ') + '.jpg'}`;
+                return `${basePath}${gyroMap[itemName] || itemName.toLowerCase().replace(/ /g, ' ') + '.jpg'}`;
             }
 
             if (restaurant.name === "My Corner") {
@@ -233,7 +232,7 @@ if (menuDiv) {
                     "Crispy Chicken Crepe": "crispy chicken crepe.jpg",
                     "Foul Sandwich": "foul with olive oil.jpg"
                 };
-                return `${basePath}${myCornerMap[item.name] || item.name.toLowerCase().replace(/ /g, ' ') + '.jpg'}`;
+                return `${basePath}${myCornerMap[itemName] || itemName.toLowerCase().replace(/ /g, ' ') + '.jpg'}`;
             }
 
             if (restaurant.name === "Conitta") {
@@ -242,84 +241,42 @@ if (menuDiv) {
                     "Cookie": "Cookie.webp",
                     "Soft Ice Cream": "Soft_Ice_Cream.webp"
                 };
-                return `${basePath}${conittaMap[item.name] || item.name.toLowerCase().replace(/ /g, '_') + '.webp'}`;
+                return `${basePath}${conittaMap[itemName] || itemName.replace(/ /g, '_') + '.webp'}`;
             }
 
-            let ext = restaurant.name === "Conitta" ? "webp" : "jpg";
-            let fileName = item.name.toLowerCase().replace(/ /g, ' ') + '.' + ext;
-            return `${basePath}${fileName}`;
+            return `${basePath}${itemName.toLowerCase().replace(/ /g, ' ')}.jpg`;
         }
 
         const dynamicMenu = getRestaurantMenu(restaurant.id);
-        if (dynamicMenu.length) {
+        const categoriesToRender = dynamicMenu.length
+            ? [{ name: "Available Menu", items: dynamicMenu, isCustom: true }]
+            : restaurant.categories;
+
+        categoriesToRender.forEach(category => {
             let catDiv = document.createElement("div");
             catDiv.className = "menu-category";
-            catDiv.innerHTML = `<h4>Available Menu</h4>`;
+            catDiv.innerHTML = `<h4>${category.name}</h4>`;
 
-            dynamicMenu.forEach(item => {
+            category.items.forEach(item => {
                 let itemDiv = document.createElement("div");
                 itemDiv.className = "menu-item";
 
-                let ext = restaurant.name === "Conitta" ? "webp" : "jpg";
-                let imageName = item.name.toLowerCase().replace(/ /g, ' ') + '.' + ext; // keep spaces? No, files have spaces.
-
-                // Files have spaces, so keep as is, but toLowerCase.
-                imageName = restaurant.name === "Conitta" ? item.name.replace(/ /g, '_') + '.' + ext : item.name.toLowerCase() + '.' + ext;
-                // Special case for TBS Hot Chocolate
-                if (restaurant.name === "TBS" && item.name === "Hot Chocolate") {
-                    imageName = "hot chcolate.jpg";
-                }
-                // Special case for My Corner Foul Sandwich
-                if (restaurant.name === "My Corner" && item.name === "Foul Sandwich") {
-                    imageName = "foul with olive oil.jpg";
-                }
-                let subfolder = '';
-                if (restaurant.name === "TBS") {
-                    if (category.name === "Beverages") {
-                        subfolder = 'beverages/hot/';
-                    } else if (category.name === "Sandwiches") {
-                        subfolder = 'sandwiches/';
-                    }
-                }
+                const imagePath = getItemImagePath(restaurant, category, item);
+                const price = parseFloat(item.price || 0).toFixed(2);
 
                 itemDiv.innerHTML = `
                     <div class="item-info">
                         <img src="${imagePath}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover; margin-bottom: 10px;" onerror="this.src='../assets/Gemini_Generated_Image_40czvt40czvt40cz.png'">
                         <h4>${item.name}</h4>
-                        <p class="price">$${parseFloat(item.price).toFixed(2)}</p>
+                        <p class="price">$${price}</p>
                     </div>
-                    <button class="add-to-cart-btn" onclick="addToCart('${item.name}', ${item.price})">Add</button>
+                    <button class="add-to-cart-btn" onclick="addToCart('${item.name}', ${price})">Add</button>
                 `;
 
                 catDiv.appendChild(itemDiv);
             });
             menuDiv.appendChild(catDiv);
-        } else {
-            restaurant.categories.forEach(category => {
-                let catDiv = document.createElement("div");
-                catDiv.className = "menu-category";
-
-                catDiv.innerHTML = `<h4>${category.name}</h4>`;
-
-                category.items.forEach(item => {
-                    let itemDiv = document.createElement("div");
-                    itemDiv.className = "menu-item";
-
-                    let imagePath = getItemImagePath(restaurant, category, item);
-                    itemDiv.innerHTML = `
-                        <div class="item-info">
-                            <img src="${imagePath}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover; margin-bottom: 10px;" onerror="this.src='../assets/Gemini_Generated_Image_40czvt40czvt40cz.png'">
-                            <h4>${item.name}</h4>
-                            <p class="price">$${item.price.toFixed(2)}</p>
-                        </div>
-                        <button class="add-to-cart-btn" onclick="addToCart('${item.name}', ${item.price})">Add</button>
-                    `;
-
-                    catDiv.appendChild(itemDiv);
-                });
-                menuDiv.appendChild(catDiv);
-            });
-        }
+        });
     } else {
         document.getElementById("rest-name").textContent = "Restaurant Not Found";
         menuDiv.innerHTML = "<p>Please select a valid restaurant.</p>";
