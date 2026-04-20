@@ -22,6 +22,45 @@ function loadDashboard() {
     }
 }
 
+function displayAllOrders() {
+    const orders = get("orders");
+    const tableBody = document.querySelector("#all-orders-table tbody");
+    if (!tableBody) return;
+    tableBody.innerHTML = "";
+    orders.forEach(order => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${order.id}</td>
+            <td class="status">${order.status}</td>
+            <td><button onclick="updateStatus(this, 'Completed')">Mark Completed</button></td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+function displayUsers() {
+    // Since users are not stored, show a message or static
+    const usersList = document.getElementById("users");
+    if (usersList) {
+        usersList.innerHTML = "<li>No users registered yet.</li>";
+    }
+}
+
+function displayRestaurants() {
+    if (!window.restaurants) return;
+    const tableBody = document.querySelector("#restaurants-table tbody");
+    if (!tableBody) return;
+    tableBody.innerHTML = "";
+    window.restaurants.forEach(restaurant => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${restaurant.name}</td>
+            <td><button onclick="removeItem(this)">Delete</button></td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
 // Works for both user list items and table rows
 function removeItem(btn) {
     const row = btn.closest('tr') || btn.closest('li');

@@ -7,18 +7,19 @@
     <link rel="stylesheet" href="../styles/colors.css">
 </head>
 
-<body>
+<body onload="displayRestaurants()">
     <h2>Manage Restaurants</h2>
     <button onclick="window.location.href='admin-dashboard.html'">Back to Dashboard</button>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Action</th>
-        </tr>
-        <tr>
-            <td>Pizza Place</td>
-            <td><button onclick="removeItem(this)">Delete</button></td>
-        </tr>
+    <table id="restaurants-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Restaurants will be loaded here -->
+        </tbody>
     </table>
     <script src="../script/admin.js"></script>
 </body>
