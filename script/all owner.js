@@ -237,8 +237,8 @@ function updateDashboard(){
 
     let total = orders.length;
     let pending = orders.filter(o => o.status === "Pending").length;
-    let accepted = orders.filter(o => o.status === "Accepted").length;
-    let done = orders.filter(o => o.status === "Completed").length;
+    let preparing = orders.filter(o => o.status === "Preparing").length;
+    let ready = orders.filter(o => o.status === "Ready").length;
 
     if(document.getElementById("totalOrders"))
         document.getElementById("totalOrders").innerText = total;
@@ -247,7 +247,7 @@ function updateDashboard(){
         document.getElementById("pendingOrders").innerText = pending;
 
     if(document.getElementById("completedOrders"))
-        document.getElementById("completedOrders").innerText = done;
+        document.getElementById("completedOrders").innerText = ready;
 }
 
 /* ===== INIT ===== */
