@@ -192,10 +192,14 @@ if (menuDiv) {
                 let imageName = item.name.toLowerCase().replace(/ /g, ' ') + '.' + ext; // keep spaces? No, files have spaces.
 
                 // Files have spaces, so keep as is, but toLowerCase.
-                imageName = restaurant.name === "Conitta" ? item.name + '.' + ext : item.name.toLowerCase() + '.' + ext;
+                imageName = restaurant.name === "Conitta" ? item.name.replace(/ /g, '_') + '.' + ext : item.name.toLowerCase() + '.' + ext;
                 // Special case for TBS Hot Chocolate
                 if (restaurant.name === "TBS" && item.name === "Hot Chocolate") {
                     imageName = "hot chcolate.jpg";
+                }
+                // Special case for My Corner Foul Sandwich
+                if (restaurant.name === "My Corner" && item.name === "Foul Sandwich") {
+                    imageName = "foul with olive oil.jpg";
                 }
                 let subfolder = '';
                 if (restaurant.name === "TBS") {
