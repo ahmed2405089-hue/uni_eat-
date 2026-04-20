@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (registerForm) {
         registerForm.setAttribute("novalidate", "true"); 
         
-        const inputs = registerForm.querySelectorAll("input:not([type='hidden'])");
         const submitBtn = document.getElementById("submitBtn");
         const password = document.getElementById("password");
         const confirm = document.getElementById("confirm");
