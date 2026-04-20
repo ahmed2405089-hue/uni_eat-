@@ -1,34 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <title>Owner Dashboard</title>
-  <link rel="stylesheet" href="../styles/owner-dashboard.css">
-  <link rel="stylesheet" href="../styles/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Owner Dashboard</title>
+
+<link rel="stylesheet" href="../styles/all owner.css">
 </head>
 
 <body>
 
-  <nav>
-    <a href="owner-dashbroad.html">Owner Dashboard</a>
-    <a href="mange-menu.html">Manage Menu</a>
-    <a href="orders.html">View Orders</a>
-  </nav>
+<div class="container">
 
-  <h1>Welcome back, [uni-eat]</h1>
+<!-- Sidebar -->
+<aside class="sidebar">
+    <h2>UniEats</h2>
 
-  <h1>Owner Dashboard</h1>
-  <div id="stats">
-    <div>Total Orders: <span id="totalOrders">0</span></div>
-    <div>Pending: <span id="pendingOrders">0</span></div>
-    <div>Completed: <span id="completedOrders">0</span></div>
-  </div>
+    <a class="active" href="../pages/owner-dashbroad.html">Dashboard</a>
+    <a href="../pages/mange-menu.html">Manage Menu</a>
+    <a href="../pages/orders.html">Orders</a>
+</aside>
 
+<!-- Main -->
+<main class="main">
 
+    <h1>Dashboard 👋</h1>
 
+    <div class="stats">
+        <div class="card">
+            <h3>Total Orders</h3>
+            <p id="totalOrders">0</p>
+        </div>
 
-  <script src="../script/owner-dashboard.js"></script>
+        <div class="card">
+            <h3>Pending</h3>
+            <p id="pendingOrders">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Completed</h3>
+            <p id="completedOrders">0</p>
+        </div>
+    </div>
+
+</main>
+
+</div>
+
+<script src="../script/all owner.js"></script>
 </body>
-
 </html>
