@@ -37,7 +37,7 @@ function displayAllOrders(orders) {
 function completeOrder(id) {
   let orders = getOrders();
   orders = orders.map(order => {
-    if(order.id === id) order.status = "Completed";
+    if (order.id === id) order.status = "Completed";
     return order;
   });
   localStorage.setItem("orders", JSON.stringify(orders));

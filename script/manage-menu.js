@@ -6,7 +6,7 @@ function addItem() {
 
   if (!name || !price) return alert("Enter name & price");
 
-  menu.push({name, price});
+  menu.push({ name, price });
   localStorage.setItem("menuItems", JSON.stringify(menu));
 
   displayMenu();

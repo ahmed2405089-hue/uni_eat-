@@ -345,7 +345,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 loginBtn.textContent = "Welcome back!";
                 loginBtn.style.backgroundColor = "#34a853";
                 loginBtn.style.color = "white";
-                setTimeout(() => window.location.href = "dashboard.html", 1000);
+                setTimeout(() => window.location.href = "student-home.html", 1000);
             } catch (error) {
                 console.error("Login attempt failed."); 
                 displayLoginError("Invalid email/username or password.");
