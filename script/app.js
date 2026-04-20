@@ -303,26 +303,106 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // LOGIN FORM LOGIC (same as before)
+    // LOGIN FORM LOGIC
     // ==========================================
     if (loginForm) {
         const loginBtn = loginForm.querySelector("button[type='submit']");
         const identifierInput = document.getElementById("login_identifier");
         const passwordInput = document.getElementById("password");
+        const userRoleSelect = document.getElementById("userRole");
         
         let isLoggingIn = false;
         let loginAttempts = 0;
+
+        // Simple email regex (covers most cases)
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // Validation for a single input
+        const validateInput = (input) => {
+            let existingError = input.parentElement.querySelector(".error-msg");
+            if (existingError) existingError.remove();
+
+            let isValid = true;
+            let errorMessage = "";
+
+            if (input === identifierInput) {
+                const value = identifierInput.value.trim();
+                if (!value) {
+                    isValid = false;
+                    errorMessage = "Email is required.";
+                } else if (!isValidEmail(value)) {
+                    isValid = false;
+                    errorMessage = "Please enter a valid email address.";
+                }
+            } else if (input === passwordInput) {
+                if (!passwordInput.value) {
+                    isValid = false;
+                    errorMessage = "Password is required.";
+                } else if (passwordInput.value.length < 6) {
+                    isValid = false;
+                    errorMessage = "Password must be at least 6 characters.";
+                }
+            }
+
+            if (!isValid) {
+                input.setAttribute("aria-invalid", "true");
+                input.style.borderColor = "#d93025";
+
+                const errorSpan = document.createElement("span");
+                errorSpan.className = "error-msg";
+                errorSpan.style.color = "#d93025";
+                errorSpan.style.fontSize = "0.85rem";
+                errorSpan.style.display = "block";
+                errorSpan.style.marginTop = "4px";
+                errorSpan.setAttribute("role", "alert");
+                errorSpan.textContent = errorMessage;
+
+                input.parentElement.appendChild(errorSpan);
+            } else {
+                input.setAttribute("aria-invalid", "false");
+                input.style.borderColor = "#34a853";
+            }
+
+            updateLoginButtonState();
+        };
+
+        // Update button state based on validity
+        function updateLoginButtonState() {
+            let allValid = true;
+            const identifierValue = identifierInput.value.trim();
+            const passwordValue = passwordInput.value;
+
+            if (!identifierValue || !isValidEmail(identifierValue)) allValid = false;
+            if (!passwordValue || passwordValue.length < 6) allValid = false;
+
+            loginBtn.disabled = !allValid;
+        }
+
+        // Attach event listeners
+        identifierInput.addEventListener("input", () => {
+            validateInput(identifierInput);
+        });
+        identifierInput.addEventListener("blur", () => {
+            identifierInput.value = identifierInput.value.trim();
+            validateInput(identifierInput);
+        });
+
+        passwordInput.addEventListener("input", () => {
+            validateInput(passwordInput);
+            updateLoginButtonState();
+        });
+        passwordInput.addEventListener("blur", () => {
+            validateInput(passwordInput);
+        });
 
         if (identifierInput) identifierInput.focus();
 
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            if (isLoggingIn) return;
-
-            if (!identifierInput.value.trim() || !passwordInput.value.trim()) {
-                displayLoginError("Please fill in both fields.");
-                return;
-            }
+            if (isLoggingIn || loginBtn.disabled) return;
+            clearLoginError();
 
             loginAttempts++;
             if (loginAttempts > 5) {
@@ -338,7 +418,6 @@ document.addEventListener("DOMContentLoaded", () => {
             loginBtn.textContent = "Authenticating...";
             loginBtn.disabled = true;
             loginBtn.style.cursor = "wait";
-            clearLoginError();
 
             try {
                 await new Promise(resolve => setTimeout(resolve, 1200));
@@ -346,7 +425,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 loginBtn.style.backgroundColor = "#34a853";
                 loginBtn.style.color = "white";
 
-                const userRoleSelect = document.getElementById("userRole");
                 const role = userRoleSelect ? userRoleSelect.value : "student";
                 
                 let targetPage = "student-home.html";
@@ -358,7 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 setTimeout(() => window.location.href = targetPage, 1000);
             } catch (error) {
-                console.error("Login attempt failed."); 
+                console.error("Login attempt failed.");
                 displayLoginError("Invalid email/username or password.");
                 isLoggingIn = false;
                 loginBtn.textContent = originalBtnText;
@@ -388,5 +466,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const formError = document.getElementById("login-error");
             if (formError) formError.remove();
         }
+
+        // Initial button state
+        updateLoginButtonState();
     }
 });
