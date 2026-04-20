@@ -1,8 +1,14 @@
 :root {
-    --light-yellow: #E6E2A5;
-    --peach: #F28C52;
-    --orange: #F45A1C;
-    --dark-pink: #C8105A;
-    --brown: #8B5A2B;
-    --white: #ffffff;
+    --primary: #6366f1;
+    --primary-glow: rgba(99, 102, 241, 0.5);
+    --secondary: #ec4899;
+    --background: #0f172a;
+    --surface: rgba(30, 41, 59, 0.6);
+    --surface-border: rgba(255, 255, 255, 0.08);
+    --text: #f8fafc;
+    --text-muted: #94a3b8;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --sidebar-width: 260px;
 }
