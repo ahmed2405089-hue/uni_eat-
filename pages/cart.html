@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNIEats - Cart</title>
+    <link rel="stylesheet" href="../styles/colors.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/cart.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">UNIEats</div>
+        <div class="links">
+            <a href="student-home.html">Home</a>
+            <a href="cart.html">Cart</a>
+            <a href="profile.html">Profile</a>
+            <a href="login.html">Logout</a>
+        </div>
+    </nav>
+
+    <main class="container cart-container">
+        <h2>Your Cart</h2>
+
+        <div class="cart-items">
+            <!-- Sample Item 1 -->
+            <div class="cart-item">
+                <div class="item-info">
+                    <h4>Chicken Shawarma</h4>
+                    <p>Price: $5.00</p>
+                </div>
+                <div class="item-quantity">
+                    <button class="qty-btn">-</button>
+                    <span>1</span>
+                    <button class="qty-btn">+</button>
+                </div>
+                <div class="item-total">
+                    $5.00
+                </div>
+                <button class="remove-btn">X</button>
+            </div>
+
+            <!-- Sample Item 2 -->
+            <div class="cart-item">
+                <div class="item-info">
+                    <h4>Beef Burger</h4>
+                    <p>Price: $7.50</p>
+                </div>
+                <div class="item-quantity">
+                    <button class="qty-btn">-</button>
+                    <span>2</span>
+                    <button class="qty-btn">+</button>
+                </div>
+                <div class="item-total">
+                    $15.00
+                </div>
+                <button class="remove-btn">X</button>
+            </div>
+        </div>
+
+        <div class="cart-summary">
+            <h3>Order Summary</h3>
+            <div class="summary-line">
+                <span>Subtotal:</span>
+                <span>$20.00</span>
+            </div>
+            <div class="summary-line">
+                <span>Tax (5%):</span>
+                <span>$1.00</span>
+            </div>
+            <div class="summary-line total">
+                <span>Total:</span>
+                <span>$21.00</span>
+            </div>
+            <button class="checkout-btn" onclick="window.location.href='checkout.html'">Proceed to Checkout</button>
+        </div>
+    </main>
+</body>
+
+</html>
