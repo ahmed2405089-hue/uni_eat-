@@ -1,392 +1,318 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const registerForm = document.getElementById("registerForm");
-    const loginForm = document.getElementById("loginForm");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import 'colors.css';
 
-    // REGISTRATION FORM LOGIC 
-    if (registerForm) {
-        registerForm.setAttribute("novalidate", "true"); 
-        
-        const inputs = registerForm.querySelectorAll("input:not([type='hidden'])");
-        const submitBtn = document.getElementById("submitBtn");
-        const password = document.getElementById("password");
-        const confirm = document.getElementById("confirm");
-        const usernameInput = document.getElementById("username");
-        const usernameCounter = document.getElementById("usernameCounter");
-        const emailInput = document.getElementById("email");
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        // Simple email regex (covers most cases)
-        function isValidEmail(email) {
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        }
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
 
-        // Character counter for username
-        function updateUsernameCounter() {
-            const len = usernameInput.value.length;
-            usernameCounter.textContent = `${len}/20`;
-            if (len >= 18) usernameCounter.style.color = "#f4b400";
-            else if (len === 20) usernameCounter.style.color = "#d93025";
-            else usernameCounter.style.color = "#666";
-        }
+/* =========================================
+   CENTERED STACKED LAYOUT
+   ========================================= */
+.split-layout {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 40px 20px;
+    gap: 30px;
+}
 
-        function updateSubmitButtonState() {
-            let allValid = true;
-            // Check each input's validity (including custom email check)
-            if (!usernameInput.validity.valid) allValid = false;
-            if (!isValidEmail(emailInput.value) && emailInput.value !== "") allValid = false;
-            if (emailInput.value === "") allValid = false;
-            if (!password.validity.valid) allValid = false;
-            if (confirm.value === "") allValid = false;
-            if (password.value !== confirm.value) allValid = false;
-            
-            submitBtn.disabled = !allValid;
-        }
+/* =========================================
+   TOP SECTION: BRANDING
+   ========================================= */
+.brand-panel {
+    flex: none;
+    width: 100%;
+    max-width: 600px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
 
-        const debounce = (func, delay = 300) => {
-            let timeoutId;
-            return (...args) => {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => func.apply(null, args), delay);
-            };
-        };
+.brand-content {
+    text-align: center;
+    width: 100%;
+    animation: fadeSlideDown 0.6s ease-out forwards;
+}
 
-        // Validation for a single input
-        const validateInput = (input) => {
-            let existingError = input.parentElement.querySelector(".error-msg");
-            if (existingError) existingError.remove();
+@keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-            let isValid = true;
-            let errorMessage = "";
+.brand-content h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+}
 
-            // Handle email specially
-            if (input === emailInput) {
-                const email = emailInput.value.trim();
-                if (!email) {
-                    isValid = false;
-                    errorMessage = "Email is required.";
-                } else if (!isValidEmail(email)) {
-                    isValid = false;
-                    errorMessage = "Please enter a valid email address (e.g., name@example.com).";
-                }
-            } 
-            // For other inputs, use browser validation
-            else {
-                if (!input.validity.valid) {
-                    isValid = false;
-                    if (input.validity.valueMissing) {
-                        errorMessage = "This field is required.";
-                    } else if (input.validity.patternMismatch || input.validity.tooShort) {
-                        errorMessage = input.title || "Invalid input format."; 
-                    }
-                }
-            }
+.brand-content p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+}
 
-            // Special case for confirm password
-            if (input === confirm && confirm.value !== password.value) {
-                isValid = false;
-                errorMessage = "Passwords do not match.";
-            }
+/* =========================================
+   MIDDLE SECTION: THE FORM / CONTAINER
+   ========================================= */
+.form-panel {
+    flex: none;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    padding: 0;
+    z-index: 5;
+}
 
-            if (!isValid) {
-                input.setAttribute("aria-invalid", "true");
-                input.style.borderColor = "#d93025"; 
+/* Base Container Styling */
+.container {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    animation: fadeSlideUp 0.6s ease-out forwards;
+}
 
-                const errorSpan = document.createElement("span");
-                errorSpan.className = "error-msg";
-                errorSpan.style.color = "#d93025";
-                errorSpan.style.fontSize = "0.85rem";
-                errorSpan.style.display = "block";
-                errorSpan.style.marginTop = "4px";
-                errorSpan.setAttribute("role", "alert"); 
-                errorSpan.textContent = errorMessage;
-                
-                input.parentElement.appendChild(errorSpan);
-            } else {
-                input.setAttribute("aria-invalid", "false");
-                input.style.borderColor = "#34a853"; 
-            }
-            
-            updateSubmitButtonState();
-        };
+/* Standalone container centering (For Forgot/Reset pages) */
+main.container {
+    max-width: 500px;
+    margin: 10vh auto;
+}
 
-        // Attach event listeners
-        // Username: debounced
-        usernameInput.addEventListener("input", debounce(() => {
-            validateInput(usernameInput);
-            updateUsernameCounter();
-        }));
-        usernameInput.addEventListener("blur", () => {
-            usernameInput.value = usernameInput.value.trim();
-            validateInput(usernameInput);
-            updateUsernameCounter();
-        });
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-        // Email: immediate validation (no debounce)
-        emailInput.addEventListener("input", () => {
-            validateInput(emailInput);
-        });
-        emailInput.addEventListener("blur", () => {
-            emailInput.value = emailInput.value.trim();
-            validateInput(emailInput);
-        });
+.container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    color: var(--text);
+    font-weight: 600;
+    text-align: center;
+}
 
-        // Password: debounced
-        password.addEventListener("input", debounce(() => {
-            validateInput(password);
-            if (confirm.value) validateInput(confirm);
-            updateSubmitButtonState();
-        }));
-        password.addEventListener("blur", () => {
-            validateInput(password);
-        });
+/* Standalone paragraphs (Forgot Password instructions & Back Links) */
+.container > p {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
 
-        // Confirm password: immediate (to show match as you type)
-        confirm.addEventListener("input", () => {
-            validateInput(confirm);
-            updateSubmitButtonState();
-        });
-        confirm.addEventListener("blur", () => {
-            validateInput(confirm);
-        });
+.container > p:last-of-type {
+    margin-top: 25px;
+    margin-bottom: 0;
+}
 
-        // Password toggle buttons
-        const setupPasswordToggles = () => {
-            const passwordInputs = registerForm.querySelectorAll("input[type='password']");
-            passwordInputs.forEach(input => {
-                const toggleBtn = document.createElement("button");
-                toggleBtn.type = "button"; 
-                toggleBtn.textContent = "Show";
-                toggleBtn.style.marginLeft = "5px";
-                toggleBtn.style.padding = "2px 6px";
-                toggleBtn.style.cursor = "pointer";
-                toggleBtn.style.fontSize = "0.8rem";
-                toggleBtn.style.verticalAlign = "middle"; 
-                toggleBtn.setAttribute("aria-label", "Show password"); 
-                input.insertAdjacentElement("afterend", toggleBtn);
-                toggleBtn.addEventListener("click", () => {
-                    const isPassword = input.type === "password";
-                    input.type = isPassword ? "text" : "password";
-                    toggleBtn.textContent = isPassword ? "Hide" : "Show";
-                });
-            });
-        };
+.container > p a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
 
-        // Password strength – text only, consistent special char check
-        const setupPasswordStrength = () => {
-            if (!password) return;
+.container > p a:hover {
+    color: var(--secondary);
+}
 
-            const strengthText = document.createElement("span");
-            strengthText.className = "password-strength-indicator";
-            strengthText.style.fontSize = "0.85rem";
-            strengthText.style.fontWeight = "bold";
-            strengthText.style.marginLeft = "10px";
-            strengthText.style.verticalAlign = "middle";
-            strengthText.setAttribute("aria-live", "polite");
-            
-            password.parentElement.appendChild(strengthText);
+/* =========================================
+   FORM ELEMENTS
+   ========================================= */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
-            const updateStrength = (val) => {
-                const hasSpecial = /[^A-Za-z0-9]/.test(val);
-                let strength = 0;
-                if (val.length >= 8) strength += 1;
-                if (/[A-Z]/.test(val)) strength += 1;
-                if (/[a-z]/.test(val)) strength += 1;
-                if (/[0-9]/.test(val)) strength += 1;
-                if (hasSpecial) strength += 1;
+.input-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
 
-                let text = "";
-                let color = "";
-                switch (strength) {
-                    case 0: case 1: case 2:
-                        text = "Weak 🔴";
-                        color = "#d93025";
-                        break;
-                    case 3: case 4:
-                        text = "Medium 🟡";
-                        color = "#f4b400";
-                        break;
-                    case 5:
-                        text = "Strong 🟢";
-                        color = "#34a853";
-                        break;
-                }
-                if (val.length === 0) text = "";
-                strengthText.textContent = text;
-                strengthText.style.color = color;
-            };
+.input-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
 
-            password.addEventListener("input", () => {
-                updateStrength(password.value);
-                updateSubmitButtonState();
-            });
-            updateStrength(password.value);
-        };
+.input-group label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 
-        setupPasswordToggles();
-        setupPasswordStrength();
+#usernameCounter {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
 
-        // Initial counter and button state
-        updateUsernameCounter();
-        updateSubmitButtonState();
+/* Shared input/select styles */
+.input-group input,
+.container form input {
+    width: 100%;
+    padding: 16px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
+    color: #9ca3af;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
 
-        // Form submission (unchanged)
-        let isSubmitting = false;
-        let submissionAttempts = 0;
+/* Select gets the custom dropdown arrow */
+.input-group select,
+.container form select {
+    width: 100%;
+    padding: 16px;
+    padding-right: 48px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
+    color: #9ca3af;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+}
 
-        registerForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            if (isSubmitting) return;
-            clearFormError();
+.input-group input:focus,
+.input-group select:focus,
+.container form input:focus,
+.container form select:focus {
+    background: var(--input-bg);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+    outline: none;
+}
 
-            // Force validate all fields
-            validateInput(usernameInput);
-            validateInput(emailInput);
-            validateInput(password);
-            validateInput(confirm);
-            updateSubmitButtonState();
+.input-group input::placeholder,
+.container form input::placeholder {
+    color: #6b7280;
+}
 
-            const isFormValid = submitBtn.disabled === false;
-            if (!isFormValid) {
-                displayFormError("Please fix the highlighted errors before submitting.");
-                return;
-            }
+/* Reset Password matching error message */
+#match-error {
+    margin-top: -10px;
+    margin-bottom: 5px;
+    padding-left: 5px;
+    color: var(--danger) !important;
+}
 
-            submissionAttempts++;
-            if (submissionAttempts > 5) {
-                displayFormError("Too many attempts. Please try again later.");
-                return;
-            }
+button[type="submit"] {
+    width: 100%;
+    padding: 18px;
+    margin-top: 15px;
+    border-radius: 12px;
+    border: none;
+    background: var(--primary);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
-            isSubmitting = true;
-            const originalBtnText = submitBtn.textContent;
-            submitBtn.textContent = "Processing...";
-            submitBtn.disabled = true;
-            submitBtn.style.opacity = "0.7";
-            submitBtn.style.cursor = "wait";
+button[type="submit"]:hover:not(:disabled) {
+    transform: translateY(-2px);
+    background: var(--primary-dark);
+    box-shadow: 0 10px 20px var(--primary-glow);
+}
 
-            try {
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                submitBtn.textContent = "Success! Redirecting...";
-                submitBtn.style.backgroundColor = "#34a853"; 
-                submitBtn.style.color = "white";
-                setTimeout(() => window.location.href = "login.html", 1000);
-            } catch (error) {
-                console.error("Submission Error:", error);
-                displayFormError("Registration failed. Please try again.");
-                isSubmitting = false;
-                submitBtn.textContent = originalBtnText;
-                submitBtn.disabled = false;
-                submitBtn.style.opacity = "1";
-                submitBtn.style.cursor = "pointer";
-                updateSubmitButtonState();
-            }
-        });
+button[type="submit"]:disabled {
+    background: var(--surface-border);
+    color: var(--text-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
 
-        function displayFormError(message) {
-            let formError = document.getElementById("main-form-error");
-            if (!formError) {
-                formError = document.createElement("div");
-                formError.id = "main-form-error";
-                formError.style.color = "#d93025";
-                formError.style.marginBottom = "15px";
-                formError.style.fontWeight = "bold";
-                formError.style.textAlign = "center";
-                formError.setAttribute("role", "alert");
-                registerForm.insertBefore(formError, registerForm.firstChild);
-            }
-            formError.textContent = message;
-        }
+.auth-links {
+    margin-top: 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
 
-        function clearFormError() {
-            const formError = document.getElementById("main-form-error");
-            if (formError) formError.remove();
-        }
+.auth-links a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.auth-links a:hover {
+    color: var(--secondary);
+}
+
+.error-msg {
+    color: var(--danger) !important;
+    font-size: 0.85rem;
+    margin-top: 6px;
+}
+
+/* Show Password Button */
+.input-group > button[type="button"] {
+    position: absolute;
+    right: 15px;
+    top: 42px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.input-group > button[type="button"]:hover {
+    color: var(--primary);
+}
+
+/* =========================================
+   MOBILE ADJUSTMENTS
+   ========================================= */
+@media (max-width: 600px) {
+    .brand-content h1 {
+        font-size: 2.8rem;
     }
 
-    // ==========================================
-    // LOGIN FORM LOGIC (same as before)
-    // ==========================================
-    if (loginForm) {
-        const loginBtn = loginForm.querySelector("button[type='submit']");
-        const identifierInput = document.getElementById("login_identifier");
-        const passwordInput = document.getElementById("password");
-        
-        let isLoggingIn = false;
-        let loginAttempts = 0;
-
-        if (identifierInput) identifierInput.focus();
-
-        loginForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            if (isLoggingIn) return;
-
-            if (!identifierInput.value.trim() || !passwordInput.value.trim()) {
-                displayLoginError("Please fill in both fields.");
-                return;
-            }
-
-            loginAttempts++;
-            if (loginAttempts > 5) {
-                displayLoginError("Too many failed attempts. Please try again later.");
-                loginBtn.disabled = true;
-                loginBtn.style.opacity = "0.5";
-                loginBtn.style.cursor = "not-allowed";
-                return;
-            }
-
-            isLoggingIn = true;
-            const originalBtnText = loginBtn.textContent;
-            loginBtn.textContent = "Authenticating...";
-            loginBtn.disabled = true;
-            loginBtn.style.cursor = "wait";
-            clearLoginError();
-
-            try {
-                await new Promise(resolve => setTimeout(resolve, 1200));
-                loginBtn.textContent = "Welcome back!";
-                loginBtn.style.backgroundColor = "#34a853";
-                loginBtn.style.color = "white";
-
-                const userRoleSelect = document.getElementById("userRole");
-                const role = userRoleSelect ? userRoleSelect.value : "student";
-                
-                let targetPage = "student-home.html";
-                if (role === "owner") {
-                    targetPage = "owner-dashbroad.html";
-                } else if (role === "admin") {
-                    targetPage = "admin-dashboard.html";
-                }
-                
-                setTimeout(() => window.location.href = targetPage, 1000);
-            } catch (error) {
-                console.error("Login attempt failed."); 
-                displayLoginError("Invalid email/username or password.");
-                isLoggingIn = false;
-                loginBtn.textContent = originalBtnText;
-                loginBtn.disabled = false;
-                loginBtn.style.cursor = "pointer";
-                passwordInput.value = "";
-                passwordInput.focus();
-            }
-        });
-
-        function displayLoginError(message) {
-            let formError = document.getElementById("login-error");
-            if (!formError) {
-                formError = document.createElement("div");
-                formError.id = "login-error";
-                formError.style.color = "#d93025";
-                formError.style.marginBottom = "15px";
-                formError.style.fontWeight = "bold";
-                formError.style.textAlign = "center";
-                formError.setAttribute("role", "alert");
-                loginForm.insertBefore(formError, loginForm.firstChild);
-            }
-            formError.textContent = message;
-        }
-
-        function clearLoginError() {
-            const formError = document.getElementById("login-error");
-            if (formError) formError.remove();
-        }
+    .container {
+        padding: 30px 20px;
     }
-});
+
+    main.container {
+        width: 100%;
+        max-width: 500px;
+        margin: 5vh 20px;
+    }
+}
