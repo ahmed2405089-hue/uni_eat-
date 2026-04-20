@@ -3,12 +3,13 @@
 
 <head>
     <title>Manage Restaurants</title>
-    <link rel="stylesheet" href="styles/admin.css">
-    <link rel="stylesheet" href="styles/colors.css">
+    <link rel="stylesheet" href="../styles/admin.css">
+    <link rel="stylesheet" href="../styles/colors.css">
 </head>
 
 <body>
     <h2>Manage Restaurants</h2>
+    <button onclick="window.location.href='admin-dashboard.html'">Back to Dashboard</button>
     <table>
         <tr>
             <th>Name</th>
@@ -16,10 +17,10 @@
         </tr>
         <tr>
             <td>Pizza Place</td>
-            <td><button onclick="deleteRow(this)">Delete</button></td>
+            <td><button onclick="removeItem(this)">Delete</button></td>
         </tr>
     </table>
-    <script src="script/admin.js"></script>
+    <script src="../script/admin.js"></script>
 </body>
 
 </html>
