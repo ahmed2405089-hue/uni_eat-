@@ -335,6 +335,19 @@ document.addEventListener("DOMContentLoaded", () => {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         }
 
+        function getRoleFromEmail(email) {
+            const normalized = email.trim().toLowerCase();
+            const domain = normalized.split("@")[1] || "";
+
+            if (/\b(admin|administrator)\b/.test(normalized) || domain.includes("admin")) {
+                return "admin";
+            }
+            if (/\b(owner|restaurant|manager)\b/.test(normalized) || domain.includes("restaurant") || domain.includes("shop") || domain.includes("eat")) {
+                return "owner";
+            }
+            return "student";
+        }
+
         // Validation for a single input
         const validateInput = (input) => {
             let existingError = input.parentElement.querySelector(".error-msg");
@@ -441,15 +454,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 loginBtn.style.backgroundColor = "#34a853";
                 loginBtn.style.color = "white";
 
-                const role = userRoleSelect ? userRoleSelect.value : "student";
-                
+                const email = identifierInput.value.trim();
+                const role = getRoleFromEmail(email);
+                localStorage.setItem("userRole", role);
+                localStorage.setItem("userEmail", email);
+
                 let targetPage = "student-home.html";
                 if (role === "owner") {
                     targetPage = "owner-dashbroad.html";
                 } else if (role === "admin") {
                     targetPage = "admin-dashboard.html";
                 }
-                
+
                 setTimeout(() => window.location.href = targetPage, 1000);
             } catch (error) {
                 console.error("Login attempt failed.");
