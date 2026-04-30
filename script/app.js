@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const usernameInput = document.getElementById("username");
         const usernameCounter = document.getElementById("usernameCounter");
         const emailInput = document.getElementById("email");
+        const mnumberInput = document.getElementById("mnumber");
+        const bdateInput = document.getElementById("bdate");
 
         // Simple email regex (covers most cases)
         function isValidEmail(email) {
@@ -36,6 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!password.validity.valid) allValid = false;
             if (confirm.value === "") allValid = false;
             if (password.value !== confirm.value) allValid = false;
+            if (!mnumberInput.validity.valid) allValid = false;
+            if (!bdateInput.validity.valid) allValid = false;
             
             submitBtn.disabled = !allValid;
         }
@@ -147,7 +151,21 @@ document.addEventListener("DOMContentLoaded", () => {
             validateInput(confirm);
         });
 
-        // Password toggle buttons
+        // Mobile number: debounced
+        mnumberInput.addEventListener("input", debounce(() => {
+            validateInput(mnumberInput);
+        }));
+        mnumberInput.addEventListener("blur", () => {
+            validateInput(mnumberInput);
+        });
+
+        // Birth date: immediate
+        bdateInput.addEventListener("input", () => {
+            validateInput(bdateInput);
+        });
+        bdateInput.addEventListener("blur", () => {
+            validateInput(bdateInput);
+        });
         const setupPasswordToggles = () => {
             const passwordInputs = registerForm.querySelectorAll("input[type='password']");
             passwordInputs.forEach(input => {
@@ -308,7 +326,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const loginBtn = loginForm.querySelector("button[type='submit']");
         const identifierInput = document.getElementById("login_identifier");
         const passwordInput = document.getElementById("password");
-        const userRoleSelect = document.getElementById("userRole");
         
         let isLoggingIn = false;
         let loginAttempts = 0;
