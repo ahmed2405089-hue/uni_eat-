@@ -17,7 +17,8 @@ function formatStatus(status) {
 
 window.addEventListener("DOMContentLoaded", () => {
     const statusElement = document.getElementById("status");
-    if (!statusElement) return;
+    const detailsElement = document.getElementById("orderDetails");
+    if (!statusElement || !detailsElement) return;
 
     const lastOrderId = localStorage.getItem("lastOrderId");
     const orders = get("orders");
@@ -29,4 +30,23 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     statusElement.textContent = formatStatus(order.status);
+
+    // Display order details
+    let detailsHTML = `<h3>Order Details</h3>`;
+    detailsHTML += `<p><strong>Order ID:</strong> ${order.id}</p>`;
+    detailsHTML += `<p><strong>Total:</strong> $${order.total}</p>`;
+    detailsHTML += `<p><strong>Items:</strong></p><ul>`;
+
+    order.items.forEach(item => {
+        const quantity = item.quantity || item.qty || 1;
+        detailsHTML += `<li>${item.name} x${quantity}</li>`;
+    });
+
+    detailsHTML += `</ul>`;
+
+    if (order.comment && order.comment.trim()) {
+        detailsHTML += `<p><strong>Special Instructions:</strong> ${order.comment}</p>`;
+    }
+
+    detailsElement.innerHTML = detailsHTML;
 });

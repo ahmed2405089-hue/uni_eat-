@@ -292,6 +292,33 @@ cart = cart.map(item => ({
     quantity: item.quantity ?? item.qty ?? 1
 }));
 
+function createToastContainer() {
+    let container = document.getElementById("toast-container");
+    if (!container) {
+        container = document.createElement("div");
+        container.id = "toast-container";
+        document.body.appendChild(container);
+    }
+    return container;
+}
+
+function showToast(message, type = "success") {
+    const container = createToastContainer();
+    const toast = document.createElement("div");
+    toast.className = `toast-message ${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+
+    requestAnimationFrame(() => {
+        toast.classList.add("show");
+    });
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 250);
+    }, 2500);
+}
+
 function addToCart(name, price) {
     let existing = cart.find(item => item.name === name);
     if (existing) {
@@ -300,7 +327,7 @@ function addToCart(name, price) {
         cart.push({ name, price: parseFloat(price), quantity: 1 });
     }
     saveCart();
-    alert("Added to cart ✅");
+    showToast("Added to cart ✅", "success");
 }
 
 function saveCart() {
@@ -382,8 +409,8 @@ function placeOrder() {
     localStorage.setItem("status", "Preparing");
     localStorage.removeItem("cart");
 
-    alert("Order Placed 🎉");
-    window.location.href = "order-tracking.html";
+    showToast("Order Placed 🎉", "success");
+    setTimeout(() => window.location.href = "order-tracking.html", 900);
 }
 
 /* =========================
@@ -421,7 +448,7 @@ function saveProfile() {
     localStorage.setItem("name", name.value);
     localStorage.setItem("email", email.value);
 
-    alert("Saved ✅");
+    showToast("Saved ✅", "success");
 }
 
 function loadProfile() {

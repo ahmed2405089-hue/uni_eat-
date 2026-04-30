@@ -18,6 +18,33 @@ function formatPrice(value) {
     return `$${parseFloat(value).toFixed(2)}`;
 }
 
+function createToastContainer() {
+    let container = document.getElementById("toast-container");
+    if (!container) {
+        container = document.createElement("div");
+        container.id = "toast-container";
+        document.body.appendChild(container);
+    }
+    return container;
+}
+
+function showToast(message, type = "success") {
+    const container = createToastContainer();
+    const toast = document.createElement("div");
+    toast.className = `toast-message ${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+
+    requestAnimationFrame(() => {
+        toast.classList.add("show");
+    });
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 250);
+    }, 2200);
+}
+
 function renderCart() {
     const orderList = document.getElementById("orderList");
     const totalElement = document.getElementById("total");
@@ -47,7 +74,7 @@ function renderCart() {
 function placeOrder() {
     const cart = getCart();
     if (cart.length === 0) {
-        alert("Your cart is empty.");
+        showToast("Your cart is empty.", "info");
         return;
     }
 
@@ -56,12 +83,15 @@ function placeOrder() {
         return sum + parseFloat(item.price) * quantity;
     }, 0);
 
+    const comment = document.getElementById("orderComment").value.trim();
+
     const orders = get("orders");
     const order = {
         id: Date.now(),
         items: cart,
         total: parseFloat(total).toFixed(2),
         status: "Pending",
+        comment: comment,
         createdAt: new Date().toISOString()
     };
 
@@ -69,8 +99,8 @@ function placeOrder() {
     set("orders", orders);
     localStorage.setItem("lastOrderId", order.id);
     clearCart();
-    alert("Order placed successfully! The owner will prepare it now.");
-    window.location.href = "order-tracking.html";
+    showToast("Order placed successfully! The owner will prepare it now.", "success");
+    setTimeout(() => window.location.href = "order-tracking.html", 900);
 }
 
 window.addEventListener("DOMContentLoaded", () => {

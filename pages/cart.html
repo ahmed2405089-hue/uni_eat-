@@ -23,15 +23,16 @@
         </div>
     </nav>
 
-    <main class="container cart-container">
-        <h2>Your Cart</h2>
+    <main class="container cart-page">
+        <h2 class="cart-title">Your Cart</h2>
 
-        <div class="cart-items" id="cart-items">
-            <!-- Items will be loaded here -->
-        </div>
+        <div class="cart-layout">
+            <div class="cart-items" id="cart-items">
+                <!-- Items will be loaded here -->
+            </div>
 
-        <div class="cart-summary">
-            <h3>Order Summary</h3>
+            <aside class="cart-summary">
+                <h3>Order Summary</h3>
 
             <div class="summary-line">
                 <span>Subtotal:</span>
@@ -49,6 +50,7 @@
             </div>
 
             <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+        </aside>
         </div>
     </main>
 
@@ -58,6 +60,33 @@
             ...item,
             quantity: item.quantity ?? item.qty ?? 1
         }));
+
+        function createToastContainer() {
+            let container = document.getElementById("toast-container");
+            if (!container) {
+                container = document.createElement("div");
+                container.id = "toast-container";
+                document.body.appendChild(container);
+            }
+            return container;
+        }
+
+        function showToast(message, type = "success") {
+            const container = createToastContainer();
+            const toast = document.createElement("div");
+            toast.className = `toast-message ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.add("show");
+            });
+
+            setTimeout(() => {
+                toast.classList.remove("show");
+                setTimeout(() => toast.remove(), 250);
+            }, 2200);
+        }
 
         function renderCart() {
             const container = document.getElementById("cart-items");
@@ -130,7 +159,7 @@
 
         function checkout() {
             if (cart.length === 0) {
-                alert("Cart is empty!");
+                showToast("Cart is empty!", "info");
                 return;
             }
 

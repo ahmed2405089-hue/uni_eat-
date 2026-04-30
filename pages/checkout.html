@@ -19,13 +19,18 @@
         </div>
     </nav>
 
-    <h1>Checkout</h1>
+    <h1 class="checkout-title">Checkout</h1>
 
-    <div class="container">
+    <div class="container checkout-container">
         <ul id="orderList"></ul>
-        <h3>Total: <span id="total"></span></h3>
+        <h3 class="checkout-total">Total: <span id="total"></span></h3>
 
-        <button onclick="placeOrder()">Place Order</button>
+        <div class="input-group">
+            <label for="orderComment">Special Instructions (optional)</label>
+            <textarea id="orderComment" class="order-comment" placeholder="e.g. add extra ranch sauce, no onions, etc." rows="3" maxlength="200"></textarea>
+        </div>
+
+        <button class="checkout-btn" onclick="placeOrder()">Place Order</button>
     </div>
 
     <script src="../script/checkout.js"></script>
