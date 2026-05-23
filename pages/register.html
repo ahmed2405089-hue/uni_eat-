@@ -8,12 +8,23 @@
     <link rel="stylesheet" href="../styles/app.css">
 </head>
 <body>
-    <a href="javascript:history.back()" class="back-arrow" aria-label="Go back">←</a>
+    <nav class="navbar">
+        <a href="javascript:history.back()" class="back-arrow" aria-label="Go back">←</a>
+        <div class="brand">
+            <div class="logo">UNIEats</div>
+            <span class="badge">Register</span>
+        </div>
+        <div class="links">
+            <a href="../index.html">Home</a>
+            <a href="login.html">Login</a>
+            <a href="register.html" class="active">Register</a>
+        </div>
+    </nav>
 
-    <div class="split-layout">
+    <main class="page-shell split-layout">
         
         <div class="form-panel">
-            <main class="container">
+            <section class="container">
                 <form action="#" method="POST" id="registerForm">
                     <h2>Create Account</h2>
 

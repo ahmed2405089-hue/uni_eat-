@@ -43,6 +43,29 @@ color:var(--text);
   color:#6366f1;
 }
 
+/* Shared navbar/back-arrow for owner pages */
+.navbar .back-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-right: 12px;
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all .16s ease;
+  font-size: 1.05rem;
+  border: 1px solid transparent;
+}
+
+.navbar .back-arrow:hover { transform: translateY(-2px); background: rgba(255,255,255,0.06); box-shadow: 0 6px 18px rgba(0,0,0,0.28); }
+
+@media (max-width: 600px) {
+  .navbar .back-arrow { width: 36px; height: 36px; margin-right: 8px; font-size: 0.95rem; }
+}
+
 /* ===== LAYOUT ===== */
 .container{
 display:flex;

@@ -11,10 +11,7 @@
 <body>
     <nav class="navbar">
         <a href="javascript:history.back()" class="back-arrow" aria-label="Go back">←</a>
-        <div class="brand">
-            <div class="logo">UniEats Admin</div>
-            <span class="badge">Restaurants</span>
-        </div>
+        <div class="logo">UniEats Admin</div>
         <div class="links">
             <a href="admin-dashboard.html">Dashboard</a>
             <a href="mange-resturant.html" class="active">Restaurants</a>
@@ -23,16 +20,8 @@
             <a href="login.html">Logout</a>
         </div>
     </nav>
-    <main class="page-shell">
-        <section class="page-header">
-            <div>
-                <p class="eyebrow">Restaurants</p>
-                <h1>Manage Restaurants</h1>
-                <p class="page-subtitle">View and update restaurant listings from a clean admin panel.</p>
-            </div>
-        </section>
-        <section class="section-block table-card">
-            <table>
+    <div class="container">
+        <table>
             <tr>
                 <th>Name</th>
                 <th>Description</th>
@@ -63,9 +52,8 @@
                 <td>Delicious food</td>
                 <td><button class="delete" onclick="removeItem(this)">Delete</button></td>
             </tr>
-            </table>
-        </section>
-    </main>
+        </table>
+    </div>
     <script src="../script/admin.js"></script>
 </body>
 

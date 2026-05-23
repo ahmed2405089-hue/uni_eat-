@@ -15,10 +15,10 @@ body {
 }
 
 .navbar {
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
-    padding: 18px 32px;
+    background: var(--surface);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--surface-border);
+    padding: 15px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -27,123 +27,43 @@ body {
     left: 0;
     width: 100%;
     z-index: 1000;
-    gap: 18px;
 }
 
-.navbar .brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.navbar .brand .logo {
-    font-size: 1.05rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--text);
-}
-
-.navbar .brand .badge {
-    background: rgba(99, 102, 241, 0.18);
-    color: #dbeafe;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-size: 0.72rem;
-    font-weight: 700;
-}
-
-.navbar .links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
+.navbar + * {
+    padding-top: 80px;
 }
 
 .navbar .links a {
-    color: var(--text);
+    margin-left: 12px;
     text-decoration: none;
+    color: var(--text);
     font-weight: 600;
-    padding: 10px 14px;
-    border-radius: 14px;
-    transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
 }
 
-.navbar .links a.active,
 .navbar .links a:hover {
-    background: rgba(99, 102, 241, 0.22);
     color: var(--primary);
-    transform: translateY(-1px);
 }
 
-.navbar .back-arrow {
-    width: 44px;
-    height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.06);
+header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--surface-border);
+    padding: 20px 30px;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+header + .container {
+    padding-top: 100px;
+}
+
+header h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
     color: var(--text);
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    text-decoration: none;
-    transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
-}
-
-.navbar .back-arrow:hover {
-    background: rgba(255, 255, 255, 0.14);
-    transform: translateY(-1px);
-    border-color: rgba(99, 102, 241, 0.4);
-}
-
-.page-shell {
-    padding: 120px 24px 40px;
-    max-width: 1240px;
-    margin: 0 auto;
-}
-
-.page-header {
-    width: 100%;
-    margin: 0 auto 32px;
-    background: rgba(15, 23, 42, 0.95);
-    border: 1px solid rgba(148, 163, 184, 0.12);
-    border-radius: 24px;
-    padding: 30px 32px;
-    box-shadow: 0 24px 80px rgba(15, 23, 42, 0.16);
-}
-
-.page-header h1 {
-    font-size: 2.8rem;
-    margin: 10px 0 6px;
-    color: #eef2ff;
-}
-
-.page-header p {
-    color: #cbd5e1;
-    font-size: 1rem;
-    line-height: 1.7;
-    margin-top: 8px;
-}
-
-.section-block {
-    width: 100%;
-    margin-bottom: 32px;
-}
-
-.table-card {
-    width: 100%;
-    overflow: hidden;
-    border-radius: 24px;
-    background: rgba(15, 23, 42, 0.95);
-    border: 1px solid rgba(148, 163, 184, 0.12);
-    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.16);
-    padding: 24px;
-}
-
-.page-header .eyebrow,
-.section-card .eyebrow {
-    color: #a5b4fc;
 }
 
 /* =========================================
@@ -454,3 +374,26 @@ button.small {
     }
 }
 
+/* Shared navbar/back-arrow for admin pages */
+.navbar .back-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-right: 12px;
+    background: rgba(255,255,255,0.03);
+    color: var(--text);
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all .16s ease;
+    font-size: 1.05rem;
+    border: 1px solid transparent;
+    z-index: 1200;
+}
+
+.navbar .back-arrow:hover { transform: translateY(-2px); background: rgba(255,255,255,0.06); box-shadow: 0 6px 18px rgba(0,0,0,0.28); }
+
+@media (max-width: 600px) {
+    .navbar .back-arrow { width: 36px; height: 36px; margin-right: 8px; font-size: 0.95rem; }
+}

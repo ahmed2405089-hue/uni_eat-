@@ -11,10 +11,7 @@
 <body onload="loadDashboard()">
     <nav class="navbar">
         <a href="javascript:history.back()" class="back-arrow" aria-label="Go back">←</a>
-        <div class="brand">
-            <div class="logo">UniEats Admin</div>
-            <span class="badge">Admin Panel</span>
-        </div>
+        <div class="logo">UniEats Admin</div>
         <div class="links">
             <a href="admin-dashboard.html" class="active">Dashboard</a>
             <a href="mange-resturant.html">Restaurants</a>
@@ -23,15 +20,14 @@
             <a href="login.html">Logout</a>
         </div>
     </nav>
-    <main class="page-shell">
-        <section class="page-header">
-            <div>
-                <p class="eyebrow">Admin Panel</p>
-                <h1>Welcome back, Admin</h1>
-                <p class="page-subtitle">Assign owners to restaurants and manage dashboard data here.</p>
-            </div>
-        </section>
-        <section class="stats-grid">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Admin Panel</p>
+            <h1>Welcome back, Admin</h1>
+            <p class="page-subtitle">Assign owners to restaurants and manage dashboard data here.</p>
+        </div>
+    </div>
+    <div class="container stats-grid">
         <div class="card stat-card">
             <div class="card-label">Total Restaurants</div>
             <b id="resCount"></b>
@@ -47,9 +43,9 @@
             <b id="orderCount"></b>
             <button onclick="window.location.href='all-orders.html'">View All</button>
         </div>
-        </section>
-        <section class="section-block">
-            <div class="card assign-card">
+    </div>
+    <div class="container">
+        <div class="card assign-card">
             <div class="section-header">
                 <div>
                     <p class="eyebrow">Assign Mapping</p>
@@ -85,8 +81,7 @@
                 <tbody></tbody>
             </table>
         </div>
-        </section>
-    </main>
+    </div>
     <script src="../script/all student.js"></script>
     <script src="../script/admin.js"></script>
 </body>
