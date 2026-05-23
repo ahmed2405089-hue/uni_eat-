@@ -1,7 +1,6 @@
 body {
   background: var(--background);
   color: var(--text);
-  padding-top: 80px; /* Space for fixed navbar */
 }
 
 .navbar {

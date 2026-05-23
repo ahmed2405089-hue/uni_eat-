@@ -14,11 +14,50 @@ body {
     min-height: 100vh;
 }
 
+.navbar {
+    background: var(--surface);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--surface-border);
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar + * {
+    padding-top: 80px;
+}
+
+.navbar .links a {
+    margin-left: 12px;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.navbar .links a:hover {
+    color: var(--primary);
+}
+
 header {
     background: var(--surface);
     border-bottom: 1px solid var(--surface-border);
     padding: 20px 30px;
     text-align: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+header + .container {
+    padding-top: 100px;
 }
 
 header h2 {
