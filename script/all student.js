@@ -6,16 +6,16 @@ window.restaurants = [
             {
                 name: "Main Dishes",
                 items: [
-                    { name: "Crispy Chicken Sandwich", price: 95 },
-                    { name: "Greek Shawerma", price: 85 },
-                    { name: "Shawerma Meal", price: 130 }
+                    { name: "Crispy Chicken Sandwich", price: 150 },
+                    { name: "Greek Shawerma", price: 155 },
+                    { name: "Shawerma Meal", price: 215 }
                 ]
             },
             {
                 name: "Sides",
                 items: [
-                    { name: "Greek Salad", price: 55 },
-                    { name: "Gyro Fries", price: 45 }
+                    { name: "Greek Salad", price: 95 },
+                    { name: "Gyro Fries", price: 65 }
                 ]
             }
         ]
