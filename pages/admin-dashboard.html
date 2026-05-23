@@ -9,25 +9,29 @@
 </head>
 
 <body onload="loadDashboard()">
-    <a href="javascript:history.back()" class="back-arrow" aria-label="Go back">←</a>
     <nav class="navbar">
-        <div class="logo">UniEats Admin</div>
+        <a href="javascript:history.back()" class="back-arrow" aria-label="Go back">←</a>
+        <div class="brand">
+            <div class="logo">UniEats Admin</div>
+            <span class="badge">Admin Panel</span>
+        </div>
         <div class="links">
-            <a href="admin-dashboard.html">Dashboard</a>
+            <a href="admin-dashboard.html" class="active">Dashboard</a>
             <a href="mange-resturant.html">Restaurants</a>
             <a href="mange-users.html">Users</a>
             <a href="all-orders.html">Orders</a>
             <a href="login.html">Logout</a>
         </div>
     </nav>
-    <div class="page-header">
-        <div>
-            <p class="eyebrow">Admin Panel</p>
-            <h1>Welcome back, Admin</h1>
-            <p class="page-subtitle">Assign owners to restaurants and manage dashboard data here.</p>
-        </div>
-    </div>
-    <div class="container stats-grid">
+    <main class="page-shell">
+        <section class="page-header">
+            <div>
+                <p class="eyebrow">Admin Panel</p>
+                <h1>Welcome back, Admin</h1>
+                <p class="page-subtitle">Assign owners to restaurants and manage dashboard data here.</p>
+            </div>
+        </section>
+        <section class="stats-grid">
         <div class="card stat-card">
             <div class="card-label">Total Restaurants</div>
             <b id="resCount"></b>
@@ -43,9 +47,9 @@
             <b id="orderCount"></b>
             <button onclick="window.location.href='all-orders.html'">View All</button>
         </div>
-    </div>
-    <div class="container">
-        <div class="card assign-card">
+        </section>
+        <section class="section-block">
+            <div class="card assign-card">
             <div class="section-header">
                 <div>
                     <p class="eyebrow">Assign Mapping</p>
@@ -81,7 +85,8 @@
                 <tbody></tbody>
             </table>
         </div>
-    </div>
+        </section>
+    </main>
     <script src="../script/all student.js"></script>
     <script src="../script/admin.js"></script>
 </body>
