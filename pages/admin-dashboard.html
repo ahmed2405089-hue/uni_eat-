@@ -19,38 +19,64 @@
             <a href="login.html">Logout</a>
         </div>
     </nav>
-    <div class="container">
-        <div class="card">
-            Total Restaurants
-            <br><b id="resCount"></b>
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Admin Panel</p>
+            <h1>Welcome back, Admin</h1>
+            <p class="page-subtitle">Assign owners to restaurants and manage dashboard data here.</p>
+        </div>
+    </div>
+    <div class="container stats-grid">
+        <div class="card stat-card">
+            <div class="card-label">Total Restaurants</div>
+            <b id="resCount"></b>
             <button onclick="window.location.href='mange-resturant.html'">Manage</button>
         </div>
-        <div class="card">
-            Total Users
-            <br><b id="userCount"></b>
+        <div class="card stat-card">
+            <div class="card-label">Total Users</div>
+            <b id="userCount"></b>
             <button onclick="window.location.href='mange-users.html'">Manage</button>
         </div>
-        <div class="card">
-            Total Orders
-            <br><b id="orderCount"></b>
+        <div class="card stat-card">
+            <div class="card-label">Total Orders</div>
+            <b id="orderCount"></b>
             <button onclick="window.location.href='all-orders.html'">View All</button>
         </div>
     </div>
     <div class="container">
         <div class="card assign-card">
-            <h3>Assign Owner to Restaurants</h3>
-            <div class="assign-row">
-                <input id="ownerEmail" placeholder="owner email (e.g. ahmed@restaurant.com)" style="flex:1">
-                <select id="restaurantsSelect" multiple style="min-width:200px;max-width:400px;height:120px;"></select>
-                <button class="small" onclick="assignOwner()">Assign</button>
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">Assign Mapping</p>
+                    <h3>Assign Owner to Restaurants</h3>
+                    <p class="section-meta">Only admins can create and edit these assignments.</p>
+                </div>
             </div>
-            <h4 style="margin-top:12px">Current Assignments</h4>
-            <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center;">
-                <input id="ownerSearch" placeholder="Search owner email..." style="flex:1">
-                <button class="small" onclick="renderOwnerMappings()">Clear</button>
+            <div class="form-grid">
+                <label class="input-group">
+                    <span>Email</span>
+                    <input id="ownerEmail" placeholder="owner email (e.g. ahmed@restaurant.com)">
+                </label>
+                <label class="select-group">
+                    <span>Select restaurants</span>
+                    <select id="restaurantsSelect" multiple></select>
+                </label>
+                <div class="form-actions">
+                    <button class="small" onclick="assignOwner()">Assign</button>
+                </div>
             </div>
-            <table id="ownerMappingsTable" style="width:100%;border-collapse:collapse">
-                <thead><tr><th style="text-align:left">Owner Email</th><th style="text-align:left">Restaurant IDs</th><th style="text-align:left">Actions</th></tr></thead>
+            <div class="assign-table-header">
+                <div>
+                    <h4>Current Assignments</h4>
+                    <p class="section-meta">Search or edit existing owner mappings.</p>
+                </div>
+                <div class="inline-actions">
+                    <input id="ownerSearch" placeholder="Search owner email...">
+                    <button class="small" onclick="renderOwnerMappings()">Clear</button>
+                </div>
+            </div>
+            <table id="ownerMappingsTable">
+                <thead><tr><th>Owner Email</th><th>Restaurant IDs</th><th>Actions</th></tr></thead>
                 <tbody></tbody>
             </table>
         </div>
