@@ -6,16 +6,16 @@ window.restaurants = [
             {
                 name: "Main Dishes",
                 items: [
-                    { name: "Crispy Chicken Sandwich", price: 6.5 },
-                    { name: "Greek Shawerma", price: 7 },
-                    { name: "Shawerma Meal", price: 8 }
+                    { name: "Crispy Chicken Sandwich", price: 150 },
+                    { name: "Greek Shawerma", price: 155 },
+                    { name: "Shawerma Meal", price: 215}
                 ]
             },
             {
                 name: "Sides",
                 items: [
-                    { name: "Greek Salad", price: 5 },
-                    { name: "Gyro Fries", price: 4 }
+                    { name: "Greek Salad", price: 95 },
+                    { name: "Gyro Fries", price: 65 }
                 ]
             }
         ]
@@ -268,7 +268,7 @@ if (menuDiv) {
                     <div class="item-info">
                         <img src="${imagePath}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover; margin-bottom: 10px;" onerror="this.src='../assets/Gemini_Generated_Image_40czvt40czvt40cz.png'">
                         <h4>${item.name}</h4>
-                        <p class="price">$${price}</p>
+                        <p class="price">EGP ${price}</p>
                     </div>
                     <button class="add-to-cart-btn" onclick="addToCart('${item.name}', ${price})">Add</button>
                 `;
@@ -354,7 +354,7 @@ function loadCart() {
         div.innerHTML = `
             <div class="item-info">
                 <h4>${item.name}</h4>
-                <p>$${item.price.toFixed(2)}</p>
+                <p>EGP ${item.price.toFixed(2)}</p>
             </div>
             <div class="item-quantity">
                 <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
@@ -362,7 +362,7 @@ function loadCart() {
                 <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
             </div>
             <div class="item-total">
-                $${(item.price * item.quantity).toFixed(2)}
+                EGP ${(item.price * item.quantity).toFixed(2)}
             </div>
             <button class="remove-btn" onclick="removeItem(${index})">X</button>
         `;
@@ -393,13 +393,13 @@ function updateSummary(subtotal) {
     let total = subtotal + tax;
 
     if (document.getElementById("subtotal"))
-        document.getElementById("subtotal").textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById("subtotal").textContent = `EGP ${subtotal.toFixed(2)}`;
 
     if (document.getElementById("tax"))
-        document.getElementById("tax").textContent = `$${tax.toFixed(2)}`;
+        document.getElementById("tax").textContent = `EGP ${tax.toFixed(2)}`;
 
     if (document.getElementById("total"))
-        document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+        document.getElementById("total").textContent = `EGP ${total.toFixed(2)}`;
 }
 
 /* =========================

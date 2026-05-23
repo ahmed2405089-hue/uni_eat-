@@ -200,7 +200,7 @@ function displayMenu(){
     menu.forEach(i => {
         list.innerHTML += `
             <li>
-                ${i.name} - $${parseFloat(i.price).toFixed(2)}
+                ${i.name} - EGP ${parseFloat(i.price).toFixed(2)}
                 <button onclick="promptPrice('${i.id}')">Change Price</button>
                 <button onclick="removeItem('${i.id}')">Remove</button>
             </li>

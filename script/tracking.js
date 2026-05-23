@@ -34,7 +34,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // Display order details
     let detailsHTML = `<h3>Order Details</h3>`;
     detailsHTML += `<p><strong>Order ID:</strong> ${order.id}</p>`;
-    detailsHTML += `<p><strong>Total:</strong> $${order.total}</p>`;
+    detailsHTML += `<p><strong>Total:</strong> EGP ${order.total}</p>`;
     detailsHTML += `<p><strong>Items:</strong></p><ul>`;
 
     order.items.forEach(item => {

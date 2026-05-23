@@ -37,17 +37,17 @@
 
             <div class="summary-line">
                 <span>Subtotal:</span>
-                <span id="subtotal">$0.00</span>
+                <span id="subtotal">EGP 0.00</span>
             </div>
 
             <div class="summary-line">
                 <span>Tax (5%):</span>
-                <span id="tax">$0.00</span>
+                <span id="tax">EGP 0.00</span>
             </div>
 
             <div class="summary-line total">
                 <span>Total:</span>
-                <span id="total">$0.00</span>
+                <span id="total">EGP 0.00</span>
             </div>
 
             <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
@@ -103,7 +103,7 @@
                 <div class="cart-item">
                     <div class="item-info">
                         <h4>${item.name}</h4>
-                        <p>Price: $${item.price.toFixed(2)}</p>
+                        <p>Price: EGP ${item.price.toFixed(2)}</p>
                     </div>
 
                     <div class="item-quantity">
@@ -113,7 +113,7 @@
                     </div>
 
                     <div class="item-total">
-                        $${itemTotal.toFixed(2)}
+                        EGP ${itemTotal.toFixed(2)}
                     </div>
 
                     <button class="remove-btn" onclick="removeItem(${index})">X</button>
@@ -124,9 +124,9 @@
             let tax = subtotal * 0.05;
             let total = subtotal + tax;
 
-            document.getElementById("subtotal").textContent = `$${subtotal.toFixed(2)}`;
-            document.getElementById("tax").textContent = `$${tax.toFixed(2)}`;
-            document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+            document.getElementById("subtotal").textContent = `EGP ${subtotal.toFixed(2)}`;
+            document.getElementById("tax").textContent = `EGP ${tax.toFixed(2)}`;
+            document.getElementById("total").textContent = `EGP ${total.toFixed(2)}`;
 
             localStorage.setItem("cart", JSON.stringify(cart));
         }

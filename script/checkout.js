@@ -15,7 +15,7 @@ function clearCart() {
 }
 
 function formatPrice(value) {
-    return `$${parseFloat(value).toFixed(2)}`;
+    return `EGP ${parseFloat(value).toFixed(2)}`;
 }
 
 function createToastContainer() {
@@ -57,7 +57,7 @@ function renderCart() {
 
     if (cart.length === 0) {
         orderList.innerHTML = "<li>Your cart is empty.</li>";
-        totalElement.textContent = "$0.00";
+        totalElement.textContent = "EGP 0.00";
         return;
     }
 
