@@ -176,11 +176,11 @@ function getRestaurantMenu(restaurantId) {
 
 function normalizeGyroMenu(menu) {
     const gyroPriceMap = {
-        "Crispy Chicken Sandwich": 95,
-        "Greek Shawerma": 85,
-        "Shawerma Meal": 130,
-        "Greek Salad": 55,
-        "Gyro Fries": 45
+        "Crispy Chicken Sandwich": 150,
+        "Greek Shawerma": 155,
+        "Shawerma Meal": 215,
+        "Greek Salad": 95,
+        "Gyro Fries": 65
     };
 
     if (!Array.isArray(menu)) return menu;
