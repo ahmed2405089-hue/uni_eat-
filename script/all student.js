@@ -28,15 +28,15 @@ window.restaurants = [
             {
                 name: "Beverages",
                 items: [
-                    { name: "Latte", price: 3 },
-                    { name: "Mocha", price: 3.5 },
-                    { name: "Hot Chocolate", price: 3 }
+                    { name: "Latte", price: 130 },
+                    { name: "Mocha", price: 120 },
+                    { name: "Hot Chocolate", price: 1}
                 ]
             },
             {
                 name: "Sandwiches",
                 items: [
-                    { name: "Grilled Chicken Sandwich", price: 6 }
+                    { name: "Grilled Chicken Sandwich", price: 150 }
                 ]
             }
         ]
@@ -49,9 +49,9 @@ window.restaurants = [
             {
                 name: "Baked Goods",
                 items: [
-                    { name: "Cinnabon Classic", price: 4 },
-                    { name: "Chocobon", price: 4.5 },
-                    { name: "Caramel Roll", price: 4.5 }
+                    { name: "Cinnabon Classic", price: 139},
+                    { name: "Chocobon", price: 159 },
+                    { name: "Caramel Roll", price: 159 }
                 ]
             }
         ]
@@ -64,9 +64,9 @@ window.restaurants = [
             {
                 name: "Sandwiches",
                 items: [
-                    { name: "Cottage Cheese Sandwich", price: 4 },
-                    { name: "Crispy Chicken Crepe", price: 5 },
-                    { name: "Foul Sandwich", price: 3 }
+                    { name: "Cottage Cheese Sandwich", price: 30 },
+                    { name: "Crispy Chicken Crepe", price: 150 },
+                    { name: "Foul Sandwich", price: 10 }
                 ]
             }
         ]
@@ -79,9 +79,9 @@ window.restaurants = [
             {
                 name: "Desserts",
                 items: [
-                    { name: "Brownie", price: 3 },
-                    { name: "Cookie", price: 2 },
-                    { name: "Soft Ice Cream", price: 2.5 }
+                    { name: "Brownie", price: 50 },
+                    { name: "Cookie", price: 70 },
+                    { name: "Soft Ice Cream", price: 80 }
                 ]
             }
         ]
