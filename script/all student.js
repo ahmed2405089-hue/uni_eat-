@@ -30,7 +30,7 @@ window.restaurants = [
                 items: [
                     { name: "Latte", price: 130 },
                     { name: "Mocha", price: 120 },
-                    { name: "Hot Chocolate", price: 1}
+                    { name: "Hot Chocolate", price:110}
                 ]
             },
             {
@@ -64,9 +64,9 @@ window.restaurants = [
             {
                 name: "Sandwiches",
                 items: [
-                    { name: "Cottage Cheese Sandwich", price: 30 },
-                    { name: "Crispy Chicken Crepe", price: 150 },
-                    { name: "Foul Sandwich", price: 10 }
+                    { name: "Foul Sandwich", price: 10 },
+                    {name: "Cottage Cheese Sandwich", price: 30},
+                    { name: "Crispy Chicken Crepe", price: 150}
                 ]
             }
         ]
