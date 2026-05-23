@@ -36,6 +36,26 @@
             <button onclick="window.location.href='all-orders.html'">View All</button>
         </div>
     </div>
+    <div class="container">
+        <div class="card assign-card">
+            <h3>Assign Owner to Restaurants</h3>
+            <div class="assign-row">
+                <input id="ownerEmail" placeholder="owner email (e.g. ahmed@restaurant.com)" style="flex:1">
+                <select id="restaurantsSelect" multiple style="min-width:200px;max-width:400px;height:120px;"></select>
+                <button class="small" onclick="assignOwner()">Assign</button>
+            </div>
+            <h4 style="margin-top:12px">Current Assignments</h4>
+            <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center;">
+                <input id="ownerSearch" placeholder="Search owner email..." style="flex:1">
+                <button class="small" onclick="renderOwnerMappings()">Clear</button>
+            </div>
+            <table id="ownerMappingsTable" style="width:100%;border-collapse:collapse">
+                <thead><tr><th style="text-align:left">Owner Email</th><th style="text-align:left">Restaurant IDs</th><th style="text-align:left">Actions</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <script src="../script/all student.js"></script>
     <script src="../script/admin.js"></script>
 </body>
 

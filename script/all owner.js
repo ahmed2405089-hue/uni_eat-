@@ -20,6 +20,36 @@ function getCurrentRestaurantId(){
     return select ? parseInt(select.value, 10) : null;
 }
 
+function getCurrentUser(){
+    return {
+        role: localStorage.getItem('userRole') || null,
+        email: localStorage.getItem('userEmail') || null
+    };
+}
+
+function getOwnerAllowedRestaurantIds(){
+    const user = getCurrentUser();
+    if (!user || user.role !== 'owner' || !user.email) return null;
+
+    const mappings = JSON.parse(localStorage.getItem('ownerRestaurants') || '{}');
+    const email = user.email.toLowerCase();
+
+    // If explicit mapping exists, return it (array of ids)
+    if (mappings[email]) return Array.isArray(mappings[email]) ? mappings[email] : [mappings[email]];
+
+    // Fallback: try to infer from email matching restaurant name
+    if (window.restaurants && window.restaurants.length) {
+        const found = window.restaurants.filter(r => {
+            const key = r.name.toLowerCase().replace(/\s+/g, '');
+            return email.includes(key) || email.includes(r.name.toLowerCase());
+        }).map(r => r.id);
+
+        if (found.length) return found;
+    }
+
+    return [];
+}
+
 function getRestaurantMenu(restaurantId){
     const menus = getRestaurantMenus();
     if (menus[restaurantId]) {
@@ -59,12 +89,40 @@ function displayRestaurantOptions(){
     if (!select || !window.restaurants) return;
 
     select.innerHTML = "";
-    window.restaurants.forEach(r => {
+    const user = getCurrentUser();
+    let allowed = null;
+
+    if (user && user.role === 'owner') {
+        allowed = getOwnerAllowedRestaurantIds();
+    }
+
+    // If allowed is null -> not owner or no restriction, show all
+    if (allowed === null) {
+        window.restaurants.forEach(r => {
+            const option = document.createElement("option");
+            option.value = r.id;
+            option.textContent = r.name;
+            select.appendChild(option);
+        });
+    } else if (Array.isArray(allowed) && allowed.length > 0) {
+        // show only allowed restaurants
+        const allowedSet = new Set(allowed.map(Number));
+        window.restaurants.forEach(r => {
+            if (allowedSet.has(r.id)) {
+                const option = document.createElement("option");
+                option.value = r.id;
+                option.textContent = r.name;
+                select.appendChild(option);
+            }
+        });
+    } else {
+        // owner with no assigned restaurants -> show placeholder
         const option = document.createElement("option");
-        option.value = r.id;
-        option.textContent = r.name;
+        option.value = "";
+        option.textContent = "No assigned restaurants";
         select.appendChild(option);
-    });
+        select.disabled = true;
+    }
 
     select.addEventListener("change", displayMenu);
 }
@@ -75,6 +133,16 @@ function addItem(){
     const restaurantId = getCurrentRestaurantId();
 
     if (!name || !price || !restaurantId) return;
+
+    // Owner permission check
+    const user = getCurrentUser();
+    if (user.role === 'owner'){
+        const allowed = getOwnerAllowedRestaurantIds();
+        if (Array.isArray(allowed) && !allowed.map(Number).includes(Number(restaurantId))) {
+            alert('You do not have permission to add items to this restaurant.');
+            return;
+        }
+    }
 
     const menu = getRestaurantMenu(restaurantId);
     const newId = Date.now();
@@ -90,6 +158,16 @@ function addItem(){
 function editItem(id){
     const restaurantId = getCurrentRestaurantId();
     if (!restaurantId) return;
+
+    // Owner permission check
+    const user = getCurrentUser();
+    if (user.role === 'owner'){
+        const allowed = getOwnerAllowedRestaurantIds();
+        if (Array.isArray(allowed) && !allowed.map(Number).includes(Number(restaurantId))) {
+            alert('You do not have permission to edit items in this restaurant.');
+            return;
+        }
+    }
 
     const menu = getRestaurantMenu(restaurantId);
     const item = menu.find(i => i.id == id);
@@ -146,6 +224,16 @@ function updatePrice(id, newPrice){
     const restaurantId = getCurrentRestaurantId();
     if (!restaurantId) return;
 
+    // Owner permission check
+    const user = getCurrentUser();
+    if (user.role === 'owner'){
+        const allowed = getOwnerAllowedRestaurantIds();
+        if (Array.isArray(allowed) && !allowed.map(Number).includes(Number(restaurantId))) {
+            alert('You do not have permission to update prices in this restaurant.');
+            return;
+        }
+    }
+
     let menu = getRestaurantMenu(restaurantId);
     const item = menu.find(i => i.id == id);
     if (item) {
@@ -160,6 +248,16 @@ function removeItem(id){
 
     const restaurantId = getCurrentRestaurantId();
     if (!restaurantId) return;
+
+    // Owner permission check
+    const user = getCurrentUser();
+    if (user.role === 'owner'){
+        const allowed = getOwnerAllowedRestaurantIds();
+        if (Array.isArray(allowed) && !allowed.map(Number).includes(Number(restaurantId))) {
+            alert('You do not have permission to remove items from this restaurant.');
+            return;
+        }
+    }
 
     let menu = getRestaurantMenu(restaurantId);
     menu = menu.filter(i => i.id != id);

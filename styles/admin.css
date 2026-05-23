@@ -192,3 +192,39 @@ ul#users li {
 ul#users li:hover {
     transform: translateX(4px);
 }
+
+/* Assignment UI tweaks */
+.card.assign-card {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.assign-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+input[type="text"], select {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--surface-border);
+    background: var(--background);
+    color: var(--text);
+}
+
+table#ownerMappingsTable {
+    width: 100%;
+}
+
+table#ownerMappingsTable th, table#ownerMappingsTable td {
+    text-align: left;
+    padding: 10px 12px;
+}
+
+button.small {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+}
