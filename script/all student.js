@@ -6,16 +6,16 @@ window.restaurants = [
             {
                 name: "Main Dishes",
                 items: [
-                    { name: "Crispy Chicken Sandwich", price: 150 },
-                    { name: "Greek Shawerma", price: 155 },
-                    { name: "Shawerma Meal", price: 215}
+                    { name: "Crispy Chicken Sandwich", price: 95 },
+                    { name: "Greek Shawerma", price: 85 },
+                    { name: "Shawerma Meal", price: 130 }
                 ]
             },
             {
                 name: "Sides",
                 items: [
-                    { name: "Greek Salad", price: 95 },
-                    { name: "Gyro Fries", price: 65 }
+                    { name: "Greek Salad", price: 55 },
+                    { name: "Gyro Fries", price: 45 }
                 ]
             }
         ]
@@ -174,6 +174,23 @@ function getRestaurantMenu(restaurantId) {
     return menus[restaurantId] || [];
 }
 
+function normalizeGyroMenu(menu) {
+    const gyroPriceMap = {
+        "Crispy Chicken Sandwich": 95,
+        "Greek Shawerma": 85,
+        "Shawerma Meal": 130,
+        "Greek Salad": 55,
+        "Gyro Fries": 45
+    };
+
+    if (!Array.isArray(menu)) return menu;
+
+    return menu.map(item => ({
+        ...item,
+        price: gyroPriceMap[item.name] || item.price
+    }));
+}
+
 /* =========================
    RESTAURANT DETAILS PAGE
 ========================= */
@@ -247,7 +264,10 @@ if (menuDiv) {
             return `${basePath}${itemName.toLowerCase().replace(/ /g, ' ')}.jpg`;
         }
 
-        const dynamicMenu = getRestaurantMenu(restaurant.id);
+        let dynamicMenu = getRestaurantMenu(restaurant.id);
+        if (restaurant.name === "Gyro") {
+            dynamicMenu = normalizeGyroMenu(dynamicMenu);
+        }
         const categoriesToRender = dynamicMenu.length
             ? [{ name: "Available Menu", items: dynamicMenu, isCustom: true }]
             : restaurant.categories;
