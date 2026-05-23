@@ -6,6 +6,29 @@
 
     --background: #0f172a;
     --surface: rgba(30, 41, 59, 0.6);
+/* Back arrow (global) */
+.back-arrow {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.04);
+    color: var(--text);
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 1.15rem;
+    z-index: 1100;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+
+.back-arrow:hover {
+    background: rgba(255,255,255,0.06);
+    transform: translateY(-2px);
+}
     --surface-border: rgba(255, 255, 255, 0.08);
 
     --text: #f8fafc;

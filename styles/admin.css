@@ -373,3 +373,22 @@ button.small {
         padding: 0 12px;
     }
 }
+
+/* Back arrow for admin pages */
+.back-arrow {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.03);
+    color: var(--text);
+    border-radius: 10px;
+    text-decoration: none;
+    z-index: 1200;
+}
+
+.back-arrow:hover { transform: translateY(-2px); background: rgba(255,255,255,0.06); }

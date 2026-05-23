@@ -137,3 +137,22 @@ body {
         animation: fadeIn 2s ease-out 1s forwards;
     }
 }
+
+/* Back arrow for index (if used) */
+.back-arrow {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    z-index: 1100;
+}
+
+.back-arrow:hover { transform: translateY(-2px); background: rgba(255,255,255,0.12); }
