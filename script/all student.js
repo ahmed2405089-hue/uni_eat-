@@ -100,6 +100,34 @@ window.restaurants = [
     }
 ];
 
+async function loadRestaurantsFromBackend() {
+    try {
+        const response = await fetch('/api/restaurants');
+        if (!response.ok) {
+            console.warn('Backend restaurants fetch failed, using local fallback.');
+            return;
+        }
+        const data = await response.json();
+        if (Array.isArray(data) && data.length > 0) {
+            window.restaurants = data;
+            if (restDiv) renderRestaurants(window.restaurants);
+        }
+    } catch (error) {
+        console.warn('Could not load restaurants from backend:', error);
+    }
+}
+
+async function getRestaurantFromBackend(id) {
+    try {
+        const response = await fetch(`/api/restaurants/${id}`);
+        if (!response.ok) return null;
+        return await response.json();
+    } catch (error) {
+        console.warn('Could not fetch restaurant from backend:', error);
+        return null;
+    }
+}
+
 /* =========================
    RESTAURANTS PAGE
 ========================= */
@@ -161,6 +189,7 @@ function searchRestaurants() {
 
 if (restDiv) {
     renderRestaurants(restaurants);
+    loadRestaurantsFromBackend();
 } else {
     console.log("All menu div not found");
 }
@@ -209,13 +238,19 @@ function normalizeGyroMenu(menu) {
 let menuDiv = document.getElementById("menu");
 
 if (menuDiv) {
-    let id = new URLSearchParams(window.location.search).get("id");
-    let restaurant = restaurants.find(r => r.id == id);
+    (async () => {
+        let id = new URLSearchParams(window.location.search).get("id");
+        window.currentRestaurantId = Number(id);
+        let restaurant = restaurants.find(r => r.id == id);
 
-    if (restaurant) {
-        document.getElementById("rest-name").textContent = restaurant.name;
+        if (!restaurant) {
+            restaurant = await getRestaurantFromBackend(id);
+        }
 
-        function getItemImagePath(restaurant, category, item) {
+        if (restaurant) {
+            document.getElementById("rest-name").textContent = restaurant.name;
+
+            function getItemImagePath(restaurant, category, item) {
             const basePath = `../assets/${restaurant.name.toLowerCase().replace(/ /g, '')}/`;
             const itemName = item.name;
 
@@ -352,11 +387,12 @@ function showToast(message, type = "success") {
 }
 
 function addToCart(name, price) {
-    let existing = cart.find(item => item.name === name);
+    const restaurantId = window.currentRestaurantId || null;
+    let existing = cart.find(item => item.name === name && item.restaurantId === restaurantId);
     if (existing) {
         existing.quantity += 1;
     } else {
-        cart.push({ name, price: parseFloat(price), quantity: 1 });
+        cart.push({ name, price: parseFloat(price), quantity: 1, restaurantId });
     }
     saveCart();
     showToast("Added to cart ✅", "success");

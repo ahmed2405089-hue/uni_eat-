@@ -1,6 +1,6 @@
+const API_ROOT = '/api';
 
-/* ===== OWNER ACCOUNTS SYSTEM (Temporary - JavaScript Only) ===== */
-const OWNER_ACCOUNTS = {
+const OWNER_EMAIL_ACCOUNTS = {
     'cinnabon@unieats.com': { password: 'pass123', restaurantId: 1, restaurantName: 'Cinnabon' },
     'conitta@unieats.com': { password: 'pass123', restaurantId: 2, restaurantName: 'Conitta' },
     'gyro@unieats.com': { password: 'pass123', restaurantId: 3, restaurantName: 'Gyro' },
@@ -8,36 +8,25 @@ const OWNER_ACCOUNTS = {
     'tbs@unieats.com': { password: 'pass123', restaurantId: 5, restaurantName: 'TBS' }
 };
 
-function authenticateOwner(username, password) {
-    const account = OWNER_ACCOUNTS[username];
-    if (account && account.password === password) {
-        localStorage.setItem('ownerUsername', username);
-        localStorage.setItem('userRole', 'owner');
-        localStorage.setItem('userEmail', username);
-        localStorage.setItem('ownerRestaurants', JSON.stringify([account.restaurantId]));
-        return true;
-    }}
-    return false;
-    
-/* ============================================
-   SHARED UTILITIES
-   ============================================ */
 function confirmLogout(event) {
     if (event) event.preventDefault();
     window.location.href = 'logout-confirm.html';
 }
 
-/* ===== STORAGE ===== */
 function get(key){
     return JSON.parse(localStorage.getItem(key)) || [];
 }
 
+function set(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
+}
+
 function getCurrentOwner() {
     const username = localStorage.getItem('ownerUsername');
-    if (!username || !OWNER_ACCOUNTS[username]) return null;
+    if (!username || !OWNER_EMAIL_ACCOUNTS[username]) return null;
     return {
         username: username,
-        ...OWNER_ACCOUNTS[username],
+        ...OWNER_EMAIL_ACCOUNTS[username],
         isAuthenticated: true
     };
 }
@@ -53,114 +42,146 @@ function isOwnerAuthenticated() {
     return getCurrentOwner() !== null;
 }
 
-/* ===== STORAGE ===== */
-function get(key) {
-    return JSON.parse(localStorage.getItem(key)) || [];
+async function apiGet(path) {
+    const response = await fetch(`${API_ROOT}${path}`);
+    if (!response.ok) throw new Error(`GET ${path} failed`);
+    return response.json();
 }
 
-function set(key, data) {
-    localStorage.setItem(key, JSON.stringify(data));
+async function apiPost(path, body) {
+    const response = await fetch(`${API_ROOT}${path}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `POST ${path} failed`);
+    }
+    return response.json();
 }
 
-function getRestaurantMenus() {
-    return JSON.parse(localStorage.getItem("restaurantMenus")) || {};
+async function apiPut(path, body) {
+    const response = await fetch(`${API_ROOT}${path}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `PUT ${path} failed`);
+    }
+    return response.json();
 }
 
-function setRestaurantMenus(data) {
-    localStorage.setItem("restaurantMenus", JSON.stringify(data));
+async function apiPatch(path, body) {
+    const response = await fetch(`${API_ROOT}${path}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `PATCH ${path} failed`);
+    }
+    return response.json();
 }
 
-function getCurrentRestaurantId() {
+async function apiDelete(path, body = null) {
+    const options = { method: 'DELETE' };
+    if (body) {
+        options.headers = { 'Content-Type': 'application/json' };
+        options.body = JSON.stringify(body);
+    }
+    const response = await fetch(`${API_ROOT}${path}`, options);
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `DELETE ${path} failed`);
+    }
+    return response.json();
+}
+
+async function getCurrentRestaurantId() {
     const owner = getCurrentOwner();
     if (!owner) return null;
-    return owner.restaurantId;
-}
 
-function getCurrentUser() {
-    const owner = getCurrentOwner();
-    if (!owner) {
-        return {
-            role: localStorage.getItem('userRole') || null,
-            email: localStorage.getItem('userEmail') || null
-        };
-    }
-    return {
-        role: 'owner',
-        email: owner.username
-    };
-}
-
-function getOwnerAllowedRestaurantIds() {
-    const owner = getCurrentOwner();
-    if (!owner) return null;
-    return [owner.restaurantId];
-}
-
-function getRestaurantMenu(restaurantId) {
-    const menus = getRestaurantMenus();
-    if (menus[restaurantId]) {
-        return menus[restaurantId];
+    const ownerMappings = await apiGet('/owner-mappings').catch(() => ({}));
+    const mapped = ownerMappings[owner.username.toLowerCase()];
+    if (mapped && mapped.length) {
+        return Number(Array.isArray(mapped) ? mapped[0] : mapped);
     }
 
-    if (window.restaurants) {
-        const restaurant = window.restaurants.find(r => r.id === restaurantId);
-        if (restaurant) {
-            const items = [];
-            restaurant.categories.forEach((category, categoryIndex) => {
-                category.items.forEach((item, itemIndex) => {
-                    items.push({
-                        id: `${restaurantId}-${categoryIndex}-${itemIndex}`,
-                        name: item.name,
-                        price: item.price.toFixed ? item.price.toFixed(2) : item.price,
-                        category: category.name || 'Uncategorized',
-                        image: item.image || null
-                    });
-                });
-            });
-            menus[restaurantId] = items;
-            setRestaurantMenus(menus);
-            return items;
+    if (localStorage.getItem('ownerRestaurants')) {
+        const restaurantIds = JSON.parse(localStorage.getItem('ownerRestaurants'));
+        if (Array.isArray(restaurantIds) && restaurantIds.length) {
+            return Number(restaurantIds[0]);
         }
     }
 
-    return [];
+    return owner.restaurantId || null;
 }
 
-function saveRestaurantMenu(restaurantId, menu) {
-    const menus = getRestaurantMenus();
-    menus[restaurantId] = menu;
-    setRestaurantMenus(menus);
+async function getRestaurantData(restaurantId) {
+    if (!restaurantId) return null;
+    return await apiGet(`/restaurants/${restaurantId}`);
 }
 
-function displayRestaurantOptions() {
-    const restaurantNameEl = document.getElementById("restaurantName");
+function flattenMenu(restaurant) {
+    if (!restaurant || !Array.isArray(restaurant.categories)) return [];
+    return restaurant.categories.flatMap(category =>
+        (category.items || []).map(item => ({
+            ...item,
+            category: category.name || 'Uncategorized'
+        }))
+    );
+}
+
+async function displayRestaurantOptions() {
+    const restaurantNameEl = document.getElementById('restaurantName');
     const owner = getCurrentOwner();
 
     if (!restaurantNameEl) return;
     if (!owner) {
-        restaurantNameEl.textContent = "Please login first";
-        restaurantNameEl.style.color = "var(--text-secondary)";
+        restaurantNameEl.textContent = 'Please login first';
+        restaurantNameEl.style.color = 'var(--text-secondary)';
         return;
     }
 
-    restaurantNameEl.textContent = owner.restaurantName;
-    restaurantNameEl.style.color = "var(--text)";
+    const restaurantId = await getCurrentRestaurantId();
+    if (!restaurantId) {
+        restaurantNameEl.textContent = 'Restaurant not assigned';
+        restaurantNameEl.style.color = 'var(--text-secondary)';
+        return;
+    }
 
-    if (document.getElementById("menuList")) {
-        displayMenu();
+    try {
+        const restaurant = await getRestaurantData(restaurantId);
+        restaurantNameEl.textContent = restaurant.name || owner.restaurantName;
+        restaurantNameEl.style.color = 'var(--text)';
+    } catch (error) {
+        console.error('Could not load restaurant data.', error);
+        restaurantNameEl.textContent = owner.restaurantName || 'Restaurant';
     }
 }
 
-/* ===== ITEM MANAGEMENT ===== */
-function addItem() {
-    const name = document.getElementById("itemName")?.value?.trim();
-    const price = document.getElementById("itemPrice")?.value?.trim();
-    const category = document.getElementById("itemCategory")?.value?.trim();
-    const imageInput = document.getElementById("itemImage");
-    const restaurantId = getCurrentRestaurantId();
+function encodeItemId(category, name) {
+    return encodeURIComponent(category || 'Uncategorized') + '|' + encodeURIComponent(name);
+}
+
+function decodeItemId(itemId) {
+    const [category, name] = itemId.split('|').map(part => decodeURIComponent(part));
+    return { category, name };
+}
+
+async function addItem() {
+    const name = document.getElementById('itemName')?.value?.trim();
+    const price = document.getElementById('itemPrice')?.value?.trim();
+    const category = document.getElementById('itemCategory')?.value?.trim() || 'Uncategorized';
+    const imageInput = document.getElementById('itemImage');
+    const restaurantId = await getCurrentRestaurantId();
 
     if (!name || !price || !restaurantId) {
-        alert('Please fill in all required fields (Name, Price)');
+        alert('Please fill in all required fields (Name, Price) and ensure your restaurant is assigned.');
         return;
     }
 
@@ -174,168 +195,168 @@ function addItem() {
         return;
     }
 
-    const menu = getRestaurantMenu(restaurantId);
-    const newId = Date.now().toString();
-    
     let imageData = null;
     if (imageInput && imageInput.files && imageInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            imageData = e.target.result;
-            const newItem = {
-                id: newId,
-                name: name,
-                price: parseFloat(price).toFixed(2),
-                category: category || 'Uncategorized',
-                image: imageData,
-                createdAt: new Date().toISOString()
-            };
-            menu.push(newItem);
-            saveRestaurantMenu(restaurantId, menu);
-            
-            // Clear form
-            document.getElementById("itemName").value = "";
-            document.getElementById("itemPrice").value = "";
-            document.getElementById("itemCategory").value = "";
-            document.getElementById("itemImage").value = "";
-            document.getElementById("imagePreview").style.backgroundImage = "";
-            document.getElementById("imagePreview").classList.remove("has-image");
-            
-            displayMenu();
-        };
-        reader.readAsDataURL(imageInput.files[0]);
-    } else {
-        const newItem = {
-            id: newId,
-            name: name,
-            price: parseFloat(price).toFixed(2),
-            category: category || 'Uncategorized',
-            image: null,
-            createdAt: new Date().toISOString()
-        };
-        menu.push(newItem);
-        saveRestaurantMenu(restaurantId, menu);
-        
-        // Clear form
-        document.getElementById("itemName").value = "";
-        document.getElementById("itemPrice").value = "";
-        document.getElementById("itemCategory").value = "";
-        document.getElementById("itemImage").value = "";
-        document.getElementById("imagePreview").style.backgroundImage = "";
-        document.getElementById("imagePreview").classList.remove("has-image");
-        
-        displayMenu();
+        const file = imageInput.files[0];
+        imageData = await new Promise(resolve => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.readAsDataURL(file);
+        });
+    }
+
+    const payload = {
+        category,
+        name,
+        price: parseFloat(price),
+        image: imageData
+    };
+
+    try {
+        await apiPost(`/restaurants/${restaurantId}/items`, payload);
+        document.getElementById('itemName').value = '';
+        document.getElementById('itemPrice').value = '';
+        document.getElementById('itemCategory').value = '';
+        if (document.getElementById('itemImage')) document.getElementById('itemImage').value = '';
+        const preview = document.getElementById('imagePreview');
+        if (preview) {
+            preview.style.backgroundImage = '';
+            preview.classList.remove('has-image');
+        }
+        await displayMenu();
+    } catch (error) {
+        console.error('Could not create menu item.', error);
+        alert(error.message || 'Failed to add item.');
     }
 }
 
-function editItem(id) {
-    const restaurantId = getCurrentRestaurantId();
+async function editItem(itemId) {
+    const restaurantId = await getCurrentRestaurantId();
     if (!restaurantId || !isOwnerAuthenticated()) return;
+    const { category, name } = decodeItemId(itemId);
+    const newName = prompt('Edit item name:', name);
+    if (newName === null || newName.trim() === '') return;
 
-    const menu = getRestaurantMenu(restaurantId);
-    const item = menu.find(i => i.id == id);
-    if (!item) return;
-
-    const name = prompt("Edit item name:", item.name);
-    if (name === null || name.trim() === "") return;
-    
-    const price = prompt("Edit item price:", item.price);
-    if (price === null || price === "") return;
-    
-    if (isNaN(parseFloat(price)) || parseFloat(price) < 0) {
+    const newPrice = prompt('Edit item price:', '');
+    if (newPrice === null || newPrice.trim() === '') return;
+    if (isNaN(parseFloat(newPrice)) || parseFloat(newPrice) < 0) {
         alert('Please enter a valid price');
         return;
     }
 
-    const category = prompt("Edit category:", item.category || 'Uncategorized');
+    const newCategory = prompt('Edit category:', category || 'Uncategorized');
 
-    item.name = name.trim();
-    item.price = parseFloat(price).toFixed(2);
-    item.category = category || 'Uncategorized';
-    item.updatedAt = new Date().toISOString();
-    
-    saveRestaurantMenu(restaurantId, menu);
-    displayMenu();
+    try {
+        await apiPut(`/restaurants/${restaurantId}/items`, {
+            category,
+            originalName: name,
+            name: newName.trim(),
+            price: parseFloat(newPrice),
+            category: newCategory || 'Uncategorized'
+        });
+        await displayMenu();
+    } catch (error) {
+        console.error('Could not edit item.', error);
+        alert(error.message || 'Failed to update item.');
+    }
 }
 
-function updateItemImage(id) {
-    const restaurantId = getCurrentRestaurantId();
+async function updateItemImage(itemId) {
+    const restaurantId = await getCurrentRestaurantId();
     if (!restaurantId || !isOwnerAuthenticated()) return;
 
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
-    
-    input.onchange = function(e) {
+
+    input.onchange = async function(e) {
         const file = e.target.files[0];
-        if (file) {
+        if (!file) return;
+        const { category, name } = decodeItemId(itemId);
+        const imageData = await new Promise(resolve => {
             const reader = new FileReader();
-            reader.onload = function(event) {
-                const menu = getRestaurantMenu(restaurantId);
-                const item = menu.find(i => i.id == id);
-                if (item) {
-                    item.image = event.target.result;
-                    item.updatedAt = new Date().toISOString();
-                    saveRestaurantMenu(restaurantId, menu);
-                    displayMenu();
-                }
-            };
+            reader.onload = () => resolve(reader.result);
             reader.readAsDataURL(file);
+        });
+
+        try {
+            await apiPut(`/restaurants/${restaurantId}/items`, {
+                category,
+                originalName: name,
+                name,
+                price: null,
+                image: imageData
+            });
+            await displayMenu();
+        } catch (error) {
+            console.error('Could not update item image.', error);
+            alert(error.message || 'Failed to update item image.');
         }
     };
-    
+
     input.click();
 }
 
-function displayMenu() {
-    const list = document.getElementById("menuList");
+async function displayMenu() {
+    const list = document.getElementById('menuList');
     if (!list) return;
 
-    const restaurantId = getCurrentRestaurantId();
+    const restaurantId = await getCurrentRestaurantId();
     if (!restaurantId) {
-        list.innerHTML = '<li style="text-align: center; color: var(--text-secondary);">Please select a restaurant</li>';
+        list.innerHTML = '<li style="text-align: center; color: var(--text-secondary);">Please login as an owner or assign a restaurant.</li>';
         return;
     }
 
-    let menu = getRestaurantMenu(restaurantId);
-    if (!menu || menu.length === 0) {
-        list.innerHTML = '<li style="text-align: center; color: var(--text-secondary);">No items in menu yet. Add your first item!</li>';
-        return;
-    }
+    try {
+        const restaurant = await getRestaurantData(restaurantId);
+        const menu = flattenMenu(restaurant);
+        if (!menu || menu.length === 0) {
+            list.innerHTML = '<li style="text-align: center; color: var(--text-secondary);">No items in menu yet. Add your first item!</li>';
+            return;
+        }
 
-    list.innerHTML = "";
-    menu.forEach(item => {
-        const itemHTML = `
-            <li>
-                <div class="item-info">
-                    ${item.image ? `<img src="${item.image}" alt="${item.name}" class="item-image">` : `<div class="item-image" style="background: var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">📸</div>`}
-                    <div class="item-details">
-                        <div class="item-name">${escapeHtml(item.name)}</div>
-                        <div class="item-meta">${escapeHtml(item.category || 'Uncategorized')}</div>
+        list.innerHTML = '';
+        menu.forEach(item => {
+            const itemId = encodeItemId(item.category, item.name);
+            const imageHtml = item.image ? `<img src="${item.image}" alt="${escapeHtml(item.name)}" class="item-image">` : `<div class="item-image" style="background: var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">??</div>`;
+            const itemHTML = `
+                <li>
+                    <div class="item-info">
+                        ${imageHtml}
+                        <div class="item-details">
+                            <div class="item-name">${escapeHtml(item.name)}</div>
+                            <div class="item-meta">${escapeHtml(item.category || 'Uncategorized')}</div>
+                        </div>
                     </div>
-                </div>
-                <div class="item-price">EGP ${parseFloat(item.price).toFixed(2)}</div>
-                <div class="actions">
-                    <button class="edit" onclick="editItem('${item.id}')">Edit</button>
-                    <button class="edit" onclick="updateItemImage('${item.id}')">📷 Image</button>
-                    <button class="delete" onclick="removeItem('${item.id}')">Delete</button>
-                </div>
-            </li>
-        `;
-        list.innerHTML += itemHTML;
-    });
+                    <div class="item-price">EGP ${parseFloat(item.price || 0).toFixed(2)}</div>
+                    <div class="actions">
+                        <button class="edit" onclick="editItem('${itemId}')">Edit</button>
+                        <button class="edit" onclick="updateItemImage('${itemId}')">?? Image</button>
+                        <button class="delete" onclick="removeItem('${itemId}')">Delete</button>
+                    </div>
+                </li>
+            `;
+            list.innerHTML += itemHTML;
+        });
+    } catch (error) {
+        console.error('Could not load menu.', error);
+        list.innerHTML = '<li style="text-align: center; color: var(--text-secondary);">Unable to load menu.</li>';
+    }
 }
 
-function removeItem(id) {
-    if (!confirm("Are you sure you want to delete this item?")) return;
-
-    const restaurantId = getCurrentRestaurantId();
+async function removeItem(itemId) {
+    if (!confirm('Are you sure you want to delete this item?')) return;
+    const restaurantId = await getCurrentRestaurantId();
     if (!restaurantId || !isOwnerAuthenticated()) return;
+    const { category, name } = decodeItemId(itemId);
 
-    let menu = getRestaurantMenu(restaurantId);
-    menu = menu.filter(i => i.id != id);
-    saveRestaurantMenu(restaurantId, menu);
-    displayMenu();
+    try {
+        await apiDelete(`/restaurants/${restaurantId}/items`, { category, name });
+        await displayMenu();
+    } catch (error) {
+        console.error('Could not remove item.', error);
+        alert('Failed to remove item.');
+    }
 }
 
 function escapeHtml(text) {
@@ -346,149 +367,123 @@ function escapeHtml(text) {
         '"': '&quot;',
         "'": '&#039;'
     };
-    return text.replace(/[&<>"']/g, m => map[m]);
+    return String(text).replace(/[&<>"']/g, m => map[m]);
 }
 
-/* ===== IMAGE UPLOAD PREVIEW ===== */
-document.addEventListener('DOMContentLoaded', function() {
-    const imageInput = document.getElementById("itemImage");
-    if (imageInput) {
-        imageInput.addEventListener('change', function(e) {
-            const preview = document.getElementById("imagePreview");
-            if (preview && this.files && this.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.style.backgroundImage = `url('${e.target.result}')`;
-                    preview.classList.add("has-image");
-                };
-                reader.readAsDataURL(this.files[0]);
-            }
-        });
-    }
-});
-
-/* ===== ORDERS ===== */
-function addOrder(item) {
-    let orders = get("orders");
-
-    orders.push({
-        id: Date.now(),
-        item,
-        status: "Pending",
-        createdAt: new Date().toISOString(),
-        restaurantId: getCurrentRestaurantId()
+function setupImagePreview() {
+    const imageInput = document.getElementById('itemImage');
+    if (!imageInput) return;
+    imageInput.addEventListener('change', function() {
+        const preview = document.getElementById('imagePreview');
+        if (preview && this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.style.backgroundImage = `url('${e.target.result}')`;
+                preview.classList.add('has-image');
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
     });
-
-    set("orders", orders);
-    displayOrders();
-    updateDashboard();
 }
 
-function acceptOrder(id) {
-    let orders = get("orders");
-    const restaurantId = getCurrentRestaurantId();
-    const order = orders.find(o => o.id == id && o.restaurantId === restaurantId);
-    if (!order) return;
-    order.status = "Preparing";
-    order.acceptedAt = new Date().toISOString();
-    set("orders", orders);
-    displayOrders();
-    updateDashboard();
-}
-
-function completeOrder(id) {
-    let orders = get("orders");
-    const restaurantId = getCurrentRestaurantId();
-    const order = orders.find(o => o.id == id && o.restaurantId === restaurantId);
-    if (!order) return;
-    order.status = "Ready";
-    order.completedAt = new Date().toISOString();
-    set("orders", orders);
-    displayOrders();
-    updateDashboard();
-}
-
-function displayOrders() {
-    let list = document.getElementById("ordersList");
+async function displayOrders() {
+    const list = document.getElementById('ordersList');
     if (!list) return;
 
-    const restaurantId = getCurrentRestaurantId();
+    const restaurantId = await getCurrentRestaurantId();
     if (!restaurantId) {
         list.innerHTML = '<li style="text-align: center; color: var(--text-secondary); padding: 24px;">Please login as an owner to see your orders.</li>';
         return;
     }
 
-    let orders = get("orders").filter(o => o.restaurantId === restaurantId);
-
-    if (!orders || orders.length === 0) {
-        list.innerHTML = '<li style="text-align: center; color: var(--text-secondary); padding: 24px;">No orders yet</li>';
-        return;
-    }
-
-    list.innerHTML = "";
-
-    orders.forEach(o => {
-        const orderDescription = o.items 
-            ? o.items.map(item => `${item.name} x${item.quantity || item.qty || 1}`).join(", ") 
-            : o.item;
-        
-        let actionButton = "";
-        let statusClass = "";
-        
-        if (o.status === "Pending") {
-            statusClass = "pending";
-            actionButton = `<button onclick="acceptOrder('${o.id}')">Accept Order</button>`;
-        } else if (o.status === "Preparing") {
-            statusClass = "preparing";
-            actionButton = `<button onclick="completeOrder('${o.id}')">Mark Ready</button>`;
-        } else if (o.status === "Ready") {
-            statusClass = "ready";
-            actionButton = `<span class="order-status ${statusClass}">Ready for Pickup</span>`;
-        } else {
-            statusClass = o.status.toLowerCase();
-            actionButton = `<span class="order-status ${statusClass}">${o.status}</span>`;
+    try {
+        const orders = await apiGet(`/orders?restaurantId=${restaurantId}`);
+        if (!orders.length) {
+            list.innerHTML = '<li style="text-align: center; color: var(--text-secondary); padding: 24px;">No orders yet</li>';
+            return;
         }
 
-        const orderHTML = `
-            <li>
-                <div class="order-header">Order #${o.id}</div>
-                <div style="margin-bottom: 12px; color: var(--text-secondary);">${escapeHtml(orderDescription)}</div>
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-                    <span class="order-status ${statusClass}">${o.status}</span>
-                    ${actionButton}
-                </div>
-            </li>
-        `;
-        list.innerHTML += orderHTML;
-    });
+        list.innerHTML = '';
+        orders.forEach(o => {
+            const orderDescription = Array.isArray(o.items)
+                ? o.items.map(item => `${item.name} x${item.quantity || item.qty || 1}`).join(', ')
+                : '';
+
+            let actionButton = '';
+            let statusClass = '';
+            if (o.status === 'Pending') {
+                statusClass = 'pending';
+                actionButton = `<button onclick="acceptOrder(${o.id})">Accept Order</button>`;
+            } else if (o.status === 'Preparing') {
+                statusClass = 'preparing';
+                actionButton = `<button onclick="completeOrder(${o.id})">Mark Ready</button>`;
+            } else {
+                statusClass = 'ready';
+                actionButton = `<span class="order-status ${statusClass}">${o.status}</span>`;
+            }
+
+            const orderHTML = `
+                <li>
+                    <div class="order-header">Order #${o.id}</div>
+                    <div style="margin-bottom: 12px; color: var(--text-secondary);">${escapeHtml(orderDescription)}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                        <span class="order-status ${statusClass}">${o.status}</span>
+                        ${actionButton}
+                    </div>
+                </li>
+            `;
+            list.innerHTML += orderHTML;
+        });
+    } catch (error) {
+        console.error('Could not load owner orders.', error);
+        list.innerHTML = '<li style="text-align: center; color: var(--text-secondary); padding: 24px;">Unable to load orders.</li>';
+    }
 }
 
-/* ===== DASHBOARD ===== */
-function updateDashboard() {
-    let orders = get("orders");
-    const restaurantId = getCurrentRestaurantId();
+async function acceptOrder(id) {
+    try {
+        await apiPatch(`/orders/${id}`, { status: 'Preparing' });
+        await displayOrders();
+        await updateDashboard();
+    } catch (error) {
+        console.error('Could not update order.', error);
+        alert('Failed to accept order.');
+    }
+}
+
+async function completeOrder(id) {
+    try {
+        await apiPatch(`/orders/${id}`, { status: 'Ready' });
+        await displayOrders();
+        await updateDashboard();
+    } catch (error) {
+        console.error('Could not update order.', error);
+        alert('Failed to complete order.');
+    }
+}
+
+async function updateDashboard() {
+    const restaurantId = await getCurrentRestaurantId();
     if (!restaurantId) return;
 
-    let ownerOrders = orders.filter(o => o.restaurantId === restaurantId);
-    let total = ownerOrders.length;
-    let pending = ownerOrders.filter(o => o.status === "Pending").length;
-    let preparing = ownerOrders.filter(o => o.status === "Preparing").length;
-    let ready = ownerOrders.filter(o => o.status === "Ready").length;
+    try {
+        const orders = await apiGet(`/orders?restaurantId=${restaurantId}`);
+        const total = orders.length;
+        const pending = orders.filter(o => o.status === 'Pending').length;
+        const ready = orders.filter(o => o.status === 'Ready').length;
 
-    if (document.getElementById("totalOrders"))
-        document.getElementById("totalOrders").innerText = total;
-
-    if (document.getElementById("pendingOrders"))
-        document.getElementById("pendingOrders").innerText = pending;
-
-    if (document.getElementById("completedOrders"))
-        document.getElementById("completedOrders").innerText = ready;
+        if (document.getElementById('totalOrders')) document.getElementById('totalOrders').innerText = total;
+        if (document.getElementById('pendingOrders')) document.getElementById('pendingOrders').innerText = pending;
+        if (document.getElementById('completedOrders')) document.getElementById('completedOrders').innerText = ready;
+    } catch (error) {
+        console.error('Could not update owner dashboard.', error);
+    }
 }
 
-/* ===== INITIALIZATION ===== */
-document.addEventListener('DOMContentLoaded', function() {
-    displayRestaurantOptions();
-    displayMenu();
-    displayOrders();
-    updateDashboard();
+document.addEventListener('DOMContentLoaded', async function() {
+    setupImagePreview();
+    await displayRestaurantOptions();
+    await displayMenu();
+    await displayOrders();
+    await updateDashboard();
 });

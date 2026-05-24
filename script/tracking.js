@@ -22,7 +22,18 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const lastOrderId = localStorage.getItem("lastOrderId");
     const orders = get("orders");
-    const order = orders.find(o => o.id == lastOrderId);
+    let order = orders.find(o => o.id == lastOrderId);
+
+    if (!order && lastOrderId) {
+        try {
+            const response = await fetch(`/api/orders/${lastOrderId}`);
+            if (response.ok) {
+                order = await response.json();
+            }
+        } catch (error) {
+            console.warn('Could not fetch order from backend:', error);
+        }
+    }
 
     if (!order) {
         statusElement.textContent = "No recent order found.";

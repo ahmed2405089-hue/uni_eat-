@@ -281,14 +281,32 @@ document.addEventListener("DOMContentLoaded", () => {
             submitBtn.style.cursor = "wait";
 
             try {
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                const payload = {
+                    name: usernameInput.value.trim(),
+                    email: emailInput.value.trim(),
+                    password: password.value,
+                    role: 'student'
+                };
+
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || 'Registration failed.');
+                }
+
                 submitBtn.textContent = "Success! Redirecting...";
-                submitBtn.style.backgroundColor = "#34a853"; 
+                submitBtn.style.backgroundColor = "#34a853";
                 submitBtn.style.color = "white";
+
                 setTimeout(() => window.location.href = "login.html", 1000);
             } catch (error) {
                 console.error("Submission Error:", error);
-                displayFormError("Registration failed. Please try again.");
+                displayFormError(error.message || "Registration failed. Please try again.");
                 isSubmitting = false;
                 submitBtn.textContent = originalBtnText;
                 submitBtn.disabled = false;
@@ -457,13 +475,24 @@ document.addEventListener("DOMContentLoaded", () => {
             loginBtn.style.cursor = "wait";
 
             try {
-                await new Promise(resolve => setTimeout(resolve, 300));
-                loginBtn.textContent = "Welcome back!";
-                loginBtn.style.backgroundColor = "#34a853";
-                loginBtn.style.color = "white";
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: identifierInput.value.trim(),
+                        password: passwordInput.value
+                    })
+                });
 
-                const email = identifierInput.value.trim();
-                const role = getRoleFromEmail(email);
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || 'Invalid email or password.');
+                }
+
+                const user = await response.json();
+                const role = user.role || getRoleFromEmail(identifierInput.value.trim());
+                const email = user.email || identifierInput.value.trim();
+
                 localStorage.setItem("userRole", role);
                 localStorage.setItem("userEmail", email);
 
@@ -475,6 +504,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
 
+                loginBtn.textContent = "Welcome back!";
+                loginBtn.style.backgroundColor = "#34a853";
+                loginBtn.style.color = "white";
+
                 let targetPage = "student-home.html";
                 if (role === "owner") {
                     targetPage = "mange-menu.html";
@@ -484,8 +517,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 setTimeout(() => window.location.href = targetPage, 1000);
             } catch (error) {
-                console.error("Login attempt failed.");
-                displayLoginError("Invalid email/username or password.");
+                console.error("Login attempt failed.", error);
+                displayLoginError(error.message || "Invalid email/username or password.");
                 isLoggingIn = false;
                 loginBtn.textContent = originalBtnText;
                 loginBtn.disabled = false;

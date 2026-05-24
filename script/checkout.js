@@ -76,7 +76,7 @@ function renderCart() {
     totalElement.textContent = formatPrice(total);
 }
 
-function placeOrder() {
+async function placeOrder() {
     const cart = getCart();
     if (cart.length === 0) {
         showToast("Your cart is empty.", "info");
@@ -92,22 +92,37 @@ function placeOrder() {
 
     const comment = document.getElementById("orderComment").value.trim();
 
-    const orders = get("orders");
+    const restaurantId = cart.length > 0 ? cart[0].restaurantId || null : null;
     const order = {
-        id: Date.now(),
         items: cart,
         total: parseFloat(total).toFixed(2),
         status: "Pending",
         comment: comment,
-        createdAt: new Date().toISOString()
+        email: localStorage.getItem('userEmail') || 'guest',
+        restaurantId
     };
 
-    orders.push(order);
-    set("orders", orders);
-    localStorage.setItem("lastOrderId", order.id);
-    clearCart();
-    showToast("Order placed successfully! The owner will prepare it now.", "success");
-    setTimeout(() => window.location.href = "order-tracking.html", 900);
+    try {
+        const response = await fetch('/api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(order)
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            showToast(error.error || 'Could not place order.', 'danger');
+            return;
+        }
+
+        const createdOrder = await response.json();
+        localStorage.setItem("lastOrderId", createdOrder.id);
+        clearCart();
+        showToast("Order placed successfully! The owner will prepare it now.", "success");
+        setTimeout(() => window.location.href = "order-tracking.html", 900);
+    } catch (error) {
+        showToast("Network error while placing order.", "danger");
+    }
 }
 
 window.addEventListener("DOMContentLoaded", () => {

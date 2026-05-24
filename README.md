@@ -17,10 +17,22 @@ The system is designed to simplify the ordering process inside the university by
 
 ## How to Run
 
+### Frontend only
 1. Open `index.html` in your web browser.
 2. Register a new account or login.
 3. Select your role: Student, Owner, or Admin.
 4. Explore the features based on your role.
+
+### Backend server
+1. Install dependencies:
+```bash
+npm install
+```
+2. Start the backend:
+```bash
+npm run start
+```
+3. Open `http://localhost:3000` in your browser.
 
 ## Project Structure
 
