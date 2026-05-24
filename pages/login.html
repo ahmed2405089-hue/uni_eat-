@@ -4,16 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNIEats - Login</title>
+    <link rel="stylesheet" href="../styles/colors.css">
     <link rel="stylesheet" href="../styles/app.css">
 </head>
 <body>
 
-    <!-- Navbar removed from login page to avoid duplicate header lines -->
+    <nav class="navbar">
+        <a href="javascript:history.back()" class="back-arrow" aria-label="Go back">←</a>
+        <div class="brand">
+            <div class="logo">UNIEats</div>
+            <span class="badge">Login</span>
+        </div>
+        <div class="links">
+            <a href="../index.html">Home</a>
+            <a href="register.html">Register</a>
+            <a href="login.html" class="active">Login</a>
+        </div>
+    </nav>
 
     <main class="page-shell split-layout">
         
         <div class="form-panel">
-            <main class="container">
+            <div class="container">
                 <form action="#" method="POST" id="loginForm">
                     <h2>Welcome Back</h2>
 
@@ -35,7 +47,7 @@
                         <p style="margin-top: 10px;"><a href="forgot-password.html">Forgot Password?</a></p>
                     </div>
                 </form>
-            </main>
+            </div>
         </div>
 
         <div class="brand-panel">
