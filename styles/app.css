@@ -319,7 +319,8 @@ button[type="submit"]:disabled {
 
 /* Shared navbar/back-arrow (migrated from floating to inline) */
 .navbar .back-arrow {
-    display: inline-flex;
+    /* Hidden by default on app-styled pages (login/register). Use .show to reveal. */
+    display: none;
     align-items: center;
     justify-content: center;
     width: 40px;
@@ -332,6 +333,10 @@ button[type="submit"]:disabled {
     transition: all .16s ease;
     font-size: 1.05rem;
     border: 1px solid transparent;
+}
+
+.navbar .back-arrow.show {
+    display: inline-flex;
 }
 
 .navbar .back-arrow:hover { transform: translateY(-2px); background: rgba(255,255,255,0.06); box-shadow: 0 6px 18px rgba(0,0,0,0.28); }

@@ -1,3 +1,15 @@
+/* ============================================
+   SHARED UTILITIES
+   ============================================ */
+function confirmLogout(event) {
+    if (event) event.preventDefault();
+    window.location.href = 'logout-confirm.html';
+}
+
+/* ============================================
+   RESTAURANTS DATA
+   ============================================ */
+
 window.restaurants = [
     {
         id: 1,
@@ -497,3 +509,28 @@ if (searchForm) {
         });
     });
 }
+
+// Back-arrow control utilities — show only when an action requests it.
+(function () {
+    function getBack() {
+        return document.querySelector('.back-arrow');
+    }
+
+    window.showBackArrow = function () {
+        const b = getBack();
+        if (b) b.classList.add('show');
+    };
+
+    window.hideBackArrow = function () {
+        const b = getBack();
+        if (b) b.classList.remove('show');
+    };
+
+    // Auto-show on restaurant details pages that include an `id` query param,
+    // or on any page where browser history indicates there's a previous page.
+    // Other pages or actions can call `showBackArrow()` when appropriate.
+    const b = getBack();
+    if (b && ((window.location.search && window.location.search.includes('id=')) || window.history.length > 1)) {
+        b.classList.add('show');
+    }
+})();

@@ -113,3 +113,14 @@ function placeOrder() {
 window.addEventListener("DOMContentLoaded", () => {
     renderCart();
 });
+
+// Back-arrow control utilities — show only when an action requests it.
+(function () {
+    function getBack() { return document.querySelector('.back-arrow'); }
+    window.showBackArrow = function () { const b = getBack(); if (b) b.classList.add('show'); };
+    window.hideBackArrow = function () { const b = getBack(); if (b) b.classList.remove('show'); };
+    const b = getBack();
+    if (b && (window.history.length > 1 || (window.location.search && window.location.search.includes('id=')))) {
+        b.classList.add('show');
+    }
+})();

@@ -1,3 +1,11 @@
+/* ============================================
+   SHARED UTILITIES
+   ============================================ */
+function confirmLogout(event) {
+    if (event) event.preventDefault();
+    window.location.href = 'logout-confirm.html';
+}
+
 /* ===== STORAGE ===== */
 function get(key){
     return JSON.parse(localStorage.getItem(key)) || [];
