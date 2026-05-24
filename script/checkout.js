@@ -49,6 +49,8 @@ function renderCart() {
     const orderList = document.getElementById("orderList");
     const totalElement = document.getElementById("total");
     const cart = getCart();
+    let subtotal = 0;
+    let tax = 0;
     let total = 0;
 
     if (!orderList || !totalElement) return;
@@ -64,9 +66,12 @@ function renderCart() {
     cart.forEach(item => {
         const quantity = item.quantity || item.qty || 1;
         const lineTotal = parseFloat(item.price) * quantity;
-        total += lineTotal;
+        subtotal += lineTotal;
         orderList.innerHTML += `<li>${item.name} x${quantity} - ${formatPrice(lineTotal)}</li>`;
     });
+
+    tax = subtotal * 0.05;
+    total = subtotal + tax;
 
     totalElement.textContent = formatPrice(total);
 }
@@ -78,10 +83,12 @@ function placeOrder() {
         return;
     }
 
-    const total = cart.reduce((sum, item) => {
+    const subtotal = cart.reduce((sum, item) => {
         const quantity = item.quantity || item.qty || 1;
         return sum + parseFloat(item.price) * quantity;
     }, 0);
+    const tax = subtotal * 0.05;
+    const total = subtotal + tax;
 
     const comment = document.getElementById("orderComment").value.trim();
 
