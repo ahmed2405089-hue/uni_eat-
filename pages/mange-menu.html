@@ -21,29 +21,32 @@
 
 <div class="container">
 
-<aside class="sidebar">
-    <h2>UniEats</h2>
-
-    <a href="owner-dashbroad.html">Dashboard</a>
-    <a class="active" href="#">Manage Menu</a>
-    <a href="orders.html">Orders</a>
-</aside>
-
 <main class="main">
 
 <h1>Manage Menu 🍔</h1>
 
 <div class="manage-menu-controls">
-    <label for="restaurantSelect">Select Restaurant:</label>
-    <select id="restaurantSelect"></select>
+    <div class="restaurant-info">
+        <span>Restaurant</span>
+        <strong id="restaurantName">Loading...</strong>
+    </div>
 </div>
 
-<input id="itemName" placeholder="Item Name">
-<input id="itemPrice" placeholder="Price">
+<div class="add-item-form">
+    <input id="itemName" placeholder="Item Name" class="form-input">
+    <input id="itemPrice" placeholder="Price (EGP)" type="number" class="form-input" min="0" step="0.01">
+    <input id="itemCategory" placeholder="Category" class="form-input">
+    <div class="image-upload-wrapper">
+        <label for="itemImage" class="image-upload-label">
+            <span>📷 Upload Image</span>
+            <input id="itemImage" type="file" accept="image/*" class="image-input">
+        </label>
+        <div id="imagePreview" class="image-preview"></div>
+    </div>
+    <button onclick="addItem()" class="btn btn-primary">Add Item</button>
+</div>
 
-<button onclick="addItem()">Add Item</button>
-
-<ul id="menuList"></ul>
+<ul id="menuList" class="menu-list"></ul>
 
 </main>
 

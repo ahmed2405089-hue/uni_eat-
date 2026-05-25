@@ -348,6 +348,14 @@ document.addEventListener("DOMContentLoaded", () => {
             return "student";
         }
 
+        const OWNER_EMAIL_ACCOUNTS = {
+            "cinnabon@unieats.com": { restaurantId: 1, restaurantName: "Cinnabon" },
+            "conitta@unieats.com": { restaurantId: 2, restaurantName: "Conitta" },
+            "gyro@unieats.com": { restaurantId: 3, restaurantName: "Gyro" },
+            "mycorner@unieats.com": { restaurantId: 4, restaurantName: "My Corner" },
+            "tbs@unieats.com": { restaurantId: 5, restaurantName: "TBS" }
+        };
+
         // Validation for a single input
         const validateInput = (input) => {
             let existingError = input.parentElement.querySelector(".error-msg");
@@ -449,7 +457,7 @@ document.addEventListener("DOMContentLoaded", () => {
             loginBtn.style.cursor = "wait";
 
             try {
-                await new Promise(resolve => setTimeout(resolve, 1200));
+                await new Promise(resolve => setTimeout(resolve, 300));
                 loginBtn.textContent = "Welcome back!";
                 loginBtn.style.backgroundColor = "#34a853";
                 loginBtn.style.color = "white";
@@ -459,9 +467,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 localStorage.setItem("userRole", role);
                 localStorage.setItem("userEmail", email);
 
+                if (role === "owner") {
+                    const ownerAccount = OWNER_EMAIL_ACCOUNTS[email.toLowerCase()];
+                    if (ownerAccount) {
+                        localStorage.setItem("ownerUsername", email);
+                        localStorage.setItem("ownerRestaurants", JSON.stringify([ownerAccount.restaurantId]));
+                    }
+                }
+
                 let targetPage = "student-home.html";
                 if (role === "owner") {
-                    targetPage = "owner-dashbroad.html";
+                    targetPage = "mange-menu.html";
                 } else if (role === "admin") {
                     targetPage = "admin-dashboard.html";
                 }
