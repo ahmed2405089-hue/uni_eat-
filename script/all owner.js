@@ -1,3 +1,4 @@
+
 /* ===== OWNER ACCOUNTS SYSTEM (Temporary - JavaScript Only) ===== */
 const OWNER_ACCOUNTS = {
     'cinnabon@unieats.com': { password: 'pass123', restaurantId: 1, restaurantName: 'Cinnabon' },
@@ -15,8 +16,20 @@ function authenticateOwner(username, password) {
         localStorage.setItem('userEmail', username);
         localStorage.setItem('ownerRestaurants', JSON.stringify([account.restaurantId]));
         return true;
-    }
+    }}
     return false;
+    
+/* ============================================
+   SHARED UTILITIES
+   ============================================ */
+function confirmLogout(event) {
+    if (event) event.preventDefault();
+    window.location.href = 'logout-confirm.html';
+}
+
+/* ===== STORAGE ===== */
+function get(key){
+    return JSON.parse(localStorage.getItem(key)) || [];
 }
 
 function getCurrentOwner() {

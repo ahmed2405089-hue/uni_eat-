@@ -10,13 +10,12 @@
 <body onload="displayAllOrders()">
     <nav class="navbar">
         <a href="javascript:history.back()" class="back-arrow" aria-label="Go back">←</a>
-        <div class="logo">UniEats Admin</div>
         <div class="links">
             <a href="admin-dashboard.html">Dashboard</a>
             <a href="mange-resturant.html">Restaurants</a>
             <a href="mange-users.html">Users</a>
             <a href="all-orders.html" class="active">Orders</a>
-            <a href="login.html">Logout</a>
+            <a href="#" onclick="confirmLogout(event)">Logout</a>
         </div>
     </nav>
     <h2>All Orders</h2>

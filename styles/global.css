@@ -18,7 +18,8 @@
 }
 
 .navbar .back-arrow {
-    display: inline-flex;
+    /* Hidden by default; shown only when an action calls for it. */
+    display: none;
     align-items: center;
     justify-content: center;
     width: 40px;
@@ -31,6 +32,11 @@
     transition: all .16s ease;
     font-size: 1.05rem;
     border: 1px solid transparent;
+}
+
+/* utility class to reveal the arrow when needed */
+.navbar .back-arrow.show {
+    display: inline-flex;
 }
 
 .navbar .back-arrow:hover {
@@ -75,7 +81,7 @@ body {
     border-bottom: 1px solid var(--surface-border);
     padding: 15px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     position: fixed;
     top: 0;
@@ -88,12 +94,20 @@ body {
     padding-top: 80px;
 }
 
+.navbar .links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .links a {
-    margin: 10px;
+    margin: 0 6px;
+    padding: 6px 8px;
     text-decoration: none;
     color: var(--text);
     font-weight: bold;
     transition: 0.3s;
+    white-space: nowrap;
 }
 
 .links a:hover {
