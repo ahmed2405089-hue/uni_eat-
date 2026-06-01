@@ -8,7 +8,7 @@
     <% if (restaurant.image) { %>
       <img src="<%= restaurant.image %>" alt="<%= restaurant.name %>" />
     <% } else { %>
-      <div style="width:100%;height:100%;background:linear-gradient(135deg,var(--clr-bg-2),var(--clr-bg-3));display:grid;place-items:center;font-size:5rem">🍽️</div>
+      <div style="width:100%;height:100%;background:linear-gradient(135deg,var(--clr-bg-3),var(--clr-bg-4));display:grid;place-items:center;font-size:5rem">🍽️</div>
     <% } %>
     <div class="restaurant-hero__overlay"></div>
     <div class="restaurant-hero__info">
@@ -43,7 +43,7 @@
           <% if (availableItems.length > 0) { %>
             <div class="menu-category" data-anim style="animation-delay:<%= ci * 80 %>ms">
               <h2 class="menu-category__title">
-                <span style="width:28px;height:28px;background:var(--clr-primary);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:#fff">
+                <span style="width:28px;height:28px;background:var(--grad-primary);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700;flex-shrink:0">
                   <%= ci + 1 %>
                 </span>
                 <%= cat.name %>
@@ -88,7 +88,7 @@
     <div class="menu-sidebar" data-anim>
       <div class="cart-box">
         <div class="cart-box__header">
-          <span class="cart-box__title"><i class="fa-solid fa-cart-shopping" style="color:var(--clr-primary-l)"></i> Your Order</span>
+          <span class="cart-box__title"><i class="fa-solid fa-cart-shopping" style="color:var(--clr-primary-d)"></i> Your Order</span>
           <button class="btn btn--ghost btn--icon-sm" id="clear-cart-btn" title="Clear cart">
             <i class="fa-solid fa-trash-can" style="font-size:var(--text-sm)"></i>
           </button>

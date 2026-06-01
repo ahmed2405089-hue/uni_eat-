@@ -73,9 +73,17 @@ exports.deleteRestaurant = catchAsync(async (req, res, next) => {
 
 exports.assignOwner = catchAsync(async (req, res, next) => {
   const { ownerId } = req.body;
+
+  if (ownerId) {
+    const existing = await Restaurant.findOne({ owner: ownerId, _id: { $ne: req.params.id } });
+    if (existing) {
+      return next(new ApiError(`This owner already manages "${existing.name}". Each owner can only manage one restaurant.`, 400));
+    }
+  }
+
   const restaurant = await Restaurant.findByIdAndUpdate(
     req.params.id,
-    { owner: ownerId },
+    { owner: ownerId || null },
     { new: true, runValidators: true }
   );
   if (!restaurant) return next(new ApiError('Restaurant not found.', 404));

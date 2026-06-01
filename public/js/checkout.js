@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div style="font-weight:600;font-size:var(--text-sm)">${item.quantity}× ${item.name}</div>
           <div style="font-size:var(--text-xs);color:var(--clr-text-muted)">${item.restaurantName || ''}</div>
         </div>
-        <div style="font-weight:700;color:var(--clr-primary-l)">EGP ${(item.price * item.quantity).toFixed(2)}</div>
+        <div style="font-weight:700;color:var(--clr-primary-d)">EGP ${(item.price * item.quantity).toFixed(2)}</div>
       `;
       itemsEl.appendChild(row);
     });
