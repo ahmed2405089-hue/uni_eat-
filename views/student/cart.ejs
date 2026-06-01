@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="/css/student.css" />
+<script src="/js/student.js"></script>
+
+<div class="container" style="padding-top:var(--sp-10);padding-bottom:var(--sp-16)">
+  <div class="page-header" data-anim>
+    <a href="/student/home" class="btn btn--ghost btn--sm" style="margin-bottom:var(--sp-4)">
+      <i class="fa-solid fa-arrow-left"></i> Back to Restaurants
+    </a>
+    <h1 class="page-title">Your Cart</h1>
+    <p class="page-subtitle">Review your items before checking out.</p>
+  </div>
+
+  <!-- Empty state -->
+  <div id="cart-empty-state" class="empty-state" style="display:none">
+    <i class="fa-solid fa-cart-shopping"></i>
+    <h3>Your cart is empty</h3>
+    <p>Add items from a restaurant to get started.</p>
+    <a href="/student/home" class="btn btn--primary mt-4">Browse Restaurants</a>
+  </div>
+
+  <!-- Cart content -->
+  <div id="cart-content" class="cart-page-layout" style="display:none">
+    <!-- Items -->
+    <div>
+      <div id="cart-page-items" class="cart-page-items"></div>
+      <button class="btn btn--ghost btn--sm mt-4" id="clear-all-btn" style="color:var(--clr-danger)">
+        <i class="fa-solid fa-trash"></i> Clear Cart
+      </button>
+    </div>
+
+    <!-- Summary -->
+    <div class="order-summary" data-anim>
+      <h3>Order Summary</h3>
+      <div class="summary-row"><span>Subtotal</span><span id="summary-subtotal">EGP 0.00</span></div>
+      <div class="summary-row"><span>Tax (5%)</span><span id="summary-tax">EGP 0.00</span></div>
+      <div class="summary-row total"><span>Total</span><span id="summary-total">EGP 0.00</span></div>
+      <button class="btn btn--primary w-full mt-4" onclick="window.location.href='/student/checkout'">
+        <i class="fa-solid fa-lock"></i> Proceed to Checkout
+      </button>
+      <a href="/student/home" class="btn btn--ghost w-full mt-4" style="justify-content:center">
+        <i class="fa-solid fa-plus"></i> Add More Items
+      </a>
+    </div>
+  </div>
+</div>

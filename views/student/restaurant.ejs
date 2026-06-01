@@ -1,0 +1,127 @@
+<link rel="stylesheet" href="/css/student.css" />
+<script src="/js/student.js"></script>
+
+<div class="container" style="padding-top:var(--sp-8);padding-bottom:var(--sp-16)">
+
+  <!-- Restaurant Hero -->
+  <div class="restaurant-hero" data-anim>
+    <% if (restaurant.image) { %>
+      <img src="<%= restaurant.image %>" alt="<%= restaurant.name %>" />
+    <% } else { %>
+      <div style="width:100%;height:100%;background:linear-gradient(135deg,var(--clr-bg-2),var(--clr-bg-3));display:grid;place-items:center;font-size:5rem">🍽️</div>
+    <% } %>
+    <div class="restaurant-hero__overlay"></div>
+    <div class="restaurant-hero__info">
+      <span class="badge badge--<%= restaurant.isOpen ? 'ready' : 'cancelled' %>" style="margin-bottom:var(--sp-3)">
+        <%= restaurant.isOpen ? '● Open Now' : '● Closed' %>
+      </span>
+      <h1><%= restaurant.name %></h1>
+      <p><%= restaurant.description %></p>
+      <div class="restaurant-hero__meta">
+        <span><i class="fa-solid fa-star" style="color:var(--clr-warning)"></i> <%= restaurant.rating ? restaurant.rating.toFixed(1) : 'New' %></span>
+        <span><i class="fa-regular fa-clock"></i> <%= restaurant.deliveryTime %></span>
+        <% if (restaurant.tags && restaurant.tags.length) { %>
+          <span><%= restaurant.tags.join(' · ') %></span>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu + Cart -->
+  <div class="menu-layout" style="margin-top:var(--sp-8)">
+    <!-- Menu -->
+    <div class="menu-content">
+      <% if (!restaurant.categories || restaurant.categories.length === 0) { %>
+        <div class="empty-state">
+          <i class="fa-solid fa-bowl-food"></i>
+          <h3>Menu Coming Soon</h3>
+          <p>This restaurant is still setting up their menu.</p>
+        </div>
+      <% } else { %>
+        <% restaurant.categories.forEach((cat, ci) => { %>
+          <% const availableItems = cat.items.filter(i => i.isAvailable !== false); %>
+          <% if (availableItems.length > 0) { %>
+            <div class="menu-category" data-anim style="animation-delay:<%= ci * 80 %>ms">
+              <h2 class="menu-category__title">
+                <span style="width:28px;height:28px;background:var(--clr-primary);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:#fff">
+                  <%= ci + 1 %>
+                </span>
+                <%= cat.name %>
+                <span style="font-size:var(--text-sm);font-weight:500;color:var(--clr-text-muted)">(<%= availableItems.length %> items)</span>
+              </h2>
+              <div class="menu-items">
+                <% availableItems.forEach(item => { %>
+                  <div class="menu-item" data-item-id="<%= item._id %>">
+                    <div class="menu-item__img" style="background:var(--clr-bg-3);display:grid;place-items:center;font-size:2rem;">
+                      <% if (item.image) { %>
+                        <img src="<%= item.image %>" alt="<%= item.name %>" />
+                      <% } else { %>
+                        🍴
+                      <% } %>
+                    </div>
+                    <div class="menu-item__info">
+                      <div class="menu-item__name"><%= item.name %></div>
+                      <% if (item.description) { %>
+                        <div class="menu-item__desc"><%= item.description %></div>
+                      <% } %>
+                      <div class="menu-item__price">EGP <%= item.price.toFixed(2) %></div>
+                    </div>
+                    <div class="menu-item__actions">
+                      <div class="qty-control" data-id="<%= item._id %>">
+                        <button class="qty-control__btn qty-dec" data-id="<%= item._id %>">−</button>
+                        <span class="qty-control__num" id="qty-<%= item._id %>">0</span>
+                        <button class="qty-control__btn qty-inc" data-id="<%= item._id %>"
+                          data-name="<%= item.name %>" data-price="<%= item.price %>"
+                          data-restaurant-id="<%= restaurant._id %>" data-restaurant-name="<%= restaurant.name %>">+</button>
+                      </div>
+                    </div>
+                  </div>
+                <% }) %>
+              </div>
+            </div>
+          <% } %>
+        <% }) %>
+      <% } %>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="menu-sidebar" data-anim>
+      <div class="cart-box">
+        <div class="cart-box__header">
+          <span class="cart-box__title"><i class="fa-solid fa-cart-shopping" style="color:var(--clr-primary-l)"></i> Your Order</span>
+          <button class="btn btn--ghost btn--icon-sm" id="clear-cart-btn" title="Clear cart">
+            <i class="fa-solid fa-trash-can" style="font-size:var(--text-sm)"></i>
+          </button>
+        </div>
+
+        <div id="cart-items" class="cart-items">
+          <div class="empty-state" id="cart-empty" style="padding:var(--sp-8) 0">
+            <i class="fa-solid fa-cart-shopping" style="font-size:2rem"></i>
+            <p style="font-size:var(--text-sm)">Your cart is empty</p>
+          </div>
+        </div>
+
+        <div id="cart-totals" style="display:none">
+          <div class="cart-divider"></div>
+          <div class="cart-total-row"><span>Subtotal</span><span id="cart-subtotal">EGP 0.00</span></div>
+          <div class="cart-total-row"><span>Tax (5%)</span><span id="cart-tax">EGP 0.00</span></div>
+          <div class="cart-total-row total"><span>Total</span><span id="cart-total">EGP 0.00</span></div>
+          <button class="btn btn--primary w-full mt-4" id="checkout-btn" onclick="window.location.href='/student/checkout'">
+            <i class="fa-solid fa-arrow-right"></i> Proceed to Checkout
+          </button>
+        </div>
+
+        <div id="cart-placeholder" style="margin-top:var(--sp-4)">
+          <button class="btn btn--outline w-full" disabled style="opacity:.4">
+            Add items to order
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.__RESTAURANT_ID__ = '<%= restaurant._id %>';
+  window.__RESTAURANT_NAME__ = '<%= restaurant.name %>';
+</script>

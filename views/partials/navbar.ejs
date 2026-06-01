@@ -1,0 +1,77 @@
+<nav class="navbar">
+  <div class="container">
+    <a href="/" class="navbar__brand">
+      <div class="navbar__logo-icon">🍽️</div>
+      Uni<span>Eats</span>
+    </a>
+
+    <% if (typeof user !== 'undefined' && user) { %>
+      <% if (user.role === 'student') { %>
+        <div class="navbar__nav" id="navbar-nav">
+          <a href="/student/home"    class="navbar__link" data-nav><i class="fa-solid fa-home"></i> Home</a>
+          <a href="/student/cart"    class="navbar__link" data-nav><i class="fa-solid fa-cart-shopping"></i> Cart</a>
+          <a href="/student/orders"  class="navbar__link" data-nav><i class="fa-solid fa-receipt"></i> Orders</a>
+        </div>
+      <% } else if (user.role === 'owner') { %>
+        <div class="navbar__nav" id="navbar-nav">
+          <a href="/owner/dashboard" class="navbar__link" data-nav><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+          <a href="/owner/orders"    class="navbar__link" data-nav><i class="fa-solid fa-receipt"></i> Orders</a>
+        </div>
+      <% } else if (user.role === 'admin') { %>
+        <div class="navbar__nav" id="navbar-nav">
+          <a href="/admin/dashboard"   class="navbar__link" data-nav><i class="fa-solid fa-gauge"></i> Dashboard</a>
+          <a href="/admin/restaurants" class="navbar__link" data-nav><i class="fa-solid fa-store"></i> Restaurants</a>
+          <a href="/admin/users"       class="navbar__link" data-nav><i class="fa-solid fa-users"></i> Users</a>
+          <a href="/admin/orders"      class="navbar__link" data-nav><i class="fa-solid fa-receipt"></i> Orders</a>
+        </div>
+      <% } %>
+    <% } else { %>
+      <div class="navbar__nav" id="navbar-nav">
+        <a href="/"               class="navbar__link" data-nav>Home</a>
+        <a href="/auth/login"     class="navbar__link" data-nav>Login</a>
+        <a href="/auth/register"  class="navbar__link" data-nav>Register</a>
+      </div>
+    <% } %>
+
+    <div class="navbar__actions">
+      <% if (typeof user !== 'undefined' && user) { %>
+        <% if (user.role === 'student') { %>
+          <a href="/student/cart" class="btn btn--outline btn--sm" id="nav-cart-btn">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="nav-cart-count">0</span>
+          </a>
+        <% } %>
+        <div class="navbar__avatar notif-badge" id="user-avatar-btn">
+          <%= user.name.charAt(0).toUpperCase() %>
+          <% if (typeof unreadCount !== 'undefined' && unreadCount > 0) { %>
+            <span class="notif-badge__count"><%= unreadCount %></span>
+          <% } %>
+          <div class="navbar__dropdown">
+            <div style="padding: var(--sp-3); border-bottom: 1px solid var(--clr-border); margin-bottom: var(--sp-2);">
+              <div style="font-weight:700; font-size: var(--text-sm)"><%= user.name %></div>
+              <div style="font-size: var(--text-xs); color: var(--clr-text-muted)"><%= user.email %></div>
+              <div style="margin-top: 4px;">
+                <span class="badge badge--<%= user.role %>"><%= user.role %></span>
+              </div>
+            </div>
+            <% if (user.role === 'student') { %>
+              <a href="/student/profile" class="navbar__dropdown-item"><i class="fa-solid fa-user"></i> Profile</a>
+              <a href="/student/orders"  class="navbar__dropdown-item"><i class="fa-solid fa-receipt"></i> My Orders</a>
+            <% } %>
+            <div class="navbar__dropdown-divider"></div>
+            <div class="navbar__dropdown-item navbar__dropdown-item--danger" id="logout-btn">
+              <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </div>
+          </div>
+        </div>
+      <% } else { %>
+        <a href="/auth/login"    class="btn btn--ghost btn--sm">Login</a>
+        <a href="/auth/register" class="btn btn--primary btn--sm">Sign Up</a>
+      <% } %>
+
+      <button class="navbar__hamburger" id="hamburger-btn" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>

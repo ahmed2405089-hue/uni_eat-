@@ -1,0 +1,128 @@
+<link rel="stylesheet" href="/css/student.css" />
+
+<div class="container" style="padding-top:var(--sp-10);padding-bottom:var(--sp-16)">
+  <div class="page-header" data-anim>
+    <a href="/student/orders" class="btn btn--ghost btn--sm" style="margin-bottom:var(--sp-4)">
+      <i class="fa-solid fa-arrow-left"></i> Back to Orders
+    </a>
+    <h1 class="page-title">Track Your Order</h1>
+    <p class="page-subtitle">Live status updates for order #<%= order._id.toString().slice(-6).toUpperCase() %></p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 380px;gap:var(--sp-8);align-items:start" class="tracking-grid">
+
+    <!-- Tracking Timeline -->
+    <div class="tracking-card" data-anim>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-6)">
+        <div>
+          <div style="font-size:var(--text-xs);color:var(--clr-text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">Current Status</div>
+          <span class="badge badge--<%= order.status.toLowerCase() %>" style="font-size:var(--text-sm)">
+            <%= order.status %>
+          </span>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:var(--text-xs);color:var(--clr-text-muted)">Order ID</div>
+          <div style="font-family:var(--font-mono);font-weight:700;color:var(--clr-primary-l)">
+            #<%= order._id.toString().slice(-6).toUpperCase() %>
+          </div>
+        </div>
+      </div>
+
+      <div class="tracking-steps" id="tracking-steps">
+        <%
+          const allStatuses = ['Pending', 'Confirmed', 'Preparing', 'Ready', 'Completed'];
+          const statusIndex = allStatuses.indexOf(order.status);
+        %>
+        <% allStatuses.forEach((s, i) => {
+          const isDone = i < statusIndex || (order.status === 'Completed' && i <= statusIndex);
+          const isActive = s === order.status && order.status !== 'Cancelled';
+          const isCancelled = order.status === 'Cancelled';
+          const icons = { Pending:'clock', Confirmed:'check', Preparing:'fire-burner', Ready:'bell', Completed:'circle-check' };
+          const labels = { Pending:'Order Received', Confirmed:'Order Confirmed', Preparing:'Being Prepared', Ready:'Ready for Pickup', Completed:'Order Completed' };
+        %>
+          <div class="tracking-step <%= isDone ? 'done' : isActive ? 'active' : '' %>">
+            <div class="tracking-step__dot">
+              <% if (isDone) { %><i class="fa-solid fa-check" style="font-size:9px"></i>
+              <% } else if (isActive) { %><i class="fa-solid fa-<%= icons[s] %>" style="font-size:9px"></i>
+              <% } %>
+            </div>
+            <div class="tracking-step__title" style="<%= !isDone && !isActive ? 'color:var(--clr-text-muted)' : '' %>">
+              <%= labels[s] %>
+            </div>
+            <% const historyEntry = order.statusHistory && order.statusHistory.find(h => h.status === s); %>
+            <% if (historyEntry) { %>
+              <div class="tracking-step__time">
+                <%= new Date(historyEntry.changedAt).toLocaleString() %>
+                <% if (historyEntry.note) { %> · <%= historyEntry.note %><% } %>
+              </div>
+            <% } %>
+          </div>
+        <% }) %>
+
+        <% if (order.status === 'Cancelled') { %>
+          <div class="tracking-step active">
+            <div class="tracking-step__dot" style="background:var(--clr-danger);border-color:var(--clr-danger)">
+              <i class="fa-solid fa-xmark" style="font-size:9px"></i>
+            </div>
+            <div class="tracking-step__title" style="color:var(--clr-danger)">Order Cancelled</div>
+            <% if (order.cancelReason) { %>
+              <div class="tracking-step__time"><%= order.cancelReason %></div>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Order Details -->
+    <div data-anim>
+      <div class="order-summary" style="position:static">
+        <h3>Order Details</h3>
+        <div style="margin-bottom:var(--sp-5)">
+          <% if (order.restaurant) { %>
+            <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4);padding:var(--sp-3);background:var(--clr-bg-3);border-radius:var(--r-md)">
+              <i class="fa-solid fa-store" style="color:var(--clr-primary-l)"></i>
+              <div>
+                <div style="font-weight:600;font-size:var(--text-sm)"><%= order.restaurant.name %></div>
+                <div style="font-size:var(--text-xs);color:var(--clr-text-muted)">
+                  <i class="fa-regular fa-clock"></i> <%= order.restaurant.deliveryTime %>
+                </div>
+              </div>
+            </div>
+          <% } %>
+          <% order.items.forEach(item => { %>
+            <div class="summary-row">
+              <span><%= item.quantity %>× <%= item.name %></span>
+              <span>EGP <%= (item.price * item.quantity).toFixed(2) %></span>
+            </div>
+          <% }) %>
+        </div>
+        <% if (order.comment) { %>
+          <div style="background:var(--clr-bg-3);border-radius:var(--r-md);padding:var(--sp-3);margin-bottom:var(--sp-4);font-size:var(--text-sm);color:var(--clr-text-3)">
+            <i class="fa-solid fa-comment-dots"></i> <%= order.comment %>
+          </div>
+        <% } %>
+        <div class="summary-row"><span>Subtotal</span><span>EGP <%= order.subtotal.toFixed(2) %></span></div>
+        <div class="summary-row"><span>Tax (5%)</span><span>EGP <%= order.tax.toFixed(2) %></span></div>
+        <div class="summary-row total"><span>Total</span><span>EGP <%= order.total.toFixed(2) %></span></div>
+        <a href="/student/orders" class="btn btn--outline w-full mt-4" style="justify-content:center">
+          <i class="fa-solid fa-list"></i> View All Orders
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const orderId = '<%= order._id %>';
+  const socket = io();
+  socket.emit('join', '<%= user._id %>');
+  socket.on('orderUpdate', ({ orderId: id, status }) => {
+    if (id !== orderId) return;
+    window.toast && window.toast.info(`Order status updated: ${status}`);
+    setTimeout(() => location.reload(), 1500);
+  });
+</script>
+
+<style>
+@media(max-width:900px){.tracking-grid{grid-template-columns:1fr!important}}
+</style>

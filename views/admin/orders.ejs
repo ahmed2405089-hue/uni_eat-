@@ -1,0 +1,94 @@
+<script src="/js/admin.js"></script>
+
+<div class="page-header__row" data-anim>
+  <div class="page-header">
+    <h1 class="page-title">All Orders</h1>
+    <p class="page-subtitle">Monitor and manage every order on the platform</p>
+  </div>
+</div>
+
+<div class="filter-row" data-anim>
+  <div class="search-box" style="flex:1;max-width:360px">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" class="form-control" id="order-search" placeholder="Search by order ID or customer…" />
+  </div>
+  <select class="form-control" id="order-status-filter" style="width:auto">
+    <option value="">All Statuses</option>
+    <option value="Pending">Pending</option>
+    <option value="Confirmed">Confirmed</option>
+    <option value="Preparing">Preparing</option>
+    <option value="Ready">Ready</option>
+    <option value="Completed">Completed</option>
+    <option value="Cancelled">Cancelled</option>
+  </select>
+</div>
+
+<% if (orders.length === 0) { %>
+  <div class="empty-state" data-anim>
+    <i class="fa-solid fa-receipt"></i>
+    <h3>No Orders Yet</h3>
+    <p>Orders will appear here once students place them.</p>
+  </div>
+<% } else { %>
+  <div class="table-wrap" data-anim>
+    <table class="table" id="orders-table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Restaurant</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% orders.forEach(order => { %>
+          <tr data-status="<%= order.status.toLowerCase() %>"
+              data-search="<%= order._id.toString() + (order.student ? order.student.name + order.student.email : '') %>">
+            <td>
+              <span style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--clr-primary-l)">
+                #<%= order._id.toString().slice(-8).toUpperCase() %>
+              </span>
+            </td>
+            <td>
+              <% if (order.student) { %>
+                <div style="font-size:var(--text-sm);font-weight:500"><%= order.student.name %></div>
+                <div style="font-size:var(--text-xs);color:var(--clr-text-muted)"><%= order.student.email %></div>
+              <% } else { %>
+                <span style="color:var(--clr-text-muted);font-size:var(--text-sm)">—</span>
+              <% } %>
+            </td>
+            <td>
+              <% if (order.restaurant) { %>
+                <span style="font-size:var(--text-sm)"><%= order.restaurant.name %></span>
+              <% } else { %>
+                <span style="color:var(--clr-text-muted);font-size:var(--text-sm)">—</span>
+              <% } %>
+            </td>
+            <td style="max-width:200px;font-size:var(--text-xs);color:var(--clr-text-3)">
+              <%= order.items.slice(0,3).map(i => `${i.quantity}× ${i.name}`).join(', ') %>
+              <% if (order.items.length > 3) { %><span>+<%= order.items.length - 3 %> more</span><% } %>
+            </td>
+            <td style="font-weight:700">EGP <%= order.total.toFixed(2) %></td>
+            <td><span class="badge badge--<%= order.status.toLowerCase() %>"><%= order.status %></span></td>
+            <td style="font-size:var(--text-xs);color:var(--clr-text-muted)">
+              <%= new Date(order.createdAt).toLocaleDateString() %>
+            </td>
+            <td>
+              <select class="form-control admin-status-select" style="font-size:var(--text-xs);padding:4px 8px;min-width:120px"
+                data-order-id="<%= order._id %>">
+                <option value="">Update Status</option>
+                <% ['Confirmed','Preparing','Ready','Completed','Cancelled'].forEach(s => { %>
+                  <option value="<%= s %>" <%= order.status === s ? 'selected' : '' %>><%= s %></option>
+                <% }) %>
+              </select>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>

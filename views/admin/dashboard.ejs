@@ -1,0 +1,57 @@
+<div class="page-header__row" data-anim>
+  <div class="page-header">
+    <h1 class="page-title">Admin Dashboard</h1>
+    <p class="page-subtitle">Platform overview and quick management</p>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid" style="margin-bottom:var(--sp-8)">
+  <div class="stat-card" data-anim>
+    <div class="stat-card__icon stat-card__icon--primary"><i class="fa-solid fa-users"></i></div>
+    <div>
+      <div class="stat-card__label">Total Users</div>
+      <div class="stat-card__value"><%= stats.totalUsers %></div>
+    </div>
+  </div>
+  <div class="stat-card" data-anim style="animation-delay:80ms">
+    <div class="stat-card__icon stat-card__icon--accent"><i class="fa-solid fa-store"></i></div>
+    <div>
+      <div class="stat-card__label">Restaurants</div>
+      <div class="stat-card__value"><%= stats.totalRestaurants %></div>
+    </div>
+  </div>
+  <div class="stat-card" data-anim style="animation-delay:160ms">
+    <div class="stat-card__icon stat-card__icon--warning"><i class="fa-solid fa-receipt"></i></div>
+    <div>
+      <div class="stat-card__label">Total Orders</div>
+      <div class="stat-card__value"><%= stats.totalOrders %></div>
+    </div>
+  </div>
+  <div class="stat-card" data-anim style="animation-delay:240ms">
+    <div class="stat-card__icon stat-card__icon--success"><i class="fa-solid fa-coins"></i></div>
+    <div>
+      <div class="stat-card__label">Total Revenue</div>
+      <div class="stat-card__value">EGP <%= stats.totalRevenue %></div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="section-header" data-anim>
+  <h2 class="section-title">Quick Actions</h2>
+</div>
+<div class="quick-actions mb-6" data-anim>
+  <a href="/admin/restaurants" class="quick-action">
+    <i class="fa-solid fa-store"></i><span>Manage Restaurants</span>
+  </a>
+  <a href="/admin/users" class="quick-action">
+    <i class="fa-solid fa-users"></i><span>Manage Users</span>
+  </a>
+  <a href="/admin/orders" class="quick-action">
+    <i class="fa-solid fa-receipt"></i><span>View All Orders</span>
+  </a>
+  <a href="/api/admin/seed" class="quick-action" onclick="return confirm('Seed admin user from .env?')">
+    <i class="fa-solid fa-seedling"></i><span>Seed Admin</span>
+  </a>
+</div>

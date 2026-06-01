@@ -1,0 +1,92 @@
+<script src="/js/owner.js"></script>
+
+<div class="page-header__row" data-anim>
+  <div class="page-header">
+    <h1 class="page-title">Orders</h1>
+    <p class="page-subtitle">Manage incoming and active orders</p>
+  </div>
+  <div class="filter-row">
+    <select class="form-control" id="status-filter" style="width:auto">
+      <option value="">All Statuses</option>
+      <option value="Pending">Pending</option>
+      <option value="Confirmed">Confirmed</option>
+      <option value="Preparing">Preparing</option>
+      <option value="Ready">Ready</option>
+      <option value="Completed">Completed</option>
+      <option value="Cancelled">Cancelled</option>
+    </select>
+  </div>
+</div>
+
+<div id="orders-list" class="orders-list">
+  <% if (orders.length === 0) { %>
+    <div class="empty-state" data-anim>
+      <i class="fa-solid fa-receipt"></i>
+      <h3>No Orders Yet</h3>
+      <p>Orders will appear here as students place them.</p>
+    </div>
+  <% } else { %>
+    <% orders.forEach((order, i) => { %>
+      <div class="order-row" data-anim style="animation-delay:<%= i * 60 %>ms" data-order-id="<%= order._id %>" data-status="<%= order.status %>">
+        <div class="order-row__header">
+          <div style="display:flex;align-items:center;gap:var(--sp-3)">
+            <span class="order-row__id">#<%= order._id.toString().slice(-8).toUpperCase() %></span>
+            <span class="badge badge--<%= order.status.toLowerCase() %>"><%= order.status %></span>
+          </div>
+          <span style="font-size:var(--text-xs);color:var(--clr-text-muted)">
+            <%= new Date(order.createdAt).toLocaleString() %>
+          </span>
+        </div>
+        <div class="order-row__meta">
+          <span><i class="fa-solid fa-user"></i> <%= order.student ? order.student.name : 'Unknown' %></span>
+          <% if (order.restaurant) { %>
+            <span><i class="fa-solid fa-store"></i> <%= order.restaurant.name %></span>
+          <% } %>
+          <span><i class="fa-solid fa-coins"></i> EGP <%= order.total.toFixed(2) %></span>
+        </div>
+        <div class="order-row__items">
+          <%= order.items.map(i => `${i.quantity}× ${i.name}`).join(', ') %>
+          <% if (order.comment) { %>
+            <div style="margin-top:var(--sp-2);color:var(--clr-text-muted);font-size:var(--text-xs)">
+              <i class="fa-solid fa-comment-dots"></i> <%= order.comment %>
+            </div>
+          <% } %>
+        </div>
+        <div class="order-row__footer">
+          <span class="order-row__total">EGP <%= order.total.toFixed(2) %></span>
+          <div class="order-row__actions">
+            <% if (order.status === 'Pending') { %>
+              <button class="btn btn--success btn--sm update-status-btn" data-order-id="<%= order._id %>" data-new-status="Confirmed">
+                <i class="fa-solid fa-check"></i> Confirm
+              </button>
+              <button class="btn btn--danger btn--sm update-status-btn" data-order-id="<%= order._id %>" data-new-status="Cancelled">
+                <i class="fa-solid fa-xmark"></i> Reject
+              </button>
+            <% } else if (order.status === 'Confirmed') { %>
+              <button class="btn btn--primary btn--sm update-status-btn" data-order-id="<%= order._id %>" data-new-status="Preparing">
+                <i class="fa-solid fa-fire-burner"></i> Start Preparing
+              </button>
+            <% } else if (order.status === 'Preparing') { %>
+              <button class="btn btn--accent btn--sm update-status-btn" data-order-id="<%= order._id %>" data-new-status="Ready">
+                <i class="fa-solid fa-bell"></i> Mark Ready
+              </button>
+            <% } else if (order.status === 'Ready') { %>
+              <button class="btn btn--success btn--sm update-status-btn" data-order-id="<%= order._id %>" data-new-status="Completed">
+                <i class="fa-solid fa-circle-check"></i> Complete
+              </button>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
+
+<script>
+  // Join socket room for real-time order notifications
+  const socket = io();
+  socket.emit('joinOwner', '<%= user._id %>');
+  socket.on('newOrder', () => {
+    window.toast && window.toast.info('New order received! Refresh to see it.');
+  });
+</script>

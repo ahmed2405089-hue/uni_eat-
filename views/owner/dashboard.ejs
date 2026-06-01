@@ -1,0 +1,98 @@
+<div class="page-header__row" data-anim>
+  <div class="page-header">
+    <h1 class="page-title">Owner Dashboard</h1>
+    <p class="page-subtitle">Welcome back, <%= user.name %></p>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid" style="margin-bottom:var(--sp-8)">
+  <div class="stat-card" data-anim>
+    <div class="stat-card__icon stat-card__icon--primary"><i class="fa-solid fa-store"></i></div>
+    <div>
+      <div class="stat-card__label">My Restaurants</div>
+      <div class="stat-card__value"><%= restaurants.length %></div>
+    </div>
+  </div>
+  <div class="stat-card" data-anim style="animation-delay:80ms">
+    <div class="stat-card__icon stat-card__icon--warning"><i class="fa-solid fa-receipt"></i></div>
+    <div>
+      <div class="stat-card__label">Total Orders</div>
+      <div class="stat-card__value"><%= stats.totalOrders %></div>
+    </div>
+  </div>
+  <div class="stat-card" data-anim style="animation-delay:160ms">
+    <div class="stat-card__icon stat-card__icon--accent"><i class="fa-solid fa-hourglass-half"></i></div>
+    <div>
+      <div class="stat-card__label">Pending Orders</div>
+      <div class="stat-card__value"><%= stats.pendingOrders %></div>
+    </div>
+  </div>
+  <div class="stat-card" data-anim style="animation-delay:240ms">
+    <div class="stat-card__icon stat-card__icon--success"><i class="fa-solid fa-coins"></i></div>
+    <div>
+      <div class="stat-card__label">Total Revenue</div>
+      <div class="stat-card__value">EGP <%= stats.revenue %></div>
+    </div>
+  </div>
+</div>
+
+<!-- My Restaurants -->
+<div class="section-header" data-anim>
+  <h2 class="section-title">My Restaurants</h2>
+</div>
+
+<% if (restaurants.length === 0) { %>
+  <div class="empty-state" data-anim>
+    <i class="fa-solid fa-store-slash"></i>
+    <h3>No Restaurants Assigned</h3>
+    <p>Contact the admin to assign a restaurant to your account.</p>
+  </div>
+<% } else { %>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--sp-5)" class="mb-6">
+    <% restaurants.forEach((r, i) => { %>
+      <div class="admin-rest-card" data-anim style="animation-delay:<%= i * 80 %>ms">
+        <div class="admin-rest-card__img">
+          <% if (r.image) { %>
+            <img src="<%= r.image %>" alt="<%= r.name %>" />
+          <% } else { %>
+            <div style="width:100%;height:100%;display:grid;place-items:center;font-size:3rem;background:var(--clr-bg-3)">🍽️</div>
+          <% } %>
+        </div>
+        <div class="admin-rest-card__body">
+          <div class="admin-rest-card__name"><%= r.name %></div>
+          <div class="admin-rest-card__meta">
+            <span><i class="fa-solid fa-star" style="color:var(--clr-warning)"></i> <%= r.rating.toFixed(1) %></span>
+            <span><i class="fa-regular fa-clock"></i> <%= r.deliveryTime %></span>
+          </div>
+          <span class="badge badge--<%= r.isOpen ? 'ready' : 'cancelled' %>" style="margin-bottom:var(--sp-4)">
+            <%= r.isOpen ? '● Open' : '● Closed' %>
+          </span>
+          <div class="admin-rest-card__footer">
+            <a href="/owner/menu/<%= r._id %>" class="btn btn--primary btn--sm">
+              <i class="fa-solid fa-utensils"></i> Manage Menu
+            </a>
+            <a href="/owner/orders" class="btn btn--outline btn--sm">
+              <i class="fa-solid fa-receipt"></i> Orders
+            </a>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<!-- Quick Actions -->
+<div class="section-header" data-anim style="margin-top:var(--sp-8)">
+  <h2 class="section-title">Quick Actions</h2>
+</div>
+<div class="quick-actions" data-anim>
+  <a href="/owner/orders" class="quick-action">
+    <i class="fa-solid fa-receipt"></i>
+    <span>View Orders</span>
+  </a>
+  <a href="/student/home" class="quick-action">
+    <i class="fa-solid fa-eye"></i>
+    <span>Preview Store</span>
+  </a>
+</div>

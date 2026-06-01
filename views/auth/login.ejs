@@ -1,0 +1,51 @@
+<div class="auth-card animate-slide">
+  <a href="/" class="auth-logo">
+    <div class="auth-logo__icon">🍽️</div>
+    <span class="auth-logo__text">Uni<span>Eats</span></span>
+  </a>
+
+  <div class="auth-header">
+    <h1>Welcome back</h1>
+    <p>Sign in to your account to continue ordering.</p>
+  </div>
+
+  <div id="auth-alert" class="auth-alert auth-alert--error" style="display:none">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <span id="auth-alert-msg"></span>
+  </div>
+
+  <form id="login-form" novalidate>
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <div class="input-icon-wrap">
+        <i class="fa-solid fa-envelope icon-left"></i>
+        <input type="email" id="email" name="email" class="form-control"
+               placeholder="you@university.edu" autocomplete="email" required />
+      </div>
+      <span class="form-error" id="email-error" style="display:none"></span>
+    </div>
+
+    <div class="form-group">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <label class="form-label">Password</label>
+        <a href="/auth/forgot-password" style="font-size:var(--text-xs);color:var(--clr-primary-l)">Forgot password?</a>
+      </div>
+      <div class="input-icon-wrap">
+        <i class="fa-solid fa-lock icon-left"></i>
+        <input type="password" id="password" name="password" class="form-control has-right"
+               placeholder="Enter your password" autocomplete="current-password" required />
+        <i class="fa-solid fa-eye icon-right" id="toggle-pwd"></i>
+      </div>
+      <span class="form-error" id="pwd-error" style="display:none"></span>
+    </div>
+
+    <button type="submit" class="btn btn--primary w-full" id="login-btn" style="margin-top:var(--sp-2)">
+      <span id="login-btn-text">Sign In</span>
+      <span id="login-spinner" class="spinner" style="display:none;width:18px;height:18px;border-width:2px"></span>
+    </button>
+  </form>
+
+  <p class="auth-footer">
+    Don't have an account? <a href="/auth/register">Create one now</a>
+  </p>
+</div>

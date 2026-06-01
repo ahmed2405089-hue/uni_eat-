@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="/css/student.css" />
+
+<div class="container" style="padding-top:var(--sp-10);padding-bottom:var(--sp-16)">
+  <div class="page-header__row" data-anim>
+    <div class="page-header">
+      <h1 class="page-title">My Orders</h1>
+      <p class="page-subtitle">View and track all your past and current orders.</p>
+    </div>
+    <a href="/student/home" class="btn btn--primary">
+      <i class="fa-solid fa-plus"></i> New Order
+    </a>
+  </div>
+
+  <% if (orders.length === 0) { %>
+    <div class="empty-state" data-anim>
+      <i class="fa-solid fa-receipt"></i>
+      <h3>No Orders Yet</h3>
+      <p>Place your first order from a campus restaurant.</p>
+      <a href="/student/home" class="btn btn--primary mt-4">Browse Restaurants</a>
+    </div>
+  <% } else { %>
+    <div style="display:flex;flex-direction:column;gap:var(--sp-4)">
+      <% orders.forEach((order, i) => { %>
+        <div class="order-card" data-anim style="animation-delay:<%= i * 60 %>ms">
+          <div class="order-card__header">
+            <div>
+              <div class="order-card__id">#<%= order._id.toString().slice(-8).toUpperCase() %></div>
+              <% if (order.restaurant) { %>
+                <div style="font-weight:600;margin-top:4px"><%= order.restaurant.name %></div>
+              <% } %>
+            </div>
+            <span class="badge badge--<%= order.status.toLowerCase() %>"><%= order.status %></span>
+          </div>
+          <div class="order-card__items">
+            <%= order.items.map(i => `${i.quantity}× ${i.name}`).join(' · ') %>
+          </div>
+          <div class="order-card__footer">
+            <div>
+              <div class="order-card__total">EGP <%= order.total.toFixed(2) %></div>
+              <div style="font-size:var(--text-xs);color:var(--clr-text-muted);margin-top:2px">
+                <%= new Date(order.createdAt).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) %>
+              </div>
+            </div>
+            <a href="/student/tracking/<%= order._id %>" class="btn btn--outline btn--sm">
+              <i class="fa-solid fa-location-arrow"></i> Track Order
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>

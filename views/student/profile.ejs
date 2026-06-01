@@ -1,0 +1,74 @@
+<div class="container" style="padding-top:var(--sp-10);padding-bottom:var(--sp-16);max-width:700px">
+  <div class="page-header" data-anim>
+    <h1 class="page-title">My Profile</h1>
+    <p class="page-subtitle">Manage your account information.</p>
+  </div>
+
+  <!-- Profile Card -->
+  <div class="card" data-anim style="margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;gap:var(--sp-5);margin-bottom:var(--sp-6)">
+      <div style="width:72px;height:72px;border-radius:50%;background:var(--grad-primary);display:grid;place-items:center;font-size:var(--text-3xl);font-weight:800;color:#fff;flex-shrink:0">
+        <%= user.name.charAt(0).toUpperCase() %>
+      </div>
+      <div>
+        <div style="font-size:var(--text-xl);font-weight:800"><%= user.name %></div>
+        <div style="color:var(--clr-text-muted);font-size:var(--text-sm)"><%= user.email %></div>
+        <span class="badge badge--<%= user.role %>" style="margin-top:var(--sp-2)"><%= user.role %></span>
+      </div>
+    </div>
+
+    <form id="profile-form">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <div class="input-icon-wrap">
+          <i class="fa-solid fa-user icon-left"></i>
+          <input type="text" class="form-control" id="profile-name" value="<%= user.name %>" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <div class="input-icon-wrap">
+          <i class="fa-solid fa-phone icon-left"></i>
+          <input type="tel" class="form-control" id="profile-phone" value="<%= user.phone || '' %>" placeholder="+20 xxx xxx xxxx" />
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Email Address</label>
+        <div class="input-icon-wrap">
+          <i class="fa-solid fa-envelope icon-left"></i>
+          <input type="email" class="form-control" value="<%= user.email %>" disabled style="opacity:.6;cursor:not-allowed" />
+        </div>
+        <span class="form-hint">Email cannot be changed.</span>
+      </div>
+      <button type="submit" class="btn btn--primary mt-6" id="save-profile-btn">
+        <i class="fa-solid fa-floppy-disk"></i> Save Changes
+      </button>
+    </form>
+  </div>
+
+  <!-- Change Password -->
+  <div class="card" data-anim>
+    <h3 style="font-weight:700;margin-bottom:var(--sp-5)">
+      <i class="fa-solid fa-shield-halved" style="color:var(--clr-primary-l)"></i> Change Password
+    </h3>
+    <form id="pwd-form">
+      <div class="form-group">
+        <label class="form-label">Current Password</label>
+        <input type="password" class="form-control" id="current-pwd" placeholder="Enter current password" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">New Password</label>
+        <input type="password" class="form-control" id="new-pwd" placeholder="At least 6 characters" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm New Password</label>
+        <input type="password" class="form-control" id="confirm-pwd" placeholder="Repeat new password" />
+      </div>
+      <button type="submit" class="btn btn--outline" id="change-pwd-btn">
+        <i class="fa-solid fa-key"></i> Update Password
+      </button>
+    </form>
+  </div>
+</div>
+
+<script src="/js/profile.js"></script>

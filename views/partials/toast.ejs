@@ -1,0 +1,16 @@
+<div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+<% if (typeof success !== 'undefined' && success && success.length > 0) { %>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.toast) window.toast.success('<%= success[0] %>');
+    });
+  </script>
+<% } %>
+<% if (typeof error !== 'undefined' && error && error.length > 0) { %>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.toast) window.toast.error('<%= error[0] %>');
+    });
+  </script>
+<% } %>

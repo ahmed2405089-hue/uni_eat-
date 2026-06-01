@@ -1,0 +1,75 @@
+<div class="auth-card animate-slide">
+  <a href="/" class="auth-logo">
+    <div class="auth-logo__icon">🍽️</div>
+    <span class="auth-logo__text">Uni<span>Eats</span></span>
+  </a>
+
+  <div class="auth-header">
+    <h1>Create your account</h1>
+    <p>Join UniEats and start ordering from campus restaurants.</p>
+  </div>
+
+  <div id="auth-alert" class="auth-alert auth-alert--error" style="display:none">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <span id="auth-alert-msg"></span>
+  </div>
+
+  <!-- Role tabs -->
+  <div class="role-tabs" id="role-tabs">
+    <div class="role-tab active" data-role="student">
+      <i class="fa-solid fa-graduation-cap"></i>
+      <span>Student</span>
+    </div>
+    <div class="role-tab" data-role="owner">
+      <i class="fa-solid fa-store"></i>
+      <span>Restaurant Owner</span>
+    </div>
+  </div>
+  <input type="hidden" id="selected-role" value="student" />
+
+  <form id="register-form" novalidate>
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+      <div class="input-icon-wrap">
+        <i class="fa-solid fa-user icon-left"></i>
+        <input type="text" id="name" name="name" class="form-control"
+               placeholder="John Smith" autocomplete="name" required />
+      </div>
+      <span class="form-error" id="name-error" style="display:none"></span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <div class="input-icon-wrap">
+        <i class="fa-solid fa-envelope icon-left"></i>
+        <input type="email" id="email" name="email" class="form-control"
+               placeholder="you@university.edu" autocomplete="email" required />
+      </div>
+      <span class="form-error" id="email-error" style="display:none"></span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <div class="input-icon-wrap">
+        <i class="fa-solid fa-lock icon-left"></i>
+        <input type="password" id="password" name="password" class="form-control has-right"
+               placeholder="At least 6 characters" autocomplete="new-password" required />
+        <i class="fa-solid fa-eye icon-right" id="toggle-pwd"></i>
+      </div>
+      <div class="pwd-strength">
+        <div class="pwd-bar"><div class="pwd-bar__fill" id="pwd-fill"></div></div>
+        <span class="pwd-label" id="pwd-label">Enter a password</span>
+      </div>
+      <span class="form-error" id="pwd-error" style="display:none"></span>
+    </div>
+
+    <button type="submit" class="btn btn--primary w-full" id="register-btn" style="margin-top:var(--sp-2)">
+      <span id="register-btn-text">Create Account</span>
+      <span id="register-spinner" class="spinner" style="display:none;width:18px;height:18px;border-width:2px"></span>
+    </button>
+  </form>
+
+  <p class="auth-footer">
+    Already have an account? <a href="/auth/login">Sign in</a>
+  </p>
+</div>
