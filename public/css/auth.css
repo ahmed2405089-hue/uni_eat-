@@ -3,12 +3,12 @@
 .auth-page {
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   background: var(--grad-hero);
   position: relative;
-  overflow: hidden;
-  padding: var(--sp-6);
+  overflow-y: auto;
+  padding: var(--sp-10) var(--sp-6);
 }
 
 /* Ambient orb effects */

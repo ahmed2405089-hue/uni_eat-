@@ -112,25 +112,56 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ─── Orders Page ───────────────────────────────── */
-  document.querySelectorAll('.update-status-btn').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const orderId   = btn.dataset.orderId;
-      const newStatus = btn.dataset.newStatus;
-      try {
-        await window.api.patch(`/api/orders/${orderId}/status`, { status: newStatus });
-        window.toast?.success(`Order marked as ${newStatus}`);
-        const row = btn.closest('[data-order-id]');
-        if (row) {
-          const badge = row.querySelector('.badge');
-          if (badge) {
-            badge.className = `badge badge--${newStatus.toLowerCase()}`;
-            badge.textContent = newStatus;
-          }
-          const actionsEl = row.querySelector('.order-row__actions');
-          if (actionsEl) actionsEl.innerHTML = `<span style="color:var(--clr-text-muted);font-size:var(--text-sm)">${newStatus}</span>`;
-        }
-      } catch (err) { window.toast?.error(err.message); }
-    });
+
+  function nextActionButtons(orderId, status) {
+    const id = orderId;
+    if (status === 'Pending') return `
+      <button class="btn btn--success btn--sm update-status-btn" data-order-id="${id}" data-new-status="Confirmed">
+        <i class="fa-solid fa-check"></i> Confirm
+      </button>
+      <button class="btn btn--danger btn--sm update-status-btn" data-order-id="${id}" data-new-status="Cancelled">
+        <i class="fa-solid fa-xmark"></i> Reject
+      </button>`;
+    if (status === 'Confirmed') return `
+      <button class="btn btn--primary btn--sm update-status-btn" data-order-id="${id}" data-new-status="Preparing">
+        <i class="fa-solid fa-fire-burner"></i> Start Preparing
+      </button>`;
+    if (status === 'Preparing') return `
+      <button class="btn btn--accent btn--sm update-status-btn" data-order-id="${id}" data-new-status="Ready">
+        <i class="fa-solid fa-bell"></i> Mark Ready
+      </button>`;
+    if (status === 'Ready') return `
+      <button class="btn btn--success btn--sm update-status-btn" data-order-id="${id}" data-new-status="Completed">
+        <i class="fa-solid fa-circle-check"></i> Complete
+      </button>`;
+    return `<span style="color:var(--clr-text-muted);font-size:var(--text-sm)">${status}</span>`;
+  }
+
+  /* Event delegation — works for dynamically added buttons too */
+  document.getElementById('orders-list')?.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.update-status-btn');
+    if (!btn) return;
+
+    const orderId   = btn.dataset.orderId;
+    const newStatus = btn.dataset.newStatus;
+    btn.disabled = true;
+
+    try {
+      await window.api.patch(`/api/orders/${orderId}/status`, { status: newStatus });
+      window.toast?.success(`Order marked as ${newStatus}`);
+
+      const row = btn.closest('[data-order-id]');
+      if (row) {
+        row.dataset.status = newStatus;
+        const badge = row.querySelector('.badge');
+        if (badge) { badge.className = `badge badge--${newStatus.toLowerCase()}`; badge.textContent = newStatus; }
+        const actionsEl = row.querySelector('.order-row__actions');
+        if (actionsEl) actionsEl.innerHTML = nextActionButtons(orderId, newStatus);
+      }
+    } catch (err) {
+      window.toast?.error(err.message);
+      btn.disabled = false;
+    }
   });
 
   /* Status filter */
