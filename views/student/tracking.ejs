@@ -107,6 +107,12 @@
         <a href="/student/orders" class="btn btn--outline w-full mt-4" style="justify-content:center">
           <i class="fa-solid fa-list"></i> View All Orders
         </a>
+        <% if (['Pending', 'Confirmed'].includes(order.status)) { %>
+          <button id="cancel-order-btn" class="btn btn--danger w-full" style="margin-top:var(--sp-3);justify-content:center"
+            data-order-id="<%= order._id %>">
+            <i class="fa-solid fa-xmark"></i> Cancel Order
+          </button>
+        <% } %>
       </div>
     </div>
   </div>
@@ -120,6 +126,20 @@
     if (id !== orderId) return;
     window.toast && window.toast.info(`Order status updated: ${status}`);
     setTimeout(() => location.reload(), 1500);
+  });
+
+  document.getElementById('cancel-order-btn')?.addEventListener('click', async () => {
+    if (!confirm('Are you sure you want to cancel this order?')) return;
+    try {
+      await fetch(`/api/orders/${orderId}/cancel`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ reason: 'Cancelled by student' }),
+      });
+      window.toast && window.toast.success('Order cancelled.');
+      setTimeout(() => location.reload(), 1200);
+    } catch { window.toast && window.toast.error('Could not cancel order.'); }
   });
 </script>
 

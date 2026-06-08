@@ -51,6 +51,18 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ─── Restaurant Modal ───────────────────────────── */
+  /* Image file preview */
+  document.getElementById('rest-image')?.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      document.getElementById('rest-img-thumb').src = ev.target.result;
+      document.getElementById('rest-image-preview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+
   document.getElementById('add-restaurant-btn')?.addEventListener('click', () => {
     document.getElementById('rest-modal-title').textContent = 'Add Restaurant';
     document.getElementById('rest-modal-id').value = '';
@@ -58,6 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('rest-desc').value = '';
     document.getElementById('rest-delivery').value = '';
     document.getElementById('rest-approved').value = 'true';
+    document.getElementById('rest-image').value = '';
+    document.getElementById('rest-image-preview').style.display = 'none';
     window.openModal('rest-modal');
   });
 
@@ -78,16 +92,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('rest-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const id       = document.getElementById('rest-modal-id').value;
-    const payload  = {
-      name:        document.getElementById('rest-name').value.trim(),
-      description: document.getElementById('rest-desc').value.trim(),
-      deliveryTime: document.getElementById('rest-delivery').value.trim(),
-      isApproved:  document.getElementById('rest-approved').value === 'true',
-    };
+    const id      = document.getElementById('rest-modal-id').value;
+    const imgFile = document.getElementById('rest-image')?.files[0];
+
+    const formData = new FormData();
+    formData.append('name',         document.getElementById('rest-name').value.trim());
+    formData.append('description',  document.getElementById('rest-desc').value.trim());
+    formData.append('deliveryTime', document.getElementById('rest-delivery').value.trim());
+    formData.append('isApproved',   document.getElementById('rest-approved').value);
+    if (imgFile) formData.append('image', imgFile);
+
     try {
-      if (id) { await window.api.put(`/api/restaurants/${id}`, payload); }
-      else    { await window.api.post('/api/restaurants', payload); }
+      const method = id ? 'PUT' : 'POST';
+      const url    = id ? `/api/restaurants/${id}` : '/api/restaurants';
+      const res    = await fetch(url, { method, body: formData, credentials: 'include' });
+      const data   = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || `HTTP ${res.status}`);
       window.toast?.success(id ? 'Restaurant updated.' : 'Restaurant created.');
       window.closeModal('rest-modal');
       setTimeout(() => location.reload(), 800);

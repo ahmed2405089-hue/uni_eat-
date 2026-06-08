@@ -1,5 +1,5 @@
 const Restaurant = require('../models/Restaurant');
-const ApiError = require('../utils/ApiError');
+const ApiError   = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getAllRestaurants = catchAsync(async (req, res) => {
@@ -8,9 +8,9 @@ exports.getAllRestaurants = catchAsync(async (req, res) => {
 
   if (search) {
     filter.$or = [
-      { name: { $regex: search, $options: 'i' } },
+      { name:        { $regex: search, $options: 'i' } },
       { description: { $regex: search, $options: 'i' } },
-      { tags: { $regex: search, $options: 'i' } },
+      { tags:        { $regex: search, $options: 'i' } },
       { 'categories.items.name': { $regex: search, $options: 'i' } },
     ];
   }
@@ -37,8 +37,9 @@ exports.createRestaurant = catchAsync(async (req, res, next) => {
     name,
     description,
     deliveryTime,
+    image: req.file ? `/uploads/${req.file.filename}` : null,
     tags: Array.isArray(tags) ? tags : (tags ? [tags] : []),
-    isApproved: req.user.role === 'admin',
+    isApproved: req.body.isApproved !== 'false',
   });
 
   res.status(201).json({ status: 'success', data: { restaurant } });
@@ -53,13 +54,15 @@ exports.updateRestaurant = catchAsync(async (req, res, next) => {
     return next(new ApiError('You can only update your own restaurant.', 403));
   }
 
-  if (name) restaurant.name = name;
+  if (name)                restaurant.name        = name;
   if (description !== undefined) restaurant.description = description;
-  if (deliveryTime) restaurant.deliveryTime = deliveryTime;
-  if (isOpen !== undefined) restaurant.isOpen = isOpen;
-  if (tags !== undefined) restaurant.tags = Array.isArray(tags) ? tags : [tags];
-  if (req.user.role === 'admin' && rating !== undefined) restaurant.rating = rating;
-  if (req.user.role === 'admin' && isApproved !== undefined) restaurant.isApproved = isApproved;
+  if (deliveryTime)        restaurant.deliveryTime = deliveryTime;
+  if (isOpen !== undefined) restaurant.isOpen      = isOpen;
+  if (tags !== undefined)  restaurant.tags         = Array.isArray(tags) ? tags : [tags];
+  if (req.file)            restaurant.image        = `/uploads/${req.file.filename}`;
+  if (req.user.role === 'admin' && rating    !== undefined) restaurant.rating     = rating;
+  if (req.user.role === 'admin' && isApproved !== undefined)
+    restaurant.isApproved = isApproved === true || isApproved === 'true';
 
   await restaurant.save();
   res.status(200).json({ status: 'success', data: { restaurant } });
@@ -77,7 +80,9 @@ exports.assignOwner = catchAsync(async (req, res, next) => {
   if (ownerId) {
     const existing = await Restaurant.findOne({ owner: ownerId, _id: { $ne: req.params.id } });
     if (existing) {
-      return next(new ApiError(`This owner already manages "${existing.name}". Each owner can only manage one restaurant.`, 400));
+      return next(new ApiError(
+        `This owner already manages "${existing.name}". Each owner can only manage one restaurant.`, 400
+      ));
     }
   }
 
@@ -111,7 +116,12 @@ exports.addMenuItem = catchAsync(async (req, res, next) => {
   const exists = cat.items.some(i => i.name.toLowerCase() === name.toLowerCase());
   if (exists) return next(new ApiError('An item with that name already exists in this category.', 409));
 
-  cat.items.push({ name, price: Number(price), description: description || '' });
+  cat.items.push({
+    name,
+    price: Number(price),
+    description: description || '',
+    image: req.file ? `/uploads/${req.file.filename}` : null,
+  });
   await restaurant.save();
   res.status(201).json({ status: 'success', data: { restaurant } });
 });
@@ -131,10 +141,11 @@ exports.updateMenuItem = catchAsync(async (req, res, next) => {
   const item = cat.items.id(itemId);
   if (!item) return next(new ApiError('Item not found.', 404));
 
-  if (name) item.name = name;
-  if (price !== undefined) item.price = Number(price);
+  if (name)               item.name        = name;
+  if (price !== undefined) item.price      = Number(price);
   if (description !== undefined) item.description = description;
   if (isAvailable !== undefined) item.isAvailable = isAvailable;
+  if (req.file)           item.image       = `/uploads/${req.file.filename}`;
 
   await restaurant.save();
   res.status(200).json({ status: 'success', data: { restaurant } });

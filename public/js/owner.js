@@ -26,8 +26,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-name').value     = data.name     || '';
     document.getElementById('modal-price').value    = data.price    || '';
     document.getElementById('modal-desc').value     = data.desc     || '';
+    const imgInput = document.getElementById('modal-image');
+    if (imgInput) imgInput.value = '';
+    document.getElementById('item-image-preview').style.display = 'none';
     window.openModal('item-modal');
   };
+
+  document.getElementById('modal-image')?.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      document.getElementById('item-img-thumb').src = ev.target.result;
+      document.getElementById('item-image-preview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
 
   document.getElementById('add-item-btn')?.addEventListener('click', () =>
     openItemModal('Add Menu Item'));
@@ -66,23 +80,31 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('close-modal')?.addEventListener('click',  () => window.closeModal('item-modal'));
   document.getElementById('cancel-modal')?.addEventListener('click', () => window.closeModal('item-modal'));
 
-  /* Item form submit */
+  /* Item form submit — uses FormData to support optional image upload */
   document.getElementById('item-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const itemId   = document.getElementById('modal-item-id').value;
-    const category = document.getElementById('modal-category').value.trim();
-    const name     = document.getElementById('modal-name').value.trim();
-    const price    = parseFloat(document.getElementById('modal-price').value);
+    const itemId      = document.getElementById('modal-item-id').value;
+    const category    = document.getElementById('modal-category').value.trim();
+    const name        = document.getElementById('modal-name').value.trim();
+    const price       = parseFloat(document.getElementById('modal-price').value);
     const description = document.getElementById('modal-desc').value.trim();
+    const imgFile     = document.getElementById('modal-image')?.files[0];
 
     if (!name || isNaN(price)) { window.toast?.error('Name and price are required.'); return; }
 
+    const formData = new FormData();
+    formData.append('category',    category);
+    formData.append('name',        name);
+    formData.append('price',       price);
+    formData.append('description', description);
+    if (itemId)  formData.append('itemId', itemId);
+    if (imgFile) formData.append('image',  imgFile);
+
     try {
-      if (itemId) {
-        await window.api.put(`/api/restaurants/${restaurantId}/menu`, { category, itemId, name, price, description });
-      } else {
-        await window.api.post(`/api/restaurants/${restaurantId}/menu`, { category, name, price, description });
-      }
+      const method = itemId ? 'PUT' : 'POST';
+      const res    = await fetch(`/api/restaurants/${restaurantId}/menu`, { method, body: formData, credentials: 'include' });
+      const data   = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || `HTTP ${res.status}`);
       window.toast?.success(itemId ? 'Item updated.' : 'Item added.');
       window.closeModal('item-modal');
       setTimeout(() => location.reload(), 800);

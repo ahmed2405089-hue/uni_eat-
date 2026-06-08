@@ -38,17 +38,29 @@ router.get('/auth/forgot-password', (req, res) => {
 
 // ── Student ───────────────────────────────────────────────
 router.get('/student/home', protect, restrictTo('student'), catchAsync(async (req, res) => {
-  const [restaurants, unreadCount] = await Promise.all([
+  const limit = 9;
+  const page  = Math.max(1, parseInt(req.query.page) || 1);
+  const skip  = (page - 1) * limit;
+
+  const [restaurants, total, unreadCount] = await Promise.all([
     Restaurant.find({ isApproved: true })
       .select('name description image rating deliveryTime isOpen tags')
-      .sort({ rating: -1 }),
+      .sort({ rating: -1 })
+      .skip(skip)
+      .limit(limit),
+    Restaurant.countDocuments({ isApproved: true }),
     Notification.countDocuments({ user: req.user._id, isRead: false }),
   ]);
+
+  const pages = Math.ceil(total / limit);
   res.render('student/home', {
     layout: 'layouts/main',
     title: 'Browse Restaurants',
     restaurants,
     unreadCount,
+    page,
+    pages,
+    total,
   });
 }));
 
@@ -83,13 +95,30 @@ router.get('/student/tracking/:id', protect, catchAsync(async (req, res) => {
 }));
 
 router.get('/student/orders', protect, restrictTo('student'), catchAsync(async (req, res) => {
-  const orders = await Order.find({ student: req.user._id })
-    .populate('restaurant', 'name image')
-    .sort({ createdAt: -1 });
+  const limit  = 8;
+  const page   = Math.max(1, parseInt(req.query.page) || 1);
+  const skip   = (page - 1) * limit;
+  const filter = { student: req.user._id };
+  if (req.query.status) filter.status = req.query.status;
+
+  const [orders, total] = await Promise.all([
+    Order.find(filter)
+      .populate('restaurant', 'name image')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit),
+    Order.countDocuments(filter),
+  ]);
+
+  const pages = Math.ceil(total / limit);
   res.render('student/orders', {
     layout: 'layouts/main',
     title: 'My Orders',
     orders,
+    page,
+    pages,
+    total,
+    statusFilter: req.query.status || '',
   });
 }));
 

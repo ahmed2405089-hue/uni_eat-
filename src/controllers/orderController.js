@@ -130,6 +130,21 @@ exports.getRestaurantOrders = catchAsync(async (req, res, next) => {
   res.status(200).json({ status: 'success', results: orders.length, data: { orders } });
 });
 
+exports.cancelOrder = catchAsync(async (req, res, next) => {
+  const order = await Order.findById(req.params.id);
+  if (!order) return next(new ApiError('Order not found.', 404));
+  if (String(order.student) !== String(req.user._id)) return next(new ApiError('Access denied.', 403));
+  if (!['Pending', 'Confirmed'].includes(order.status)) {
+    return next(new ApiError('Orders can only be cancelled before preparation begins.', 400));
+  }
+
+  order.status = 'Cancelled';
+  order.cancelReason = req.body.reason || 'Cancelled by student';
+  await order.save();
+
+  res.status(200).json({ status: 'success', data: { order } });
+});
+
 exports.getAllOrders = catchAsync(async (req, res) => {
   const { status, restaurantId, studentId, page = 1, limit = 20 } = req.query;
   const filter = {};

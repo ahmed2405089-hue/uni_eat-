@@ -32,7 +32,7 @@ app.use(helmet({
       styleSrc:    ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://cdnjs.cloudflare.com'],
       fontSrc:     ["'self'", 'https://fonts.gstatic.com', 'https://cdnjs.cloudflare.com'],
       imgSrc:      ["'self'", 'data:', 'https:'],
-      connectSrc:  ["'self'", 'ws:', 'wss:'],
+      connectSrc:  ["'self'", 'ws:', 'wss:', 'https://api.open-meteo.com'],
     },
   },
 }));
@@ -51,7 +51,8 @@ app.use(cookieParser());
 
 // ── Static files ─────────────────────────────────────
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/assets',  express.static(path.join(__dirname, 'assets')));
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // ── View engine ───────────────────────────────────────
 app.use(expressLayouts);
